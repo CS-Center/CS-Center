@@ -4,7 +4,8 @@ from wcics import logger
 
 from wcics.auth.manage_user import user
 
-from wcics.database.models.roles import AttendanceRoles, DatabaseRoles, NewsRoles, TopicRoles, UserRoles
+from wcics.database.models import Organizations, OrganizationUsers
+from wcics.database.models.roles import AttendanceRoles, DatabaseRoles, NewsRoles, OrganizationRoles, TopicRoles, UserRoles
 
 def admin_sublinks():
   links = []
@@ -14,8 +15,8 @@ def admin_sublinks():
     links.append(("/admin/database/", "database", []))
   if False: # TODO
     links.append(("/admin/news/", "news", []))
-  if False:
-    links.append(("/admin/attendance/", "attendance", [("/admin/attendance/display", "display")]))
+  if any(role.attendance > AttendanceRoles.default for role in OrganizationRoles.query.filter_by(uid = user.id).all()):
+    links.append(("/admin/attendance/", "attendance", [("/organization/%s/admin/attendance/" % organization.oid, organization.name) for organization in Organizations.query.all() if organization.id != 1 and OrganizationUsers.query.filter_by(oid = organization.id, uid = user.id).count() > 0 and OrganizationRoles.query.filter_by(oid = organization.id, uid = user.id).first().attendance > AttendanceRoles.default]))
   if False:
     links.append(("/admin/topics/", "topics", []))
   if False: # TODO
