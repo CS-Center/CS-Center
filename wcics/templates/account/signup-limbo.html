@@ -1,0 +1,21 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Account Creation - Email Sent
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Account Creation - Email Sent
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <center>
+    <h2 class="subheader">
+      An email was sent!
+    </h2><br />
+    An email with a link to create your account was sent to {% if email -%}<b>{{ email }}</b>{%- else -%}the email address you provided{%- endif -%}.
+  </center>
+{%- endblock -%}

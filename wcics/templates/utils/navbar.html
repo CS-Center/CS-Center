@@ -1,0 +1,47 @@
+<link href="/static/css/utils/navbar.css" rel="stylesheet" type="text/css" />
+
+<ul id="navbar">
+  {%- for x, y, z in (sudo_links if sudo else links)() -%}
+    <li class="navbar__col">
+      {%- if y == "Home" -%}
+        <a href="{{ x }}" class="navbar__col__button navbar__col__button--home no-animation"><span class="wcics-button--first">CS</span><span class="wcics-button--second">Center</span></a>
+      {%- else -%}
+        <a href="{{ x }}" class="navbar__col__button {{ ' navbar__col__button--active' if y == active else '' }}">{{ y }}</a>
+      {%- endif -%}
+
+      {%- if z != [] -%}
+        <ul class="navbar__col__options">
+          {%- for a, b in z -%}
+            <li class="navbar__col__option">
+              <a class="navbar__col__option__button" href="{{ a }}">{{ b }}</a>
+            </li>  
+          {%- endfor -%}
+        </ul>
+      {% endif %}
+    </li>
+  {%- endfor -%}
+
+  <li id="right-navbar-col" class="navbar__col">
+    {%- if hide_links -%}
+    {%- elif user -%}
+        <a id="right-navbar-col-button" class="navbar__col__button{{ ' navbar__col__button--active' if active == 'Account' else '' }}" href="/user" >Welcome, {{ user.username }}!</a>
+
+        <ul id="right-navbar-col-options" class="navbar__col__options">
+          <li>
+            <a class="navbar__col__option__button" href="/edit-profile">
+              Edit Profile
+            </a>
+          </li>
+
+          <li>
+            <a href="/logout/?next={{ request.path }}" id="logout" class="navbar__col__option__button">
+              Log Out
+            </a>
+          </li>
+        </ul>
+    {%- else -%}
+      <a href="/login/?next={{ request.path }}" id="login" class="navbar__col__button{{ ' navbar__col__button--active' if active == 'Log In' else '' }}">Log In</button>
+      <a href="/signup/?next={{ request.path }}" id="signup" class="navbar__col__button{{ ' navbar__col__button--active' if active == 'Sign Up' else '' }}">Sign Up</a>
+    {%- endif -%}
+  </li>
+</ul>

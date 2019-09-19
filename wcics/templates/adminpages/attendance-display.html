@@ -1,0 +1,20 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - attendance
+{%- endblock -%}
+
+{%- block header -%}
+  <link href="/static/css/adminpages/attendance-display.css" rel="stylesheet" type="text/css" />
+{%- endblock -%}
+
+{%- block content -%}
+  <center>
+    <div id="attendance-header">
+      The attendance code is
+    </div>
+    <div id="attendance-display">
+      {{ attendance_code }}
+    </div>
+  </center>
+{%- endblock -%}

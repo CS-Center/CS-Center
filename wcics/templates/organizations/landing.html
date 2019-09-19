@@ -1,0 +1,41 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  {{ organization.name }}
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    {{ organization.name }}
+    &nbsp;
+    <span class="light-text small-text">
+      {%- if user and organization.has_user(user) -%}
+        {%- if organization.user_role(user) == 0 -%}
+          Member
+        {%- elif organization.user_role(user) == 1 -%}
+          Inviter
+        {%- elif organization.user_role(user) == 2 -%}
+          Admin
+        {%- endif -%}
+      {%- endif -%}
+    </span>
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  {{ organization.desc }}<br /><br />
+  {%- if user -%}
+    {%- if not organization.has_user(user) -%}
+      {%- if organization.can_join_code -%}
+        <form method="post">
+          {{ form.csrf_token }}
+          {{ input_field(form.join_code) }}
+          {{ form.submit(class = "outlined-button") }}
+        </form>
+      {%- endif -%}
+    {%- endif -%}
+  {%- else -%}
+    <a class="button-link outlined-button" href="/login/?next={{ request.path }}">Log in to join this organization</a>
+  {%- endif -%}
+{%- endblock -%}

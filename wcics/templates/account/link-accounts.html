@@ -1,0 +1,37 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Link {{ provider }} Account
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Link {{ provider }} Account
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  {%- if matches | length > 1 -%}
+    Multiple accounts with matching email addresses to your {{ provider }} account were found. Select one of the following accounts to link to your accounts:
+  {%- else -%}
+    An account with a matching email address to your {{ provider }} account was found. Click the link below to connect your accounts:
+  {%- endif -%}
+
+  <ul>
+    {%- for email, user, link_token in matches -%}
+      <li><a class="unstyled-link" href="/link-account/?token={{ link_token }}">{{ user | display_user | safe }}</a> ({{ email }})</li>
+    {%- endfor -%}
+  </ul>
+
+  {%- if not no_signup and other_emails | length > 0 -%}
+    Alternatively, you may also choose to sign up with one of the following unused emails:
+    <ul>
+      {%- for email, token in other_emails -%}
+        <li><a href="/oauth-create-account/?token={{ token }}">{{ email }}</a></li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  Or, <a href="/login/">return to the log in page</a>.
+{%- endblock -%}

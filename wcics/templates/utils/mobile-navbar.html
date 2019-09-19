@@ -1,0 +1,23 @@
+<link href="/static/css/utils/mobile-navbar.css" rel="stylesheet" type="text/css" />
+<script src="/static/js/utils/mobile-navbar.js" type="text/javascript"></script>
+
+<nav id="navbar">
+  <button id="toggle-navbar" class="text-button white-text"><i class="fa fa-bars"></i></button>
+
+  {% if user %}
+    <a href="/logout/?next={{ request.path }}" class="right-side navbar__col__button unstyled-link">Log Out</a>
+    <a href="/edit-profile/" class="right-side navbar__col__button unstyled-link{{ ' navbar__col__button--active' if active == 'Account' else '' }}">Edit Profile</button>
+  {% else %}
+    <a href="/signup/?next={{ request.path }}" class="right-side navbar__col__button unstyled-link{{ ' navbar__col__button--active' if active == 'Sign Up' else '' }}">Sign Up</a>
+    <a href="/login/?next={{ request.path }}" class="right-side navbar__col__button unstyled-link{{ ' navbar__col__button--active' if active == 'Log In' else '' }}">Log In</button>
+  {% endif %}
+</nav>
+
+<div id="navbar-expand" class="flex-column" tabindex="0">
+  {%- for x, y, z in (sudo_links if sudo else links)() -%}
+    <a href="{{ x }}" class="navbar__row__button unstyled-link{{ ' navbar__row__button--active' if y == active else '' }}">{{ y }}</a>
+    {%- for a, b in z -%}
+      <a href="{{ a }}" class="navbar__row__button unstyled-link{{ ' navbar__row__button--active' if b == active else '' }}">{{ b }}</a>
+    {%- endfor -%}
+  {%- endfor -%}
+</div>

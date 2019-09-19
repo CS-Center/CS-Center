@@ -1,0 +1,31 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+code, code * {
+  font-family: 'Cousine', monospace;
+}
+
+kbd, kbd * {
+  font-family: 'Cousine', monospace;
+}
+
+.monospace, .monospace * {
+  font-family: 'Cousine', monospace;
+}
+
+.large-text {
+  font-size: 120%;
+}
+
+.small-text {
+  font-size: 80%;
+}
+
+.white-text {
+  color: #fff;
+}
+
+.light-text {
+  color: #888;
+}

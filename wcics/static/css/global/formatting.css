@@ -1,0 +1,48 @@
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.force-wrap, .force-wrap * {
+  text-wrap: break-word;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: 50%;
+}
+
+.left-side {
+  float: left;
+}
+
+.third-width {
+  width: 33%;
+}
+
+.indent-paragraph {
+  text-indent: 2em;
+}
+
+.pad-left {
+  padding-left: 4px;
+}
+
+.right-side {
+  float: right;
+}
+
+.table-row {
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+.MathJax_Preview {
+  display: none;
+}

@@ -1,0 +1,25 @@
+.status-box {
+  border-radius: 5px;
+  margin-bottom: 1em;
+  padding: 0px 5px;
+}
+
+.status-box--error {
+  background-color: #f006;
+  border: 1px solid #f00;
+}
+
+.status-box--success {
+  background-color: #0a06;
+  border: 1px solid #0a0;
+}
+
+.status-box--info {
+  background-color: #aaa6;
+  border: 1px solid #aaa;
+}
+
+.status-box--debug {
+  background-color: #0006;
+  border: 1px solid #000;
+}

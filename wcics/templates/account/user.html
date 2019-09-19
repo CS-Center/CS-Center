@@ -1,0 +1,33 @@
+{%- extends 'utils/layout.html' -%}
+
+{% block title %}
+  {{ pname }}
+{% endblock %}
+
+{%- block header -%}
+  {%- include 'utils/mathjax-import.html' -%}
+{%- endblock -%}
+
+{% block content_header %}
+  <div>
+    <h1 class="header">
+      {{ pname }}
+      {% if user and user.id == target.id -%}
+        <a href="/edit-profile"><i class="fa fa-edit"></i></a>
+      {%- elif user and (user.roles.users > target.roles.users or user.roles.users >= roles.users.admin) -%}
+        <a href="/admin/user/{{ target.id }}"><i class="fa fa-edit"></i></a>
+      {%- endif -%}
+      &nbsp;&nbsp;
+      <span class="light-text small-text">joined {{ datetime.datetime.fromtimestamp(target.join_time).strftime("%b %e, %Y") }}</span>
+    </h1>
+  </div>
+  <hr />
+{% endblock %}
+
+{%- block content -%}
+  {%- if desc.strip() -%}
+    {{ desc.strip() | markdown }}
+  {%- else -%}
+    <p class="light-text">{{ default_desc }}</p>
+  {%- endif -%}
+{%- endblock -%}

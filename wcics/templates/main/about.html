@@ -1,0 +1,45 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  About
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    About
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <p>
+    Welcome to the official CS Center website! This site includes lesson pages and a large collection of original computer science problems ranging from introduction problems to higher-level competition problems.
+  </p>
+  <p>
+    Also, we have editorials for problems not on our site, like CCC problems. 
+  </p>
+  <p>
+    This website is closely bound the WCI's Computer Science club. Waterloo Collegiate Institute's official school website can be found at <a href="https://wci.wrdsb.ca/">wci.wrdsb.ca</a>. Neither Waterloo Collegiate Institute (WCI) nor the Waterloo Region District School Board (WRDSB) endorse this website or are associated with it.
+  </p>
+  <h2 class="subheader">Contact Us</h2>
+  <hr />
+  <p>
+    Check out our FAQ <a href="/faq">here</a>. You can contact us with questions and comments <a href="/contact">here</a>.
+  </p>
+  <h2 class="subheader">Credits</h2>
+  <hr />
+  <ul>
+    <li>This website is developed by:</li>
+    <ul>
+      <li>{{ 2 | display_user_as_link | safe }}</li>
+      <li>{{ 3 | display_user_as_link | safe }}</li>
+    </ul>
+    <br />
+    <li>It is run on BudgetNode using Python's <a href="http://flask.pocoo.org/">Flask</a> server library and <a href="http://jinja.pocoo.org/docs/2.10/">Jinja2's</a> templating engine. 
+      HTTPS connections are managed through <a href="https://www.nginx.com/">nginx</a> and the <a href="https://letsencrypt.org/">Let's Encrypt</a> certificate provider.</li>
+    <br />
+    <li>Special thanks to Andy Bao for providing us with the server.</li>
+    <br />
+    <li>Site design inspired by the <a href="https://dmoj.ca">DM::OJ</a></li>
+  </ul>
+{%- endblock -%}

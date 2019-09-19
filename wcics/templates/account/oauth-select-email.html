@@ -1,0 +1,22 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Select email for {{ provider }} account
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Select email for {{ provider }} account
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <ul>
+    {%- for email, link_token in options -%}
+      <li><a class="unstyled-link" href="/link-account/?token={{ link_token }}">{{ user | display_user | safe }}</a> ({{ email }})</li>
+    {%- endfor -%}
+  </ul>
+
+  Or, <a href="/login/">return to the log in page</a>.
+{%- endblock -%}

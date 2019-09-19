@@ -1,0 +1,61 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - user
+{%- endblock -%}
+
+{%- block header -%}
+  <script src="/static/js/adminpages/user.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- macro time_editor(name, value, field) -%}
+<div id="{{ name }}_editor">
+  {{ input_field(field, classes = ["time-control-field"], extras = {"data-name": name, "value": value, "type": "number", "min": "-1", "required": True}) }} <span id="{{ name }}_desc"></span>
+  <br /><br />
+  <button class="outlined-button time-control" data-time="clear" data-name="{{ name }}" type="button">Clear</button>
+  <button class="outlined-button time-control" data-time="forever" data-name="{{ name }}" type="button">Forever</button>
+  <span width="20px"></span>
+  <button class="outlined-button time-control" data-time="current" data-name="{{ name }}" type="button">Current Time</button>
+  <span width="20px"></span>
+  <button class="outlined-button time-control" data-time="inc-hour" data-name="{{ name }}" type="button">+1 hour</button>
+  <button class="outlined-button time-control" data-time="dec-hour" data-name="{{ name }}" type="button">-1 hour</button>
+  <span width="20px"></span>
+  <button class="outlined-button time-control" data-time="inc-day" data-name="{{ name }}" type="button" >+1 day</button>
+  <button class="outlined-button time-control" data-time="dec-day" data-name="{{ name }}" type="button" >-1 day</button>
+  <span width="20px"></span>
+  <button class="outlined-button time-control" data-time="inc-week" data-name="{{ name }}" type="button">+1 week</button>
+  <button class="outlined-button time-control" data-time="dec-week" data-name="{{ name }}" type="button">-1 week</button>
+</div>
+{%- endmacro -%}
+
+{%- macro admin_controls(category, perms) -%}
+  <b>admin controls - {{ category }}</b><br />
+  {%- for subfield in form["role_" ~ category] -%}
+    {{ subfield(checked = target.roles[category] == roles[category][subfield.data]) }} {{ subfield.label }}<br />
+  {%- endfor -%}
+  <br />
+{%- endmacro -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - user - [{{ target.id }}] {{ target.username }}
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    {{ time_editor("can_login_after", target.permissions.can_login_after, form.can_login_after) }}
+    {%- if user.roles.users >= roles.users.admin -%}
+      <br />
+      {{ admin_controls("users", ["default", "moderator", "admin"]) }}
+      {{ admin_controls("database", ["default", "admin"]) }}
+      {{ admin_controls("news", ["underprivileged", "default", "poster", "moderator"]) }}
+      {{ admin_controls("attendance", ["default", "reader", "admin"]) }}
+      {{ admin_controls("topics", ["default", "editor", "admin"]) }}
+    {%- endif -%}
+    <br />
+    {{ form.submit(class = "contained-button") }}
+  </form>
+{%- endblock -%}

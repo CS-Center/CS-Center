@@ -1,0 +1,38 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Edit Profile
+{%- endblock -%}
+
+{%- block header -%}
+  {%- include 'utils/mathjax-import.html' -%}
+  <script src="/static/js/account/edit-profile.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Edit Profile
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    {{ textbox_field(form.description) }}
+    <br />
+    {%- with source = "description" -%}
+      {%- include 'utils/markdown-preview.html' -%}
+    {%- endwith -%}
+    <hr />
+    {{ input_field(form.username, user.username) }}<br />
+    {{ input_field(form.email, user.email) }}<br />
+    {{ input_field(form.real_name, user.real_name, extras = { "title": "Your real name is not displayed anywhere and is only used to keep track of attendance for giving club credits. If you are not in a club where this matters or are not using this site for an organization, you do not need to include your real name." }) }}<br /><br />
+    {{ form.subscribed(value = user.subscribed) }} {{ form.subscribed.label }}<br /><br />
+    <a href="/change-email/" class="button-link text-button">Change email</a>
+    <a href="/change-password/" class="button-link text-button">Change password</a>
+    <button id="global-logout" class="text-button" type="button">Log out of all locations</button>
+    <br /><br />
+    {{ form.submit(class = "contained-button") }}
+  </form>
+{%- endblock -%}

@@ -1,0 +1,23 @@
+<span>
+  {%- if pages > 1 -%}
+    {%- if page == 1 -%}
+      <a class="unstyled-link toggle-button toggle-button--disabled">&laquo;</a>
+    {%- else -%}
+      <a class="unstyled-link toggle-button" href="{{ url_with_modifications(page = None if page == 2 else page - 1) }}">&laquo;</a>
+    {%- endif -%}
+
+    {%- for page_num in page_button_array(page, pages) -%}
+      {%- if page_num == -1 -%}
+        <a class="unstyled-link toggle-button toggle-button--disabled">...</a>
+      {%- else -%}
+        <a class="unstyled-link toggle-button {% if page_num == page -%}toggle-button--active{%- endif -%}" href="{{ url_with_modifications(page = None if page_num == 1 else page_num) }}">{{ page_num }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if page == pages -%}
+      <a class="unstyled-link toggle-button toggle-button--disabled">&raquo;</a>
+    {%- else -%}
+      <a class="unstyled-link toggle-button" href="{{ url_with_modifications(page = pages) }}">&raquo;</a>
+    {%- endif -%}
+  {%- endif -%}
+</span>

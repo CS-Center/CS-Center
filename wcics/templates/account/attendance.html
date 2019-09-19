@@ -1,0 +1,31 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Attendance
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Attendance
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block attendance_message -%}
+  <!-- Don't say "attendance is being taken" when they're on the attendance page lol -->
+{%- endblock -%}
+
+{%- block content -%}
+  You currently have an attendance count of {{ attendance.count(user) }}.<br /><br />
+  {%- if off -%}
+    Attendance is not currently being taken.
+  {%- else -%}
+    <center>
+      <form method="post">
+        {{ form.csrf_token }}
+        {{ input_field(form.attendance_code, classes = ["focus-on-load"], extras = { "value": "", "autocomplete": "off" }) }}<br /><br />
+        {{ form.submit(class = "outlined-button") }}
+      </form>
+    </center>
+  {%- endif -%}
+{%- endblock -%}

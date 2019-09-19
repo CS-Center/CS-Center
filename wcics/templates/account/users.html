@@ -1,0 +1,37 @@
+{%- extends 'utils/layout.html' -%}
+
+{% block title %}
+  Users
+{% endblock %}
+
+{% block content_header %}
+  <h1 class="header">
+    Users
+  </h1>
+  <hr />
+{% endblock %}
+
+{%- block content -%}
+  <table class="fancy-table">
+    <tr>
+      <th>Username</th>
+      <th>Points</th>
+    </tr>
+    {%- for target in users -%}
+      <tr>
+        <td>
+          <a class="unstyled-link" href="/user/{{ target.id }}">{{ target | display_user | safe }}</a>
+          {%- if user.id == target.id -%}
+            <a class="right-side" href="/edit-profile"><i class="fa fa-edit"></i></a>
+          {%- elif user and (user.roles.users > target.roles.users or user.roles.users >= roles.users.admin) -%}
+            <a class="right-side" href="/admin/user/{{ target.id }}"><i class="fa fa-edit"></i></a>
+          {%- endif -%}
+        </td>
+        <td>0</td>
+<!--         TODO -->
+      </tr>
+    {%- endfor -%}
+  </table>
+  <br />
+  {%- include 'utils/page-selector.html' -%}
+{%- endblock -%}

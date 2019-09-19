@@ -1,0 +1,32 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  {{ statcode }} {{ errorname }}
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    {{ statcode }} {{ errorname }}
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block attendance_message -%}
+
+{%- endblock -%}
+
+{%- block status_box -%}
+  <!-- Don't display any status messages if there's an error because it looks weird -->
+{%- endblock -%}
+
+{%- block content -%}
+  <p>
+    {%- block message -%}
+      {{ message }}
+    {%- endblock -%}
+  </p>
+  <p>
+    {{ reportmessage }}, consider <a href="/about">reporting this to us</a>.
+  </p>
+  <a href="/">Return to Home Page</a>
+{%- endblock -%}

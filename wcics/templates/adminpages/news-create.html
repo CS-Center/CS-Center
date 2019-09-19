@@ -1,0 +1,37 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - create news item
+{%- endblock -%}
+
+{%- block header -%}
+  <data id="user-uid" value="{{ user.id }}"></data>
+  <script src="/static/js/adminpages/news-create.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - create news item
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    {{ input_field(form.nid) }}<br />
+    {{ input_field(form.title) }}<br /><br />
+    {{ textbox_field(form.body)}}
+    <hr />
+    {%- with nomathjax = True, source = "body" -%}
+      {%- include 'utils/markdown-preview.html' -%}
+    {%- endwith -%}
+    <hr />
+    {{ form.email }} {{ form.email.label }}<br /><br />
+    {{ form.authors(hidden = True) }}
+    {%- include 'utils/author-selector.html' -%}<br />
+    Consider sending the URL of this page to the authors so they can find the edit page more easily.
+    <br /><br />
+    {{ form.submit(class = "contained-button") }}
+  </form>
+{%- endblock -%}

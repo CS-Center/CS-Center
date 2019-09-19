@@ -1,0 +1,38 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - database
+{%- endblock -%}
+
+{%- block header -%}
+  <script src="/static/js/adminpages/database.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - database
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    {{ textbox_field(form.query, classes = ["focus-on-load", "monospace", "small-text"]) }}
+    {{ form.submit(class = "contained-button") }}
+  </form>
+  
+  {%- if data -%}
+    <br /><br />
+    <table class="fancy-table">
+      <tr>{%- for key in data[0] -%}<th>{{ key }}</th>{%- endfor -%}</tr>
+      {%- for row in data[1:] -%}
+        <tr>
+          {%- for val in row -%}
+            <td>{{ val }}</td>
+          {%- endfor -%}
+        </tr>
+      {%- endfor -%}
+    </table>
+  {%- endif -%}
+{%- endblock -%}

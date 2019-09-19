@@ -1,0 +1,3 @@
+hljs.configure({
+  tabReplace: "    "
+})

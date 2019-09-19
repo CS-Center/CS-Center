@@ -1,0 +1,27 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Organizations
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Organizations
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  {%- include 'utils/page-selector.html' -%}
+  {%- for organization in organizations -%}
+    <div class="border-box left-side full-width">
+      <span class="left-side"><img src="{{ organization.logo }}" width="100" height="100" /></span>
+      <span class="left-side">&nbsp;&nbsp;&nbsp;</span>
+      <span class="left-side">
+        <span class="large-text"><a href="/organization/{{ organization.oid }}/">{{ organization.name }}</a></span><br />
+        <span class="small-text">{{ organization.desc }}</span>
+      </span>
+    </div>
+  {%- endfor -%}
+  {%- include 'utils/page-selector.html' -%}
+{%- endblock -%}

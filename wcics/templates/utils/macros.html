@@ -1,0 +1,11 @@
+{%- macro input_field(field, value = "", classes = [], label_classes = [], extras = {}, label_extras = {}) -%}
+  <div class="material-field-container material-input-container">
+    {{ field(class = "form-field standard-input-size " ~ (classes | join(" ")), autocomplete = False, value = value or field.data or "", placeholder = " ", **extras) }} {{ field.label(class = "material-field-container-label " ~ (label_classes | join(" ")), **extras) }}
+  </div>
+{%- endmacro -%}
+
+{%- macro textbox_field(field, value = "", classes = [], label_classes = [], extras = {}, label_extras = {}) -%}
+  <div class="material-field-container material-textbox-container">
+    {{ field(class = "form-field large-textbox " ~ (classes | join(" ")), autocomplete = False, value = value or field.data or "", placeholder = " ", **extras) }} {{ field.label(class = "material-field-container-label " ~ (label_classes | join(" ")), **extras) }}
+  </div>
+{%- endmacro -%}

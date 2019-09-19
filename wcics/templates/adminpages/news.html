@@ -1,0 +1,23 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - news
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - news
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <ul>
+    {%- for item in news -%}
+      {%- if user.roles.news >= roles.news.moderator or item.has_author(user.id) -%}
+        <li><a href="/admin/news-edit/{{ item.nid }}">{{ item.title }}</a> (posted {{ time_delta_display(item.time) }})</li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+  <a class="button-link outlined-button" href="/admin/news-create/">+ POST</a>
+{%- endblock -%}

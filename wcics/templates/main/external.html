@@ -1,0 +1,16 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  External Redirect
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    External Redirect
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  A URL from this site attempted to redirect you to <a href="{{ url }}">{{ url }}</a>, which appears to be an external link. Per our site policy, we do not automatically redirect users off of our page, so either a URL was manually typed incorrectly, or some mistake occurred on our side. Please click on the link if you do wish to continue; if this was a mistake on our side, please report this incident and how you got the faulty URL <a href="/contact">here</a>. Thanks!
+{%- endblock -%}

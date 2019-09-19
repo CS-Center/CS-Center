@@ -1,0 +1,42 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - news item
+{%- endblock -%}
+
+{%- block header -%}
+  <script src="/article-authors.js?article_id={{ article.nid }}" type="text/javascript"></script>
+  <script src="/static/js/adminpages/news-edit.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - news item [{{ article.nid }}]
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    {{ input_field(form.title) }}<br /><br />
+    {{ textbox_field(form.body) }}
+    <hr />
+    {%- with source = "body", nomathjax = True -%}
+      {%- include 'utils/markdown-preview.html' -%}
+    {%- endwith -%}
+    <hr />
+    {{ form.authors(hidden = True) }}
+    {%- if user.roles.news >= roles.news.moderator -%}
+      {%- include 'utils/author-selector.html' -%}<br />
+      Consider sending the URL of this page to the authors so they can find the edit page more easily.<br /><br />
+    {%- endif -%}
+    {{ form.delete(hidden = True) }}
+  
+    {{ form.submit(class = "contained-button") }}
+    
+    {% if user.roles.news >= roles.news.moderator -%}
+      <button id="delete-news-button" class="text-button" type="button">Delete</button>
+    {%- endif -%}
+  </form>
+{%- endblock -%}

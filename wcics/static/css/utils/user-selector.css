@@ -1,0 +1,31 @@
+.user-match {
+  border-radius: 5px;
+  display: block;
+  font-family: inherit;
+  font-size: 80%;
+  margin: 2px 0;
+  padding: 2px 5px;
+  text-align: left;
+  text-decoration: none;
+  width: 100%;
+  
+  background-color: #ddd8;
+  color: black;
+}
+
+.user-match:hover {
+  text-decoration: none;
+  
+  background-color: #ccc8;
+  color: black;
+}
+
+.user-match:active {
+  background-color: #bbb8;
+  color: black;
+}
+
+.user-select-button {
+  background: none;
+  padding: inherit;
+}

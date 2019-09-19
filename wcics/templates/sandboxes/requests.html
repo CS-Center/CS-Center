@@ -1,0 +1,26 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Requests Sandbox
+{%- endblock -%}
+
+{%- block header -%}
+  <script src="/static/js/sandboxes/requests.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content -%}
+  <div class="material-field-container material-input-container">
+    <input id="url" class="standard-input-size monospace requests-sandbox-field" placeholder=" " /><label for="url" class="material-field-container-label">URL</label>
+  </div>
+  <select id="request-type" class="monospace">
+    <option value="get">GET</option>
+    <option value="post">POST</option>
+  </select>
+  <button id="submit" class="outlined-button">Submit</button>
+  <br /><br />
+  <div class="material-field-container material-textbox-container">
+    <textarea id="post-data" class="large-textbox monospace requests-sandbox-field" placeholder=" " hidden></textarea><label for="post-data" class="material-field-container-label" hidden>POST Data</label>
+  </div>
+  <br />
+  <div id="request-output" class="monospace force-wrap"></div>
+{%- endblock -%}

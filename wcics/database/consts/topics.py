@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+
+TOPIC_ID_MAX_LENGTH = 32
+
+TOPIC_NAME_MAX_LENGTH = 64
+
+TOPIC_DESC_MAX_LENGTH = 1000

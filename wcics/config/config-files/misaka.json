@@ -1,0 +1,12 @@
+{
+  "escape": true,
+  "html": false,
+  "fenced_code": true,
+  "autolink": true,
+  "highlight": true,
+  "math": true,
+  "math_explicit": true,
+  "strikethrough": true,
+  "superscript": true,
+  "tables": true
+}

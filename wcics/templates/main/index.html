@@ -1,0 +1,37 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block header -%}
+  <link href="/static/css/main/index.css" rel="stylesheet" type="text/css" />
+{%- endblock -%}
+
+{%- block content_header -%}
+  {%- if organization.name -%}
+    <h1 class="header">
+      {{ organization.name }}
+    </h1>
+    <hr />
+  {%- endif -%}
+{%- endblock -%}
+
+{%- block content -%}
+  <section class="content-block">
+    <span class="content-block__header large-text">News</span>
+    <div class="content-block__content">
+      {%- for article in news -%}
+        <div class="news-block">
+          <span class="large-text"><a href="/news/{{ article.nid }}">{{ article.title }}</a></span>
+          {%- if user and False and (user.roles.news >= roles.news.moderator or article.has_author(user.id)) -%}
+            <a class="right-side" href="/admin/news-edit/{{ article.nid }}"><i class="fa fa-edit"></i></a>
+          {%- endif -%}<br />
+          <span class="small-text">{{ article.authors | map("display_user_as_link") | list | english_join | safe }} posted {{ time_delta_display(article.time) }}</span>
+          {{ article.body | markdown }}
+        </div>
+        {%- if loop.index != news | length -%}
+          <hr />
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+  <br />
+  {%- include 'utils/page-selector.html' -%}
+{%- endblock -%}

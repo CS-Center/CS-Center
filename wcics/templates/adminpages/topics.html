@@ -1,0 +1,47 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - topics
+{%- endblock -%}
+
+{%- block header -%}
+  <link href="/static/css/adminpages/topics.css" rel="stylesheet" type="text/css" />
+  <script src="/static/js/adminpages/topics.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - topics
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- macro display(id) -%}
+  <div id="item-{{ id }}" data-tid="{{ topicmap[id].tid }}">
+    <li id="link-{{ id }}" class="item-link"><span>[{{ topicmap[id].tid }}] {{ topicmap[id].name }}
+      <a class="button-link outlined-button" href="/admin/topic-edit/{{ id }}">EDIT</a>
+      <a class="button-link outlined-button" href="/admin/topic-create/{{ id }}">+ CHILD</a>
+      <button id="delete-keep-{{ id }}" class="outlined-button topic-delete keep" data-action-ext="-keep-children" data-id="{{ id }}" data-name="{{ topicmap[id].name }}"><i class="fa fa-trash"></i> KEEP CHILDREN</button>
+      <button id="delete-{{ id }}" class="outlined-button topic-delete" data-action-ext="" data-id="{{ id }}" data-name="{{ topicmap[id].name }}"><i class="fa fa-trash"></i></button>
+      <button id="move-keep-{{ id }}" class="outlined-button topic-move keep" data-action-ext="-keep-children" data-id="{{ id }}" data-name="{{ topicmap[id].name }}">MOVE &amp; LEAVE CHILDREN</button>
+      <button id="move-{{ id }}" class="outlined-button topic-move" data-action-ext="" data-id="{{ id }}" data-name="{{ topicmap[id].name }}">MOVE</button>
+    </span></li>
+    <ul id="list-{{ id }}">
+      {%- for child in children[id] -%}
+        {{ display(child) }}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endmacro -%}
+
+{%- block content -%}
+  {{ form.csrf_token }}
+  <a class="button-link outlined-button" href="/admin/topic-create/0">CREATE TOPIC</a>
+  <div id="item-root">
+    <ul id="list-root">
+      {%- for id in rootids -%}
+        {{ display(id) }}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endblock -%}

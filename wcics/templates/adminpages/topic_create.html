@@ -1,0 +1,25 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - topics
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - topics
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    <div class="material-field-container material-input-container">
+      <input id="ptid" class="form-field standard-input-size" readonly="true" value="{{ ptid }}" /><label for="ptid" class="material-field-container-label">Parent ID</label>
+    </div><br />
+    {{ input_field(form.tid) }}<br />
+    {{ input_field(form.name) }}<br /><br />
+    {{ textbox_field(form.description) }}<br />
+    {{ form.submit(class = "outlined-button") }}
+  </form>
+{%- endblock -%}

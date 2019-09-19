@@ -1,0 +1,58 @@
+body {
+  font-size: 110%;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+body, html {
+  height: 90%;
+}
+
+pre, code {
+  font-size: 80%;
+  
+  background-color: #0002;
+}
+
+pre > code {
+  padding: 0;
+  
+  background-color: #0000;
+}
+
+.bubbled {
+  border-radius: 5px;
+  padding: 1em;
+  
+  background-color: #fff8;
+}
+
+.border-box {
+  border-radius: 5px;
+  padding: 1em;
+  
+  border: 1px solid black;
+}
+
+.header {
+  font-family: inherit;
+  font-size: 180%;
+  font-weight: bold;
+  margin: 0;
+}
+
+.no-animation {
+  transition: none !important;
+}
+
+.subheader {
+  font-size: 150%;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subsubheader {
+  font-size: 120%;
+  font-weight: bold;
+  margin: 0;
+}

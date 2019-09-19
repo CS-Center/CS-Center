@@ -1,0 +1,15 @@
+<link href="/static/css/utils/status-box.css" rel="stylesheet" type="text/css" />
+
+{%- for msgtype in FLASHES-%}
+  {%- with messages = get_flashed_messages(False, msgtype) -%}
+    {%- if messages -%}
+      <div class="status-box status-box--{{ msgtype | lower }}">
+        <ul>
+          {%- for message in messages -%}
+            <li>{{ message | safe }}</li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+  {%- endwith -%}
+{%- endfor -%}

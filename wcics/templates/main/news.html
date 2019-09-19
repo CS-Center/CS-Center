@@ -1,0 +1,19 @@
+{%- extends 'utils/layout.html' -%}
+{% block title %}
+  CS Center News - {{ data.title }}
+{% endblock %}
+
+{% block content_header %}
+  <h1 class="header">
+    {{ data.title }}
+    {%- if user and (user.roles.news >= roles.news.moderator or data.has_author(user.id)) -%}
+      <a class="right-side" href="/admin/news-edit/{{ data.nid }}"><i class="fa fa-edit"></i></a>
+    {%- endif -%}
+  </h1>
+  <hr />
+<span class="small-text">{{ data.authors | map("display_user_as_link") | list | english_join | safe }} posted {{ time_delta_display(data.time) }}</span>
+{% endblock %}
+
+{%- block content -%}
+  {{ data.body | markdown }}
+{%- endblock -%}

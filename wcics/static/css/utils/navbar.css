@@ -1,0 +1,120 @@
+ul#navbar {
+  border-spacing: 0px;
+  border: none;
+  border: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+  
+  box-shadow: 0 2px 2px #888a;
+  
+  background-color: #333;
+}
+
+ul#navbar li.navbar__col {
+  display: inline;
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+ul#navbar a.navbar__col__button {
+  display: inline-block;
+  font-size: 100%;
+  padding: calc(6px + 0.35em) 12px;
+  margin: 0;
+  color: #fff;
+}
+
+ul#navbar a.navbar__col__button--home {
+  font-size: 150%;
+  font-weight: 300;
+  padding: 6px 12px;
+  margin: 0;
+}
+
+ul#navbar a.navbar__col__button:hover {
+  text-decoration: none;
+}
+
+ul#navbar a.navbar__col__button--active, ul#navbar a.navbar__col__button--active:hover {
+  background-color: #777;
+}
+
+ul#navbar a.navbar__col__button {
+  transition: background-color 0.1s;
+  background-color: inherit;
+}
+
+ul#navbar a.navbar__col__button:not(.navbar__col__button--home):hover {
+  transition: background-color 0.1s;
+  background-color: #666;
+}
+
+ul#navbar a.navbar__col__button:not(:hover) + ul.navbar__col__options:not(:hover) {
+  transition: opacity 0.1s;
+  display: none;
+}
+
+ul#navbar ul.navbar__col__options {
+  list-style-type: none;
+  padding: 0;
+  position: absolute;
+  display: block;
+  
+  box-shadow: 1px 1px 2px #888a;
+  
+  background-color: #444;
+}
+
+ul#navbar li.navbar__col__option {
+  display: block;
+  padding: 0;
+  border-left: 4px solid #88f;
+}
+
+ul#navbar a.navbar__col__option__button {
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  font-size: 100%;
+  margin: 0;
+  padding: 8px 10px 8px 8px;
+  text-align: left;
+  display: block;
+  
+  transition: background-color 0.1s;
+  background-color: inherit;
+  color: #fff;
+}
+
+ul#navbar a.navbar__col__option__button:hover {
+  text-decoration: none;
+  
+  transition: background-color 0.1s;
+  background-color: #555;
+}
+
+ul#navbar li.navbar__col#right-navbar-col {
+  float: right;
+}
+
+ul#navbar ul.navbar__col__options#right-navbar-col-options {
+  width: 100%;
+}
+
+ul#navbar a.navbar__col__button.navbar__col__button--active, ul#navbar a.navbar__col__button.navbar__col__button--active:hover {
+  background-color: #777;
+}
+
+span.wcics-button--first {
+  color: #aaf;
+}
+
+span.wcics-button--second {
+  color: #6f6;
+}

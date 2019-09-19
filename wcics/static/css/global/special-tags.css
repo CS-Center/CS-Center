@@ -1,0 +1,35 @@
+pre {
+  box-sizing: border-box;
+  font-size: 110%;
+  padding: 2px 5px;
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+kbd {
+  border-radius: 2px;
+  font-size: 80%;
+  font-weight: bold;
+  line-height: 2em;
+  padding: 4px 6px 0 6px;
+  
+  background-color: #ccc;
+  color: #000;
+}
+
+hr {
+  color: #333;
+}
+
+mark {
+  padding: 1px 3px;
+  background-color: #ccfb;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+ul {
+  list-style-type: square;
+}

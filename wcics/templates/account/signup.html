@@ -1,0 +1,34 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Sign Up
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Sign Up
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <div>
+    <center>
+      <h2 class="subheader">
+        Welcome!
+      </h2><br />
+      <form method="post">
+        {{ form.csrf_token }}
+        {{ input_field(form.email, extras = {"type": "email"}) }}<br /><br />
+        {{ form.captcha }}<br />
+        {{ form.submit(class = "button-link outlined-button") }}
+      </form><br />
+      <span style="vertical-align:center">Or sign up with:</span><br /><br />
+      <span>
+        <a href="/login/google" class="button-link text-button login-button no-hover no-active"><i class="fab fa-google-plus-square"></i></a>
+        <a href="/login/github" class="button-link text-button login-button no-hover no-active"><i class="fab fa-github"></i></a>
+      </span><br />
+      Already have an account? <a href="/login/?next={{ next_page }}">Log in here.</a>
+    </center>
+  </div>
+{%- endblock -%}

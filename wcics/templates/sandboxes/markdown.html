@@ -1,0 +1,20 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Markdown Sandbox
+{%- endblock -%}
+
+{%- block header -%}
+  {%- include 'utils/mathjax-import.html' -%}
+  <script src="/static/js/sandboxes/markdown.js" type="text/javascript"></script>
+{%- endblock -%}
+
+{%- block content -%}
+  <div class="material-field-container material-textbox-container">
+    <textarea id="sandbox-field" class="large-textbox monospace" placeholder=" ">{{ query }}</textarea><label for="sandbox-field" class="material-field-container-label">Markdown</label>
+  </div>
+  <br />
+  {%- with source = "sandbox-field" -%}
+    {%- include 'utils/markdown-preview.html' -%}
+  {%- endwith -%}
+{%- endblock -%}

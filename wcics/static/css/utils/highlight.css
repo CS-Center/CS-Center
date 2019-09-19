@@ -1,0 +1,188 @@
+.hljs {
+  background-color: #0000;
+  padding: inherit;
+}
+
+.hljs-keyword {
+  font-weight: bold;
+  color: #828;
+}
+
+.hljs-built_in {
+  font-weight: bold;
+  color: #080;
+}
+
+.hljs-type {
+  font-weight: bold;
+  color: #000;
+}
+
+.hljs-literal {
+  font-weight: bold;
+  color: #00f;
+}
+
+.hljs-number {
+  font-weight: normal;
+  color: #00a;
+}
+
+.hljs-string,
+.hljs-regexp {
+  font-weight: normal;
+  color: #a00;
+}
+
+.hljs-subst {
+  
+}
+
+.hljs-symbol {
+  font-weight: bold;
+  color: #3a3;
+}
+
+.hljs-class {
+  
+}
+
+.hljs-function {
+  
+}
+
+.hljs-title {
+  font-weight: bold;
+  color: #000;
+}
+
+.hljs-params {
+  
+}
+
+.hljs-comment {
+  
+}
+
+.hljs-doctag {
+  font-weight: bold;
+}
+
+.hljs-meta {
+  
+}
+
+.hljs-meta-keyword {
+  font-weight: bold;
+  color: #088;
+}
+
+.hljs-meta-string {
+  font-weight: normal;
+  color: #0aa;
+}
+
+.hljs-section {
+  font-weight: bold;
+  color: #000;
+}
+
+.hljs-tag {
+  font-weight: bold;
+  color: #555;
+}
+
+.hljs-name {
+  font-weight: bold;
+  color: #800;
+}
+
+.hljs-builtin-name {
+  
+}
+
+.hljs-attr {
+  font-weight: bold;
+  color: #333;
+}
+
+.hljs-attribute {
+  font-weight: bold;
+  color: #33a;
+}
+
+.hljs-variable {
+  
+}
+
+.hljs-bullet {
+  font-weight: bold;
+  color: #00f;
+}
+
+.hljs-code {
+  color: #00f;
+}
+
+.hljs-emphasis {
+  color: #00a;
+}
+
+.hljs-strong {
+  color: #00a;
+}
+
+.hljs-formula {
+  
+}
+
+.hljs-link {
+  color: #a50;
+}
+
+.hljs-quote {
+  color: #a00;
+}
+
+.hljs-selector-tag {
+  font-weight: bold;
+  color: #555;
+}
+
+.hljs-selector-id {
+  font-weight: bold;
+  color: #33a;
+}
+
+.hljs-selector-class {
+  font-weight: bold;
+  color: #3a3;
+}
+
+.hljs-selector-attr {
+  font-weight: bold;
+  color: #a33;
+}
+
+.hljs-selector-pseudo {
+  font-weight: bold;
+  color: #3aa;
+}
+
+.hljs-template-tag {
+  
+}
+
+.hljs-template-variable {
+  
+}
+
+.hljs-addition {
+  font-weight: bold;
+  color: #0a0;
+}
+
+.hljs-deletion {
+  font-weight: bold;
+  color: #a00;
+}

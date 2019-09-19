@@ -1,0 +1,20 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Link Accounts
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Link Accounts
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">  
+    {{ form.csrf_token }}
+    You are about to connect your {{ provider }} account to {{ uid | display_user | safe }} using the email address "{{ email }}". You can disconnect this authentication method in your Edit Profile page later.<br /><br />
+    {{ form.submit(value = "Proceed", class = "contained-button") }} <a class="button-link outlined-button" href="/login/">Return to log in page</a>
+  </form>
+{%- endblock -%}

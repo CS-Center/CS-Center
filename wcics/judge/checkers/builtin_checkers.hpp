@@ -1,0 +1,1 @@
+int builtin_check(const char* checkername, const char* expected, const char* user, const char* arg);

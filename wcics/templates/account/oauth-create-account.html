@@ -1,0 +1,30 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Create Account with {{ provider }} account
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Create Account with {{ provider }} account
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <center>
+    <h2 class="subheader">
+      Welcome!
+    </h2><br />
+    <form method="post">
+      {{ form.csrf_token }}
+      {{ input_field(form.email, email, extras = { "readonly": True }) }}<br />
+      {{ input_field(form.username) }}<br />
+      {{ input_field(form.real_name, extras = { "title": "Your real name is not displayed anywhere and is only used to keep track of attendance. If you are not in a club where this matters or are not using this site for an organization, you do not need to include your real name." }) }}<br /><br />
+      {{ form.legal_agreement }} {{ form.legal_agreement.label }}<br />
+      {{ form.subscribed }} {{ form.subscribed.label }}<br /><br />
+      {{ form.submit(class = "outlined-button") }}
+    </form><br />
+    Already have an account? <a href="/login/?next={{ next_page }}">Log in here.</a>
+  </center>
+{%- endblock -%}

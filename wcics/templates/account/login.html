@@ -1,0 +1,52 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  {%- if reauth -%}
+    Reauthenticate
+  {%- else -%}
+    Log In
+  {%- endif -%}
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    {%- if reauth -%}
+      Reauthenticate
+    {%- else -%}
+      Log In
+    {%- endif -%}
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <center>
+    {%- if reauth -%}
+      This is a sensitive action; please log in again to confirm that your account will not be compromised!<br />
+    {%- else -%}
+      <h2 class="subheader">
+        Welcome Back!
+      </h2>
+    {%- endif -%}<br />
+    <form method="post">
+      {{ form.csrf_token }}
+      {%- if use_username -%}
+        {{ input_field(form.username) }}
+      {%- else -%}
+        {{ input_field(form.email, extras = {"type": "email"}) }}
+      {%- endif -%}
+      <br />
+      {{ input_field(form.password) }}<br /><br />
+      {{ form.submit(class = "outlined-button") }}
+    </form><br />
+    <span style="vertical-align:center">Or log in with:</span><br /><br />
+    <span>
+      <a href="/login/?id={{ 'email' if use_username else 'username' }}&next={{ next_page }}{%- if reauth -%}&reauth=yes{%- endif -%}" class="button-link text-button login-button no-hover no-active"><i class="fa fa-{{ 'envelope' if use_username else 'user' }}"></i></a>
+      <a href="/login/google/?next={{ next_page }}" class="button-link text-button login-button no-hover no-active"><i class="fab fa-google-plus-square"></i></a>
+      <a href="/login/github/?next={{ next_page }}" class="button-link text-button login-button no-hover no-active"><i class="fab fa-github"></i></a>
+    </span>
+    <br /><br />
+    Don't have an account yet? <a href="/signup/?next={{ next_page }}">Sign up here.</a><br />
+    Forgot your password? <a href="/reset-password/">Reset password.</a>
+  </center>
+{%- endblock -%}

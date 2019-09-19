@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+
+NEWS_ID_MAX_LENGTH = 32
+
+NEWS_TITLE_MAX_LENGTH = 256
+
+NEWS_BODY_MAX_LENGTH = 3000

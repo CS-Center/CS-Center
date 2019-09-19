@@ -1,0 +1,21 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  Welcome to the admin landing page.
+  <ul>
+    {%- for username, desc in accessible -%}
+      <li><a href="/admin/{{ username }}">{{ username }}</a> - {{ desc }}</li>
+    {%- endfor -%}
+  </ul>
+{%- endblock -%}
