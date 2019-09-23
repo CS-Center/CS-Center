@@ -6,9 +6,7 @@ import os
 
 app_properties = {}
 
-app_config = dict(
-  SERVER_NAME = "www." + os.environ['WCICS_DOMAIN'],
-)
+app_config = dict()
 
 app_params = {}
 

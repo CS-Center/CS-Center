@@ -39,7 +39,25 @@ def configure_app():
   for key in preset_config:
     final_config[key].update(preset_config[key])
     
+  if module is prod:      
+    from werkzeug.routing import Map
+    class CSCMap(Map):
+      def __init__(self, *args, **kwargs):
+        if kwargs.get("default_subdomain") is None:
+          kwargs['default_subdomain'] = 'www'
+        super().__init__(*args, **kwargs)
+    
+    Flask.url_map_class = CSCMap
+    
+  print(Flask.url_map_class)
+    
   application = Flask('wcics', **final_config['params'])
+  
+  print(application.url_map)
+  
+  print(application.url_map.__dict__)
+  
+  print(list(application.url_map.iter_rules())[0].__dict__)
   
   for attr, val in final_config['properties'].items():
     setattr(application, attr, val)
