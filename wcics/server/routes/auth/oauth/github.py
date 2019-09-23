@@ -84,7 +84,7 @@ def authorize_github():
     elif len(options) > 1:
       return render_template("account/oauth-select-email.html", provider = "GitHub", next = get_next_page(), options = options)
     else:
-      return redirect("/oauth-create-account/?next=%s&token=%s", (get_next_page(), options[0][1]))
+      return redirect("/oauth-create-account/?next=%s&token=%s" % (get_next_page(), options[0][1]))
   else:
     set_user(Users.query.filter_by(id = link.uid).first_or_404())
     flash("Welcome back!", category = "SUCCESS")
