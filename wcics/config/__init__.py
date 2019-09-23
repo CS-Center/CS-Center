@@ -72,6 +72,8 @@ def add_extensions(application):
   global mb
   global socketio
   
+  application.config['SQLALCHEMY_DATABASE_URI'] += "_debug" if application.debug else "_prod"
+  
   db = SQLAlchemy(application)
   
   mail_app = Mail(application)
