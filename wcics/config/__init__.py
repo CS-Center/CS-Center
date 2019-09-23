@@ -48,17 +48,9 @@ def configure_app():
         super().__init__(*args, **kwargs)
     
     Flask.url_map_class = CSCMap
-    
-  print(Flask.url_map_class)
-    
+        
   application = Flask('wcics', **final_config['params'])
-  
-  print(application.url_map)
-  
-  print(application.url_map.__dict__)
-  
-  print(list(application.url_map.iter_rules())[0].__dict__)
-  
+    
   for attr, val in final_config['properties'].items():
     setattr(application, attr, val)
     
