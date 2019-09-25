@@ -24,7 +24,7 @@
             <a class="right-side" href="/admin/news-edit/{{ article.nid }}"><i class="fa fa-edit"></i></a>
           {%- endif -%}<br />
           <span class="small-text">{{ article.authors | map("display_user_as_link") | list | english_join | safe }} posted {{ time_delta_display(article.time) }}</span>
-          {{ article.body | markdown }}
+          {{ article.body | markdown | safe }}
         </div>
         {%- if loop.index != news | length -%}
           <hr />
