@@ -32,3 +32,33 @@ bool FileAccessChecker::check(const char* file, bool is_write) {
   // if it errors, no problem, just pass it up the line
   return dir_trie.find(file);
 }
+
+std::vector<const char*> base_dir_fs = { "/usr/", "/lib/", "/proc/self/", };
+
+std::vector<const char*> base_read_fs = { 
+  "/usr", 
+  "/lib", 
+  "/proc/self",
+  
+  "/etc/ld.so.nohwcap",
+  "/etc/ld.so.preload",
+  "/etc/ld.so.cache",
+  "/etc/localtime", 
+  "/etc/passwd",
+  "/etc/nsswitch.conf",
+  
+  "/dev/stdin",
+
+  "/proc/meminfo",
+  "/proc/cpuinfo",
+  
+  "/etc/os-release",
+  "/proc/sys/vm/overcommit_memory",
+};
+
+std::vector<const char*> base_write_fs = {
+  "/dev/null", 
+  
+  "/dev/stdout",
+  "/dev/stderr"
+};

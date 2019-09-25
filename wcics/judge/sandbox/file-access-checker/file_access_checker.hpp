@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "file_access_trie.hpp"
 
 class FileAccessChecker {
@@ -20,3 +22,5 @@ public:
   
   bool check(const char* file, bool is_write);
 };
+
+extern std::vector<const char*> base_dir_fs, base_read_fs, base_write_fs;
