@@ -11,6 +11,7 @@ from wcics.database.utils import db_commit
 
 from wcics.server.forms import AttendanceForm, flash_form_errors
 
+from wcics.utils.time import get_time
 from wcics.utils.url import get_org_id
 
 from flask import flash, render_template
@@ -24,7 +25,12 @@ def serve_attendance(org):
   if form.validate_on_submit():
     flash("Your attendance was confirmed!", category = "SUCCESS")
     
-    AttendanceRecords.add(cid = AttendanceCodes.query.filter_by(code = form.attendance_code.data.strip()).first().id, oid = get_org_id(), uid = user.id)
+    AttendanceRecords.add(
+      cid = AttendanceCodes.query.filter_by(code = form.attendance_code.data.strip()).first().id,
+      oid = get_org_id(),
+      uid = user.id,
+      time = get_time()
+    )
     db_commit()
   
   flash_form_errors(form)

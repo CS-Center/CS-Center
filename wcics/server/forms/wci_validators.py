@@ -5,7 +5,7 @@ from wcics import consts
 from wcics.auth.hash import pass_hash
 from wcics.auth.manage_user import user
 
-from wcics.database.models import Organizations, AttendanceCodes, Users
+from wcics.database.models import Organizations, AttendanceCodes, AttendanceRecords, Users
 
 from wcics.server.consts import ERROR_MESSAGES
 
@@ -95,8 +95,11 @@ def timestamp_format(form, field):
     raise ValidationError("Please enter a valid timestamp (-1 for forever)!")
 
 def validate_attendance(form, field):
-  if AttendanceCodes.query.filter_by(oid = get_org_id(), code = field.data.strip()).count() == 0:
+  code = AttendanceCodes.query.filter_by(oid = get_org_id(), code = field.data.strip()).first()
+  if code is None:
     raise ValidationError("Invalid attendance code!")
+  if AttendanceRecords.query.filter_by(oid = get_org_id(), cid = code.id, uid = user.id).count() > 0:
+    raise ValidationError("Attendance code already used!")
 
 def validate_organization_join_code(form, field):
   organization = Organizations.query.filter_by(id = get_org_id()).first()
