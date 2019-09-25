@@ -10,6 +10,17 @@ FAT_node::FAT_node() : is_end(false) {
   memset(children, 0, sizeof children);
 }
 
+FAT_node::FAT_node(const FAT_node& other) {
+  is_end = other.is_end;
+  
+  for(int i = 0; i < 256; i++) {
+    if(other.children[i])
+      children[i] = new FAT_node(other.children[i]);
+    else
+      children[i] = 0;
+  }
+}
+
 // 0 on success, -1 on error
 int FAT_insert(FAT_node** tree, const char* str) { 
   while(*str) {

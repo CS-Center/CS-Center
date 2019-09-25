@@ -33,7 +33,6 @@ inline int add_nonblock(int fd) {
     perror("Failed to get flags from fd");
     
     return -1;
-    
   }
   
   if(fcntl(fd, F_SETFL, flags | O_NONBLOCK)) {

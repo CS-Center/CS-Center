@@ -6,6 +6,7 @@ struct FAT_node {
   bool is_end;
   
   FAT_node();
+  FAT_node(const FAT_node& other);
 };
 
 class FileAccessTrie {
@@ -13,6 +14,7 @@ class FileAccessTrie {
 
 public:
   FileAccessTrie();
+  
   ~FileAccessTrie();
 
   // status will be 0 on success, -1 and errno on error

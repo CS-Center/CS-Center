@@ -11,7 +11,7 @@ alt_names = dict(
   alex = 'neutrino'
 )
 
-FQDN = "cscenter.ca"
+FQDN = "wcics.club"
 
 def setup(args):
   if not args:
@@ -21,7 +21,7 @@ def setup(args):
   BRANCH = os.environ['WCICS_BRANCH']
   DOMAIN = alt_names[USERNAME] + "." + FQDN
   
-  if args[0] not in ['inspect', 'debug', 'production', 'testing']:
+  if args[0] not in ['inspect', 'debug', 'production', 'testing', 'prod-test']:
     return error("Unrecognized configuration: '%s'" % args[0])
     
   os.environ['WCICS_PRESET'] = args[0]
@@ -34,12 +34,17 @@ def setup(args):
   
   elif args[0] == 'production':
     DOMAIN = FQDN
-    PORT = 3000
+    PORT = 0
+    
+  elif args[0] == 'prod-test':
+    DOMAIN = 'prod-test.' + FQDN
+    PORT = 0
   
   elif args[0] == 'testing':
     PORT = 6000
   
-  os.system("fuser -k {port}/tcp -s".format(port = PORT))
+  if port != 0:
+    os.system("fuser -k {port}/tcp -s".format(port = PORT))
   
   os.environ['WCICS_DOMAIN'] = DOMAIN
   os.environ['WCICS_PORT'] = str(PORT)
