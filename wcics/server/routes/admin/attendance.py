@@ -37,7 +37,7 @@ def serve_attendance_sudo(org):
       else:
         for attr in ["start", "end", "code"]:
           if attr in change:
-            item.__setattr__(attr, change[attr])
+            item.__setattr__(attr, change[attr].strip() if attr == "code" else change[attr])
 
     db_commit()
   
@@ -59,7 +59,7 @@ def serve_attendance_display(org):
   else:
     return render_template("adminpages/attendance-display-select.html", sudo = True, active = "attendance", codes = codes)
 
-@app.route("/organization/<org>/admin/attendance/display/<cid>")
+@app.route("/organization/<org>/admin/attendance/display/<int:cid>")
 @organization_page
 @assert_login
 def serve_attendance_code_display(org, cid):

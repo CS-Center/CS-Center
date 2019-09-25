@@ -6,6 +6,7 @@ from .aliases import *
 from .helper import Helper
 
 from wcics.utils.time import get_time
+from wcics.utils.url import get_org_id
 
 class attendance_codes(Helper, dbmodel):
   """Store all the attenadnce codes, along with their time intervals"""

@@ -8,13 +8,17 @@
   <link href="/static/css/adminpages/attendance-display.css" rel="stylesheet" type="text/css" />
 {%- endblock -%}
 
+{%- block attendance_message -%}
+
+{%- endblock -%}
+
 {%- block content -%}
   <center>
     <div id="attendance-header">
       The attendance code is
     </div>
     <div id="attendance-display">
-      {{ attendance_code }}
+      {{ code }}
     </div>
   </center>
 {%- endblock -%}

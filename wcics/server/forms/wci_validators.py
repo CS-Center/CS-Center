@@ -95,7 +95,7 @@ def timestamp_format(form, field):
     raise ValidationError("Please enter a valid timestamp (-1 for forever)!")
 
 def validate_attendance(form, field):
-  if field.data != AttendanceCodes.current():
+  if AttendanceCodes.query.filter_by(oid = get_org_id(), code = field.data.strip()).count() == 0:
     raise ValidationError("Invalid attendance code!")
 
 def validate_organization_join_code(form, field):

@@ -38,6 +38,8 @@ def inline_markdown(text):
 
 @app.template_filter()
 def display_user(user):
+  if not user:
+    return "<span>user does not exist</span>"
   uid = user if isinstance(user, int) else user.id
   user = Users.query.filter_by(id = uid).first()
   if not user:
@@ -48,6 +50,8 @@ def display_user(user):
 
 @app.template_filter()
 def display_user_as_link(user):
+  if not user:
+    return "<span>user does not exist</span>"
   uid = user if isinstance(user, int) else user.id
   return "<a class='unstyled-link' href='/user/%d'>%s</a>" % (uid, display_user(uid))
 

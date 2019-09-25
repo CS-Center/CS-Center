@@ -13,8 +13,8 @@
 
 {%- block content -%}
   <ul>
-    {%- for email, link_token in options -%}
-      <li><a class="unstyled-link" href="/link-account/?token={{ link_token }}">{{ user | display_user | safe }}</a> ({{ email }})</li>
+    {%- for email, token in options -%}
+      <li><a href="/oauth-create-account/?token={{ token }}">{{ email }}</a></li>
     {%- endfor -%}
   </ul>
 
