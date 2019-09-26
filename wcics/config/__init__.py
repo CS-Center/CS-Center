@@ -2,6 +2,8 @@
 
 from ..consts import set_constant
 from wcics.config import debug, testing, default, prod
+from wcics.auth._jwt import verify_jwt, make_jwt, InvalidJWT, ExpiredJWT
+from wcics.auth._cookies import set_cookie
 
 from flask_mail import Mail
 from flask_misaka import Misaka
@@ -9,11 +11,11 @@ from flask_mobility import Mobility
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 
-from flask import Flask, json
+from flask import Flask, json, request, session, redirect
 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-import os
+import os, base64
 
 def configure_app():
   preset_config_name = os.environ.get("WCICS_PRESET", "")
@@ -39,7 +41,8 @@ def configure_app():
   for key in preset_config:
     final_config[key].update(preset_config[key])
     
-  if module is prod:      
+  if module is prod:     
+    # Have a default subdomain for the static route, since flask is bad
     from werkzeug.routing import Map
     class CSCMap(Map):
       def __init__(self, *args, **kwargs):
@@ -65,6 +68,46 @@ def configure_app():
   
   # Run setup function for the configuration
   module.setup_func()
+  
+  if preset_config_name != 'production':
+    # If we aren't full prod, we make ppl enter password
+    password = base64.b64encode(os.urandom(12)).decode("utf-8")
+    
+    nonce = base64.b64encode(os.urandom(12)).decode("utf-8")
+    
+    print("\nYOUR DEBUG PASSWORD IS: %s\n" % password)
+
+    @application.before_request
+    def force_password_entry():
+      if request.path == '/favicon.ico':
+        # Let them have a favicon lol
+        return
+      
+      if request.path == '/submit-password/':        
+        if request.form['password'] == password:
+          rv = redirect(session.get("next", '/'))
+          set_cookie(application.config, rv, "_dev_pwd", make_jwt(dict(
+            nonce = nonce
+          ), application.secret_key))
+      
+          return rv
+      
+      # Check for a cookie, if they have one, they can have in
+      pwd = request.cookies.get('_dev_pwd', '')
+      
+      session['next'] = request.url
+      
+      try:
+        verify_jwt(pwd, application.secret_key)
+      
+      except (InvalidJWT, ExpiredJWT):
+        return """
+        A password is required for entry. Check your terminal.
+        <form action='/submit-password/', method='post'>
+          <input type='password' name='password' />
+          <input type='submit' />
+        </form>
+        """
     
   return application
     
