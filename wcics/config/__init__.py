@@ -26,7 +26,7 @@ def configure_app():
   elif preset_config_name == 'testing':
     module = testing
     
-  elif preset_config_name == "production":
+  elif preset_config_name == "production" or preset_config_name == 'prod-test':
     module = prod
     
   else:
