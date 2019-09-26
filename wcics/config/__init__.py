@@ -73,7 +73,7 @@ def configure_app():
     # If we aren't full prod, we make ppl enter password
     password = base64.b64encode(os.urandom(12)).decode("utf-8")
     
-    nonce = base64.b64encode(os.urandom(12)).decode("utf-8")
+    nonce = 'i am a noncy boi'
     
     print("\nYOUR DEBUG PASSWORD IS: %s\n" % password)
 
@@ -82,6 +82,8 @@ def configure_app():
       if request.path == '/favicon.ico':
         # Let them have a favicon lol
         return
+
+      msg = ""
       
       if request.path == '/submit-password/':        
         if request.form['password'] == password:
@@ -91,23 +93,32 @@ def configure_app():
           ), application.secret_key))
       
           return rv
+        
+        msg = "Invalid Password!"
       
       # Check for a cookie, if they have one, they can have in
       pwd = request.cookies.get('_dev_pwd', '')
       
       session['next'] = request.url
       
+      class InvalidNonce(Exception): pass
+            
       try:
-        verify_jwt(pwd, application.secret_key)
+        body = verify_jwt(pwd, application.secret_key)
+        
+        if body.get("nonce") != nonce:
+          msg = "Invalid nonce provided!"
+          raise InvalidNonce
       
-      except (InvalidJWT, ExpiredJWT):
+      except (InvalidNonce, InvalidJWT, ExpiredJWT):
         return """
+        {}<br>
         A password is required for entry. Check your terminal.
         <form action='/submit-password/', method='post'>
           <input type='password' name='password' />
           <input type='submit' />
         </form>
-        """
+        """.format(msg)
     
   return application
     
