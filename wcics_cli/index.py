@@ -2,7 +2,7 @@
 # Generates or removes _hashed_static files
 # This allows for exceptionally efficient caching
 
-import os, hashlib, base64
+import os, hashlib, base64, sys
 
 from wcics_cli.utils import error
 
@@ -22,6 +22,15 @@ def main(args):
 def index_make(args):
   if not args:
     return error("A directory is required in order to index make")
+  
+  print("Cleaning tree first...", file = sys.stderr)
+  
+  sub = _clean(args[0])
+
+  if sub:
+    return sub
+  
+  print("Indexing tree...", file = sys.stderr)
   
   return _make(args[0])
 
