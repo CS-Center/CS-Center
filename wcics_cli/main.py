@@ -4,9 +4,12 @@ import sys
 
 from wcics_cli.start import main as start_main
 from wcics_cli.inspection import main as inspect_main
+from wcics_cli.index import main as index_main
 from wcics_cli.utils import error
 
 def main(args):
+  print("The update thing")
+  
   if not args:
     return error("Please provide a subcommand.")
   
@@ -15,6 +18,9 @@ def main(args):
   
   elif args[0] == 'inspect':
     return inspect_main(args[1:])
+  
+  elif args[0] == 'index':
+    return index_main(args[1:])
   
   else:
     return error("Unrecognized subcommand: '%s'" % args[0])

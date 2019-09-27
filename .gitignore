@@ -9,4 +9,5 @@ __pycache__/*
 logs.txt
 .cache
 .pytest_cache
-bin/
+bin
+_hashed_static.*
