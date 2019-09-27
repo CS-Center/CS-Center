@@ -2,7 +2,67 @@
 # Generates or removes _hashed_static files
 # This allows for exceptionally efficient caching
 
+import os, hashlib, base64
+
 from wcics_cli.utils import error
 
 def main(args):
-  return -1
+  if not args:
+    return error("Please provide a subcommand (valid values are: make, clean)")
+  
+  if args[0] == 'make':
+    return index_make(args[1:])
+  
+  elif args[0] == 'clean':
+    return index_clean(args[1:])
+  
+  else:
+    return error("Invalid subcommand %s, valid values are: make, clean." % args[0])
+  
+def index_make(args):
+  if not args:
+    return error("A directory is required in order to index make")
+  
+  return _make(args[0])
+
+indexed_prefix = "_hashed_static"
+
+def _make(dir):
+  with os.scandir(dir) as it:
+    for entry in it:
+      if entry.is_dir():
+        subres = _make(entry.path)
+
+        if subres:
+          return subres
+
+      elif not entry.name.startswith(indexed_prefix):
+        # entry.is_file()
+
+        with open(entry.path, "rb") as f:
+          content = f.read()
+
+          hashed_content = hashlib.sha256(content).hexdigest()
+
+          newfilename = dir + "/" + indexed_prefix + "." + hashed_content + "." + entry.name
+
+          with open(newfilename, "a") as newf: pass
+
+          with open(newfilename, "wb") as newf:
+            newf.write(content)
+    
+def index_clean(args):
+  if not args:
+    return error("A directory is required in order to index_clean")
+  
+  return _clean(args[0])
+
+def _clean(dir):
+  with os.scandir(dir) as it:
+    for entry in it:
+      if entry.is_dir():
+        _clean(entry.path)
+      
+      else:
+        if entry.name.startswith(indexed_prefix):
+          os.unlink(entry.path)
