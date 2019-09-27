@@ -7,9 +7,7 @@ from wcics_cli.inspection import main as inspect_main
 from wcics_cli.index import main as index_main
 from wcics_cli.utils import error
 
-def main(args):
-  print("The update thing")
-  
+def main(args):  
   if not args:
     return error("Please provide a subcommand.")
   
