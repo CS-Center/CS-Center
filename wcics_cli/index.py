@@ -55,8 +55,6 @@ def _make(dir):
 
           newfilename = dir + "/" + indexed_prefix + "." + hashed_content + "." + entry.name
 
-          with open(newfilename, "a") as newf: pass
-
           with open(newfilename, "wb") as newf:
             newf.write(content)
     
