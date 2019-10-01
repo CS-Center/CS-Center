@@ -19,6 +19,8 @@ class news(dbmodel, Helper):
   time = dbcol(dbint, default = get_time, nullable = False)
   title = dbcol(dbstr(NEWS_TITLE_MAX_LENGTH), nullable = False)
   
+  __table_args__ = (dbunicon("oid", "nid"),)
+  
   @property
   def authors(self):
     return Users.query.join(NewsAuthors).filter(NewsAuthors.nid == self.id).all()

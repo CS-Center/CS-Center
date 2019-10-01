@@ -11,6 +11,7 @@ from wcics.utils.time import get_time
 class lessons(dbmodel, Helper):
   id = dbcol(dbint, primary_key = True)
   lid = dbcol(dbstr(LESSON_ID_MAX_LENGTH), unique = True, nullable = False)
+  oid = dbcol(dbint, dbforkey('organizations.id', ondelete = "CASCADE", onupdate = "CASCADE"))
   name = dbcol(dbstr(LESSON_NAME_MAX_LENGTH), nullable = False)
   body = dbcol(dbstr(LESSON_BODY_MAX_LENGTH), nullable = False)
   create_time = dbcol(dbint, default = get_time, nullable = False)
@@ -22,3 +23,7 @@ class lesson_topics(dbmodel, Helper):
 class lesson_authors(dbmodel, Helper):
   lid = dbcol(dbint, dbforkey(lessons.id, onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
   uid = dbcol(dbint, dbforkey(Users.id, onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
+  
+Lessons = lessons
+LessonTopics = lesson_topics
+LessonAuthors = lesson_authors

@@ -1,0 +1,28 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - attendance
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - attendance
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  Welcome to the attendance admin landing page.
+  <ul>
+    {%- for oid, oname, role in links -%}
+      <li>
+        {%- if role >= roles.attendance.admin -%}
+          <a href="/organization/{{ oid }}/admin/attendance/">{{ oname }}</a>
+        {%- elif role >= roles.attendance.reader -%}
+          {{ oname }}
+        {%- endif -%}
+        &nbsp;(<a href="/organization/{{ oid }}/admin/attendance/display/">display</a>)
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endblock -%}

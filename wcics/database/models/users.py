@@ -4,7 +4,7 @@ from ..consts.users import USER_EMAIL_MAX_LENGTH, USER_REAL_NAME_MAX_LENGTH, USE
 from ..utils import db_commit
 from .aliases import *
 from .helper import Helper
-from .attendance import AttendanceCodes
+from .attendance import AttendanceCodes, AttendanceRecords
 from .organizations import Organizations, OrganizationUsers
 from .permissions import Permissions
 from .roles import OrganizationRoles, Roles
@@ -46,7 +46,7 @@ class users(dbmodel, Helper):
   
   def attendance_organizations(self):
     time = get_time()
-    return Organizations.query.join(OrganizationUsers).join(AttendanceCodes).filter(OrganizationUsers.uid == self.id, AttendanceCodes.start <= time, time <= AttendanceCodes.end).all()
+    Organizations.query.join(OrganizationUsers).join(Users).join(AttendanceCodes).filter(~db.exists().where(db.and_(AttendanceRecords.uid == Users.id, AttendanceRecords.cid == AttendanceCodes.id)), Users.id == self.id, AttendanceCodes.start <= time, time <= AttendanceCodes.end).distinct(Organizations.id).all()
   
   @property
   def organizations(self):

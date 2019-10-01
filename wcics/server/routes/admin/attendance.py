@@ -7,7 +7,8 @@ from wcics.auth.manage_user import assert_login, organization_page, user
 from wcics.consts import KEYS_FOLDER_PATH
 
 from wcics.database.models.attendance import AttendanceCodes
-from wcics.database.models.roles import AttendanceRoles
+from wcics.database.models.roles import AttendanceRoles, OrganizationRoles
+from wcics.database.models import Organizations, OrganizationUsers
 from wcics.database.utils import db_commit
 
 from wcics.server.forms import BlankForm
@@ -18,6 +19,25 @@ from wcics.utils.url import get_org_id
 from flask import abort, flash, redirect, render_template, request
 
 import json
+
+@app.route("/admin/attendance/")
+@assert_login
+def serve_attendance_sudo_home():
+  links = []
+  
+  for organization in Organizations.query.all():
+    if organization.id == 1:
+      continue
+    if OrganizationUsers.query.filter_by(oid = organization.id, uid = user.id).count() == 0:
+      continue
+    role = OrganizationRoles.query.filter_by(oid = organization.id, uid = user.id).first().attendance
+    if role > AttendanceRoles.default:
+      links.append((organization.oid, organization.name, role))
+  
+  if links == []:
+    abort(403)
+  
+  return render_template("adminpages/attendance-home.html", sudo = True, active = "attendance", links = links)
 
 @app.route("/organization/<org>/admin/attendance/", methods = ["GET", "POST"])
 @organization_page

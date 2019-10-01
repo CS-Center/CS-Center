@@ -3,6 +3,7 @@
 from ..utils import create_tables
 
 from .attendance import AttendanceRecords, AttendanceCodes
+from .lessons import Lessons, LessonTopics, LessonAuthors
 from .news import News, NewsAuthors
 from .oauth import GoogleLinks, GithubLinks
 from .organizations import Organizations, OrganizationUsers

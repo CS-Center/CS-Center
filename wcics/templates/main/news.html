@@ -6,7 +6,7 @@
 {% block content_header %}
   <h1 class="header">
     {{ data.title }}
-    {%- if user and (user.roles.news >= roles.news.moderator or data.has_author(user.id)) -%}
+    {%- if user and (user.organization_roles.news >= roles.news.moderator or data.has_author(user.id)) -%}
       <a class="right-side" href="/admin/news-edit/{{ data.nid }}"><i class="fa fa-edit"></i></a>
     {%- endif -%}
   </h1>

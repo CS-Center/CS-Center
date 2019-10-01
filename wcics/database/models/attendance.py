@@ -37,13 +37,12 @@ class attendance_records(Helper, dbmodel):
   """Store all the attendance records"""
   
   cid = dbcol(dbint, dbforkey('attendance_codes.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
-  oid = dbcol(dbint, dbforkey('organizations.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
   uid = dbcol(dbint, dbforkey('users.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
   time = dbcol(dbint, nullable = False, default = 0)
   
   def __repr__(self):
     record = AttendanceCodes.query.filter_by(id = cid).first()
-    return "<attendance_record uid=%s code=%s>" % (self.uid, record.code)
+    return "<attendance_record uid=%s cid=%s>" % (self.uid, record.cid)
   
   @classmethod
   def count(self, user):
