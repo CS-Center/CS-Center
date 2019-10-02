@@ -24,7 +24,7 @@ def indexed_url(path):
     
     hashed = hashlib.sha256(content)
     
-    val = path + "/_hashed_static." + hashed.hexdigest() + "." + filename, "sha256-" + base64.b64encode(hashed.digest()).decode("utf-8")
+    val = "/static/" + path + "/_hashed_static." + hashed.hexdigest() + "." + filename, "sha256-" + base64.b64encode(hashed.digest()).decode("utf-8")
     
     _index_cache[path] = val
     
