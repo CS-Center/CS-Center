@@ -34,7 +34,7 @@ def links():
 #     ("/learn/", "Learn", []),
     ("/calendar/", "Calendar", []),
     ("/users/", "Users", []),
-    ("/organizations/", "Organizations", []),
+    ("/organizations/", "Organizations", [("/organization/%s" % org.oid, org.name) for org in Organizations.query.join(OrganizationUsers).filter(OrganizationUsers.uid == user.id, Organizations.id != 1)] if user else []),
 #     ("/editorials/", "Editorials", []),
     ("/about/", "About", [("/contact", "Contact"), ("/faq", "FAQ")])
   ]
