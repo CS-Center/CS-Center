@@ -46,7 +46,7 @@ class users(dbmodel, Helper):
   
   def attendance_organizations(self):
     time = get_time()
-    Organizations.query.join(OrganizationUsers).join(Users).join(AttendanceCodes).filter(~db.exists().where(db.and_(AttendanceRecords.uid == Users.id, AttendanceRecords.cid == AttendanceCodes.id)), Users.id == self.id, AttendanceCodes.start <= time, time <= AttendanceCodes.end).distinct(Organizations.id).all()
+    return Organizations.query.join(OrganizationUsers).join(Users).join(AttendanceCodes).filter(~db.exists().where(db.and_(AttendanceRecords.uid == Users.id, AttendanceRecords.cid == AttendanceCodes.id)), Users.id == self.id, AttendanceCodes.start <= time, time <= AttendanceCodes.end).distinct(Organizations.id).all()
   
   @property
   def organizations(self):
