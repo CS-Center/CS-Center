@@ -38,6 +38,7 @@ class attendance_records(Helper, dbmodel):
   
   cid = dbcol(dbint, dbforkey('attendance_codes.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
   uid = dbcol(dbint, dbforkey('users.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
+  oid = dbcol(dbint, dbforkey('organizations.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
   time = dbcol(dbint, nullable = False, default = 0)
   
   def __repr__(self):
