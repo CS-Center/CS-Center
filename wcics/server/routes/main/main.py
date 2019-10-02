@@ -78,4 +78,4 @@ def serve_alticon():
 
 @app.route("/favicon.ico")
 def serve_favicon():
-  return redirect(indexed_url("static/ico/favicon.ico")[0], code = 303)
+  return redirect(indexed_url("/static/ico/favicon.ico")[0], code = 303)
