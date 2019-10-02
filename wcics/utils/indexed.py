@@ -17,7 +17,7 @@ def indexed_url(path):
   # Strip /static from the front of path
   path = path[len("/static"):]
   
-  dir = path.split("/")[:-1]
+  dir = "/".join(path.split("/")[:-1])
   
   filename = path.split("/")[-1]
   
