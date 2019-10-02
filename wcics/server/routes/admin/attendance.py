@@ -75,7 +75,7 @@ def serve_attendance_display(org):
   if len(codes) == 0:
     return render_template("adminpages/attendance-display-no-codes.html", sudo = True, active = "attendance")
   elif len(codes) == 1:
-    return redirect("/organizations/%s/admin/attendance/display/%s" % (org, codes[0].id))
+    return redirect("/organization/%s/admin/attendance/display/%s" % (org, codes[0].id))
   else:
     return render_template("adminpages/attendance-display-select.html", sudo = True, active = "attendance", codes = codes)
 
