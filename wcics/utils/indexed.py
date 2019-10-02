@@ -15,7 +15,8 @@ def indexed_url(path):
     return res
   
   # Strip /static from the front of path
-  path = path[len("/static"):]
+  # Also strip trailing slashes, because they cause annoying errors
+  path = path[len("/static"):].rstrip("/")
   
   dir = "/".join(path.split("/")[:-1])
   
