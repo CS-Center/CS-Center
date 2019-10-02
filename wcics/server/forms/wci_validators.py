@@ -98,6 +98,10 @@ def validate_attendance(form, field):
   code = AttendanceCodes.query.filter_by(oid = get_org_id(), code = field.data.strip()).first()
   if code is None:
     raise ValidationError("Invalid attendance code!")
+  if code.start > get_time():
+    raise ValidationError("This code is not yet active!")
+  if code.end < get_time():
+    raise ValidationError("This code has expired!")
   if AttendanceRecords.query.filter_by(oid = get_org_id(), cid = code.id, uid = user.id).count() > 0:
     raise ValidationError("Attendance code already used!")
 
