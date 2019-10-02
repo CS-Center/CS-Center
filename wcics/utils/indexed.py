@@ -17,6 +17,8 @@ def indexed_url(path):
   # Strip /static from the front of path
   path = path[len("/static"):]
   
+  dir = path.split("/")[:-1]
+  
   filename = path.split("/")[-1]
   
   with open(app.static_folder + path, "rb") as f:
@@ -24,7 +26,7 @@ def indexed_url(path):
     
     hashed = hashlib.sha256(content)
     
-    val = "/static/" + path + "/_hashed_static." + hashed.hexdigest() + "." + filename, "sha256-" + base64.b64encode(hashed.digest()).decode("utf-8")
+    val = "/static/" + dir + "/_hashed_static." + hashed.hexdigest() + "." + filename, "sha256-" + base64.b64encode(hashed.digest()).decode("utf-8")
     
     _index_cache[path] = val
     
