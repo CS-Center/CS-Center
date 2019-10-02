@@ -1,0 +1,31 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  Lessons - {{ organization.name }}
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    Lessons - {{ organization.name }}
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  {%- for lesson in lessons -%}
+      <div class="border-box left-side full-width">
+        {%- if organization.oid == "main" -%}
+          <a href="/lesson/{{ lesson.lid }}">
+        {%- else -%}
+          <a href="/organization/{{ organization.oid }}/lesson/{{ lesson.lid }}/" class="unstyled-link">
+        {%- endif -%}
+          <span class="large-text">{{ lesson.name }}</span>
+        </a>
+            
+        <br>
+        <span class="small-text">{{ lesson.desc | markdown }}</span>
+      </div>
+    </a>
+  {%- endfor -%}
+  {%- include 'utils/page-selector.html' -%}
+{%- endblock -%}

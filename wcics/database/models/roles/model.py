@@ -20,6 +20,7 @@ class organization_roles(Helper, dbmodel):
   admin = dbcol(dbsmallint, default = 0, nullable = False)
   attendance = dbcol(dbsmallint, default = 0, nullable = False)
   news = dbcol(dbsmallint, default = 0, nullable = False)
+  lessons = dbcol(dbsmallint, default = 0, nullable = False)
   
   __table_args__ = (db.ForeignKeyConstraint(["uid", "oid"], ["organization_users.uid", "organization_users.oid"], onupdate = "CASCADE", ondelete = "CASCADE"),)
 

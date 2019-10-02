@@ -1,0 +1,23 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block header -%}
+  {%- include 'utils/mathjax-import.html' -%}
+{%- endblock -%}
+
+{%- block title -%}
+  Lesson - {{ lesson.name }} - CSCenter
+{%- endblock -%}
+
+{% block content_header %}
+  <h1 class="header">
+    {{ lesson.name }}
+  </h1>
+  <hr />
+  <span class="small-text">By {{ lesson.authors | map("display_user_as_link") | list | english_join | safe }}</span>
+  <br>
+  <span class="small-text">Written {{ time_delta_display(lesson.create_time) }}</span>
+{% endblock %}
+
+{%- block content -%}
+  {{ lesson.body | markdown }}
+{%- endblock -%}
