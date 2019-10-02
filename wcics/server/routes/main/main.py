@@ -13,6 +13,7 @@ from wcics.server.routes.utils import paged_data
 
 from wcics.utils.files import load_file
 from wcics.utils.url import get_org_id
+from wcics.utils.indexed import indexed_url
 
 from flask import redirect, render_template, request, send_file
 
@@ -70,10 +71,11 @@ def serve_terms():
 def serve_robots():
   return load_file(CONFIG_FOLDER_PATH + "/robots.txt")
 
+# Temporary redirects here are a must, otherwise the route would hardcode to a location which would be BAD
 @app.route("/alticon.ico")
 def serve_alticon():
-  return send_file(STATIC_FOLDER_PATH + "/ico/alticon.ico")
+  return redirect(indexed_url("/static/ico/alticon.ico")[0], code = 303)
 
 @app.route("/favicon.ico")
 def serve_favicon():
-  return send_file(STATIC_FOLDER_PATH + "/ico/favicon.ico")
+  return redirect(indexed_url("static/ico/favicon.ico")[0], code = 303)

@@ -4,6 +4,8 @@ NEWS_PER_PAGE = 10
 ORGANIZATIONS_PER_PAGE = 50
 USERS_PER_PAGE = 50
 
+LESSONS_PER_PAGE = 10
+
 PAGE_THRESHOLDS = {
   "edge_left": 2,
   "merge_left": 6,

@@ -65,7 +65,7 @@ def organization_page(view_func):
     org = get_organization()
     organization = Organizations.query.filter_by(oid = org).first()
     if organization is None:
-      return error_page(404, "This organization does not exist!"), 404
+      return error_page(404, "No organization with code '%s'." % org)
     if org != "main":
       # The main organization is accessible to everyone
       if not user:
