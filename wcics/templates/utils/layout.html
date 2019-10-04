@@ -12,7 +12,7 @@
     {%- block dependencies -%}
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charset="UTF-8" />
-      {{ static_link(rel = "icon", type = "image/x-icon", path = '/alticon.ico' if sudo else '/favicon.ico') }}
+      <link rel="icon" type="image/x-icon" href="{{'/alticon.ico' if sudo else '/favicon.ico' }}" />
     
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cousine:400,700|Open+Sans:300,400,600|Material+Icons" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" integrity="sha256-BtbhCIbtfeVWGsqxk1vOHEYXS6qcvQvLMZqjtpWUEx8=" crossorigin="anonymous" />
