@@ -6,7 +6,5 @@ MAIN_ROUTES = [
   "/faq/",
   "/privacy/",
   "/tos/",
-  "/robots.txt",
-  "/alticon.ico",
-  "/favicon.ico"
+  "/robots.txt"
 ]

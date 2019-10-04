@@ -8,7 +8,7 @@ app_properties = dict(
 )
 
 app_config = dict(
-  SQLALCHEMY_DATABASE_URI = "sqlite://", # In-memory sqlite database
+  SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:", # In-memory sqlite database
   WTF_CSRF_ENABLED = False
 )
 

@@ -9,8 +9,6 @@ from wcics.server.routes.utils import paged_data
 
 from wcics.server.consts import LESSONS_PER_PAGE
 
-from wcics.utils.url import get_org_id
-
 from wcics.database.models import Organizations, Lessons
 
 from wcics.utils.routes import error_page

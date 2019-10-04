@@ -8,7 +8,7 @@ from .news import News, NewsAuthors
 from .oauth import GoogleLinks, GithubLinks
 from .organizations import Organizations, OrganizationUsers
 from .permissions import Permissions
-from .roles import Roles
+from .roles import Roles, OrganizationRoles
 from .problems import Problems, ProblemSamples, ProblemSuites, ProblemCases
 from .submissions import Submissions, SubmissionCases
 from .topics import Topics

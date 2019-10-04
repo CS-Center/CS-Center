@@ -1,7 +1,7 @@
 {%- extends 'utils/layout.html' -%}
 
 {%- block header -%}
-  <link href="/static/css/main/index.css" rel="stylesheet" type="text/css" />
+  {{ css_link("/static/css/main/index.css") }}
 {%- endblock -%}
 
 {%- block content_header -%}
