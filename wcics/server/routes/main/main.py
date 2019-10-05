@@ -69,7 +69,11 @@ def serve_terms():
 
 @app.route("/robots.txt")
 def serve_robots():
-  return load_file(CONFIG_FOLDER_PATH + "/robots.txt")
+  if app.debug:
+    return "User-Agent: *\r\nDisallow: /"
+  
+  # Allow everything on production
+  return "User-Agent: *\r\nDisallow: "
 
 # Temporary redirects here are a must, otherwise the route would hardcode to a location which would be BAD
 @app.route("/alticon.ico")
