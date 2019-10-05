@@ -77,6 +77,7 @@ def serve_robots():
   
   resp = make_response(txt)
   resp.headers['Content-Type'] = "text/plain"
+  resp.headers['Cache-Control'] = 'no-cache'
 
   return resp
   
