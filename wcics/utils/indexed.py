@@ -9,7 +9,7 @@ _index_cache = {}
 # Get the indexed url and integrity for a static path
 def indexed_url(orig_path):
   if app.debug:
-    return orig_path, None
+    return orig_path
   
   res = _index_cache.get(orig_path)
   
@@ -30,8 +30,8 @@ def indexed_url(orig_path):
 
       hashed = hashlib.sha256(content)
 
-      val = "/static" + dir + "/_hashed_static." + hashed.hexdigest() + "." + filename, "sha256-" + base64.b64encode(hashed.digest()).decode("utf-8")
-
+      val = "/static" + dir + "/_hashed_static." + hashed.hexdigest() + "." + filename
+      
       _index_cache[orig_path] = val
 
       return val
@@ -54,22 +54,12 @@ def make_static_link(path, tag = None, link_tag = None, **kwargs):
   
   subres = indexed_url(path)
   
-  if subres[1] is None:
-    return Markup("<{tag} {extra_tags} {link_tag}={link}></{tag}>".format(
-      tag = tag, 
-      link_tag = link_tag, 
-      link = repr(subres[0]), 
-      # val should be a string, so this will escape and the like
-      extra_tags = " ".join(key + "=" + repr(val) for key, val in kwargs.items())
-    ))
-  
-  return Markup("<{tag} {extra_tags} {link_tag}={link} integrity={integ}></{tag}>".format(
+  return Markup("<{tag} {extra_tags} {link_tag}={link}></{tag}>".format(
     tag = tag, 
     link_tag = link_tag, 
-    link = repr(subres[0]), 
+    link = repr(subres), 
     # val should be a string, so this will escape and the like
-    extra_tags = " ".join(key + "=" + repr(val) for key, val in kwargs.items()),
-    integ = repr(subres[1])
+    extra_tags = " ".join(key + "=" + repr(val) for key, val in kwargs.items())
   ))
 
 # As for above, but specialized for CSS
