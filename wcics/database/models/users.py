@@ -5,6 +5,7 @@ from ..utils import db_commit
 from .aliases import *
 from .helper import Helper
 from .attendance import AttendanceCodes, AttendanceRecords
+from .news import News, NewsAuthors
 from .organizations import Organizations, OrganizationUsers
 from .permissions import Permissions
 from .roles import OrganizationRoles, Roles
@@ -47,6 +48,11 @@ class users(dbmodel, Helper):
   def attendance_organizations(self):
     time = get_time()
     return Organizations.query.join(OrganizationUsers).join(Users).join(AttendanceCodes).filter(~db.exists().where(db.and_(AttendanceRecords.uid == Users.id, AttendanceRecords.cid == AttendanceCodes.id)), Users.id == self.id, AttendanceCodes.start <= time, time <= AttendanceCodes.end).distinct(Organizations.id).all()
+  
+  def news_admin_organizations(self):
+    subq = db.exists().where(db.and_(NewsAuthors.uid == self.id, News.oid == Organizations.id))
+    realq = Organizations.query.join(OrganizationUsers).join(OrganizationRoles).filter(OrganizationRoles.uid == self.id, db.or_(OrganizationRoles.news >= 1, subq))
+    return realq.all()
   
   @property
   def organizations(self):

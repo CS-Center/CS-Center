@@ -129,7 +129,7 @@ def serve_user_list_js():
 
 @app.route("/article-authors.js")
 def serve_article_authors_js():
-  return Response("var authors = %s;" % json.dumps(News.query.filter_by(nid = request.args.get("article_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
+  return Response("var authors = %s;" % json.dumps(News.query.filter_by(id = request.args.get("article_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
 
 @app.context_processor
 def context_processor():

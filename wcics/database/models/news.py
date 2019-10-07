@@ -2,7 +2,6 @@
 
 from .aliases import *
 from .helper import Helper
-from .users import Users
 from ..consts.news import NEWS_ID_MAX_LENGTH, NEWS_TITLE_MAX_LENGTH, NEWS_BODY_MAX_LENGTH
 
 from wcics import db
@@ -23,11 +22,14 @@ class news(dbmodel, Helper):
   
   @property
   def authors(self):
+    from .users import Users
+    # importing inside the function to avoid a circular import at the top
+    # the alternative is worse, which uses a private method and key access to the name directly
     return Users.query.join(NewsAuthors).filter(NewsAuthors.nid == self.id).all()
   
   @property
   def author_ids(self):
-    return [uid for (uid,) in db.session.query(NewsAuthors.uid).filter_by(nid = self.nid).all()]
+    return [uid for (uid,) in db.session.query(NewsAuthors.uid).filter_by(nid = self.id).all()]
   
   def has_author(self, uid):
     return NewsAuthors.query.filter_by(nid = self.nid, uid = uid).count() > 0
@@ -37,12 +39,11 @@ class news(dbmodel, Helper):
   
 # Store the authors to each news article
 class news_authors(dbmodel, Helper):
-  nid = dbcol(dbint, dbforkey(news.id, onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
-  uid = dbcol(dbint, dbforkey(Users.id, onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
+  nid = dbcol(dbint, dbforkey('news.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
+  uid = dbcol(dbint, dbforkey('users.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
   
   def __repr__(self):
-    username = Users.query.filter_by(id = self.uid).first().username
-    return "<news_author article=%s, user=%s>" % (self.nid, username)
+    return "<news_author article=%s, user=%s>" % (self.nid, self.uid)
   
 # This is to allow easy table renaming
 News = news

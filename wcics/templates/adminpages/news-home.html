@@ -1,0 +1,23 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - news
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - news
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  Welcome to the news admin landing page.
+  <ul>
+    {%- for oid, oname in links -%}
+      <li>
+        <a href="/organization/{{ oid }}/admin/news/">{{ oname }}</a>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endblock -%}
