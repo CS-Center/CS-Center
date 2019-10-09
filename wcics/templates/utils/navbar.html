@@ -1,4 +1,4 @@
-<link href="/static/css/utils/navbar.css" rel="stylesheet" type="text/css" />
+{{ css_link("/static/css/utils/navbar.css") }}
 
 <ul id="navbar">
   {%- for x, y, z in (sudo_links if sudo else links)() -%}

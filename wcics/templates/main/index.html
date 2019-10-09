@@ -1,7 +1,7 @@
 {%- extends 'utils/layout.html' -%}
 
 {%- block header -%}
-  <link href="/static/css/main/index.css" rel="stylesheet" type="text/css" />
+  {{ css_link("/static/css/main/index.css") }}
 {%- endblock -%}
 
 {%- block content_header -%}
@@ -19,7 +19,7 @@
     <div class="content-block__content">
       {%- for article in news -%}
         <div class="news-block">
-          <span class="large-text"><a href="/news/{{ article.nid }}">{{ article.title }}</a></span>
+          <span class="large-text"><a href="{{ article.link }}">{{ article.title }}</a></span>
           {%- if user and False and (user.roles.news >= roles.news.moderator or article.has_author(user.id)) -%}
             <a class="right-side" href="/admin/news-edit/{{ article.nid }}"><i class="fa fa-edit"></i></a>
           {%- endif -%}<br />

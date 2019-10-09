@@ -6,7 +6,7 @@
 
 {%- block header -%}
   {%- include 'utils/mathjax-import.html' -%}
-  <script src="/static/js/sandboxes/markdown.js" type="text/javascript"></script>
+  {{ js_link("/static/js/sandboxes/markdown.js") }}
 {%- endblock -%}
 
 {%- block content -%}

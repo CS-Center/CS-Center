@@ -1,4 +1,4 @@
-<link href="/static/css/utils/status-box.css" rel="stylesheet" type="text/css" />
+{{ css_link("/static/css/utils/status-box.css") }}
 
 {%- for msgtype in FLASHES-%}
   {%- with messages = get_flashed_messages(False, msgtype) -%}

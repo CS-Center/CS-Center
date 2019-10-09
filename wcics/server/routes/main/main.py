@@ -15,7 +15,7 @@ from wcics.utils.files import load_file
 from wcics.utils.url import get_org_id
 from wcics.utils.indexed import indexed_url
 
-from flask import redirect, render_template, request, send_file
+from flask import redirect, render_template, request, send_file, make_response
 
 from math import ceil
 
@@ -69,8 +69,18 @@ def serve_terms():
 
 @app.route("/robots.txt")
 def serve_robots():
-  return load_file(CONFIG_FOLDER_PATH + "/robots.txt")
+  if app.debug:
+    txt = "User-Agent: *\r\nDisallow: /"
+    
+  else:
+    txt = "User-Agent: *\r\nDisallow: "
+  
+  resp = make_response(txt)
+  resp.headers['Content-Type'] = "text/plain"
+  resp.headers['Cache-Control'] = 'no-cache'
 
+  return resp
+  
 # Temporary redirects here are a must, otherwise the route would hardcode to a location which would be BAD
 @app.route("/alticon.ico")
 def serve_alticon():

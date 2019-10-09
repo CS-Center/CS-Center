@@ -7,11 +7,11 @@
   </span>
   <span class="table-row ">
     <span class="table-cell">Add&nbsp;Author:</span><span></span>
-    <span class="table-cell full-width">{%- with include_all = True -%}{%- include 'utils/user-selector.html' -%}{%- endwith -%}</span>
+    <span class="table-cell full-width">{%- with include_all = True, organization_only = True -%}{%- include 'utils/user-selector.html' -%}{%- endwith -%}</span>
   </span>
 </div>
 <div hidden>
-  {%- for username, uid in get_user_list(True) -%}
+  {%- for username, uid in get_user_list(True, True) -%}
     <button class="outlined-button remove-author-button author-{{ uid }}" data-uid="{{ uid }}" type="button">
       <b>&times;</b> {{ uid | display_user | safe }}
     </button>

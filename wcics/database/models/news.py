@@ -13,7 +13,7 @@ from wcics.utils.time import get_time
 class news(dbmodel, Helper):
   id = dbcol(dbint, primary_key = True)
   oid = dbcol(dbint, dbforkey('organizations.id', onupdate = "CASCADE", ondelete = "CASCADE"))
-  nid = dbcol(dbstr(NEWS_ID_MAX_LENGTH), unique = True, nullable = False)
+  nid = dbcol(dbstr(NEWS_ID_MAX_LENGTH), nullable = False)
   body = dbcol(dbstr(NEWS_BODY_MAX_LENGTH), nullable = False)
   time = dbcol(dbint, default = get_time, nullable = False)
   title = dbcol(dbstr(NEWS_TITLE_MAX_LENGTH), nullable = False)
@@ -21,11 +21,20 @@ class news(dbmodel, Helper):
   __table_args__ = (dbunicon("oid", "nid"),)
   
   @property
+  def link(self):
+    from wcics.database.models import Organizations # to fix circular import issues; better than sketchy db name lookup table thing
+    
+    if self.oid == 1:
+      return "/news/%s" % self.nid
+    org = Organizations.query.filter_by(id = self.oid).first()
+    return "/organization/%s/news/%s" % (org.oid, self.nid)
+  
+  @property
   def authors(self):
     from .users import Users
     # importing inside the function to avoid a circular import at the top
     # the alternative is worse, which uses a private method and key access to the name directly
-    return Users.query.join(NewsAuthors).filter(NewsAuthors.nid == self.id).all()
+    return Users.query.join(NewsAuthors, Users.id == NewsAuthors.uid).filter(NewsAuthors.nid == self.id).all()
   
   @property
   def author_ids(self):
@@ -40,7 +49,7 @@ class news(dbmodel, Helper):
 # Store the authors to each news article
 class news_authors(dbmodel, Helper):
   nid = dbcol(dbint, dbforkey('news.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
-  uid = dbcol(dbint, dbforkey('users.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
+  uid = dbcol(dbint, dbforkey('organization_users.uid', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
   
   def __repr__(self):
     return "<news_author article=%s, user=%s>" % (self.nid, self.uid)

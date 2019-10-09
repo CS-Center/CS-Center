@@ -5,8 +5,8 @@
 {%- endblock -%}
 
 {%- block header -%}
-  <link href="/static/css/adminpages/topics.css" rel="stylesheet" type="text/css" />
-  <script src="/static/js/adminpages/topics.js" type="text/javascript"></script>
+  {{ css_link("/static/css/adminpages/topics.css") }}
+  {{ js_link("/static/js/adminpages/topics.js") }}
 {%- endblock -%}
 
 {%- block content_header -%}
