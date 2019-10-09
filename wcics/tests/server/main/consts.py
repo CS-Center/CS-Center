@@ -2,7 +2,7 @@ MAIN_ROUTES = [
   "/",
   "/about/",
   "/contact/",
-  "/calendar/"
+  "/calendar/",
   "/external/",
   "/faq/",
   "/privacy/",

@@ -29,7 +29,6 @@ class organizations(dbmodel, Helper):
   
   def add_user(self, user):
     OrganizationUsers.add(oid = self.id, uid = user.id)
-    db_commit()
     OrganizationRoles.add(oid = self.id, uid = user.id)
     db_commit()
     return self
