@@ -3,11 +3,7 @@
 <ul id="navbar">
   {%- for x, y, z in (sudo_links if sudo else links)() -%}
     <li class="navbar__col">
-      {%- if y == "Home" -%}
-        <a href="{{ x }}" class="navbar__col__button navbar__col__button--home no-animation"><span class="wcics-button--first">CS</span><span class="wcics-button--second">Center</span></a>
-      {%- else -%}
-        <a href="{{ x }}" class="navbar__col__button {{ ' navbar__col__button--active' if y == active else '' }}">{{ y }}</a>
-      {%- endif -%}
+      <a href="{{ x }}" class="navbar__col__button {{ ' navbar__col__button--active' if y == active or active == 'Home' and y.endswith(' Home') else '' }}">{{ y }}</a>
 
       {%- if z != [] -%}
         <ul class="navbar__col__options">

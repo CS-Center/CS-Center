@@ -16,7 +16,7 @@ def serve_admin_root():
     accessible.append(("users", "manage user permissions"))
   if user.roles.database > DatabaseRoles.default:
     accessible.append(("database", "on-site database queries"))
-  if False: # TODO
+  if user.news_admin_organizations():
     accessible.append(("news", "post/manage news items"))
   if any(role.attendance > AttendanceRoles.default for role in OrganizationRoles.query.filter_by(uid = user.id).all()):
     accessible.append(("attendance", "read/write organization attendance codes"))

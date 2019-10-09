@@ -16,6 +16,7 @@
 {%- endblock -%}
 
 {%- block content -%}
+  <a class="button-link outlined-button" href="display">Display code</a><br /><br />
   <form id="attendance-form" method="post">
     {{ form.csrf_token }}
     <button id="save-all" class="contained-button" type="submit" disabled>

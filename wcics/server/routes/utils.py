@@ -6,7 +6,7 @@ from wcics.auth.manage_user import user
 
 from wcics import consts
 
-from wcics.database.models import AttendanceCodes, AttendanceRecords, News, Roles, Users
+from wcics.database.models import AttendanceCodes, AttendanceRecords, News, OrganizationUsers, Roles, Users
 from wcics.database.models.roles import UserRoles
 from wcics.database.models.roles.consts import roles
 
@@ -71,7 +71,7 @@ def attendance_link(org):
   return "<a href=\"/organization/%s/attendance/\">%s</a>" % (org.oid, org.name)
 
 @app.template_global()
-def get_user_list(include_all = False):
+def get_user_list(include_all = False, organization = False):
   if not include_all and (not user or user.roles.users <= UserRoles.default):
     abort(403)
   
@@ -80,6 +80,10 @@ def get_user_list(include_all = False):
     query = query.filter(Users.id != user.id)
     if not user.admin:
       query = query.join(Roles).filter(Roles.users < UserRoles.moderator)
+      
+  if organization:
+    query = query.join(OrganizationUsers).filter(OrganizationUsers.oid == get_org_id(), OrganizationUsers.uid == Users.id)
+      
   users = query.all()
   
   return users
@@ -129,7 +133,7 @@ def serve_user_list_js():
 
 @app.route("/article-authors.js")
 def serve_article_authors_js():
-  return Response("var authors = %s;" % json.dumps(News.query.filter_by(nid = request.args.get("article_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
+  return Response("var authors = %s;" % json.dumps(News.query.filter_by(id = request.args.get("article_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
 
 @app.context_processor
 def context_processor():

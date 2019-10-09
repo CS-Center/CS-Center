@@ -14,10 +14,10 @@
 {%- block content -%}
   <ul>
     {%- for item in news -%}
-      {%- if user.roles.news >= roles.news.moderator or item.has_author(user.id) -%}
-        <li><a href="/admin/news-edit/{{ item.nid }}">{{ item.title }}</a> (posted {{ time_delta_display(item.time) }})</li>
+      {%- if user.organization_roles.news >= roles.news.moderator or item.has_author(user.id) -%}
+        <li><a href="/organization/{{ oid }}/admin/news-edit/{{ item.nid }}">{{ item.title }}</a> (posted {{ time_delta_display(item.time) }})</li>
       {%- endif -%}
     {%- endfor -%}
   </ul>
-  <a class="button-link outlined-button" href="/admin/news-create/">+ POST</a>
+  <a class="button-link outlined-button" href="/organization/{{ oid }}/admin/news-create/">+ POST</a>
 {%- endblock -%}

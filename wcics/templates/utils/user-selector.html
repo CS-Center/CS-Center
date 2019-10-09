@@ -1,4 +1,4 @@
-{%- set users = get_user_list(include_all) -%}
+{%- set users = get_user_list(include_all, organization_only) -%}
 
 <script src="/get-users.js?include_all={{ 'y' if include_all else 'n' }}" type="text/javascript"></script>
 {{ css_link("/static/css/utils/user-selector.css") }}

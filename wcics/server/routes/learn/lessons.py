@@ -13,10 +13,10 @@ from wcics.database.models import Organizations, Lessons
 
 from wcics.utils.routes import error_page
 
-@app.route("/lessons/")
-@app.route("/organization/<oid>/lessons/")
+@app.route("/learn/")
+@app.route("/organization/<oid>/learn/")
 @organization_page
-def get_lessons(oid = "main"):
+def serve_learn(oid = "main"):
   org = Organizations.query.filter_by(oid = oid).first()
   
   page, pages, lessons = paged_data(Lessons.query.filter_by(oid = org.id).order_by(Lessons.name).all(), LESSONS_PER_PAGE)
