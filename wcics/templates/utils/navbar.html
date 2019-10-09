@@ -27,13 +27,13 @@
         <a id="right-navbar-col-button" class="navbar__col__button{{ ' navbar__col__button--active' if active == 'Account' else '' }}" href="/user" >Welcome, {{ user.username }}!</a>
 
         <ul id="right-navbar-col-options" class="navbar__col__options">
-          <li>
+          <li class="navbar__col__option">
             <a class="navbar__col__option__button" href="/edit-profile">
               Edit Profile
             </a>
           </li>
 
-          <li>
+          <li class="navbar__col__option">
             <a href="/logout/?next={{ request.path }}" id="logout" class="navbar__col__option__button">
               Log Out
             </a>
