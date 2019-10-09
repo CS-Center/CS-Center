@@ -41,7 +41,7 @@ class news(dbmodel, Helper):
     return [uid for (uid,) in db.session.query(NewsAuthors.uid).filter_by(nid = self.id).all()]
   
   def has_author(self, uid):
-    return NewsAuthors.query.filter_by(nid = self.nid, uid = uid).count() > 0
+    return NewsAuthors.query.filter_by(nid = self.id, uid = uid).count() > 0
   
   def __repr__(self):
     return "<news %s>" % self.nid
