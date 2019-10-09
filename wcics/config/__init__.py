@@ -69,7 +69,7 @@ def configure_app():
   # Run setup function for the configuration
   module.setup_func()
   
-  if preset_config_name != 'production':
+  if preset_config_name != 'production' and not application.testing:
     # If we aren't full prod, we make ppl enter password
     password = base64.b64encode(os.urandom(12)).decode("utf-8")
     

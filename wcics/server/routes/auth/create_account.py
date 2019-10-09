@@ -38,9 +38,9 @@ def serve_create_account_request():
   user = Users.query.filter_by(email = email).first()
 
   if user:
-      set_user(user)
-      flash("Welcome back! This email address already owns an account. If you wish to add/change your password, go to the Edit Profile page.", category = "SUCCESS")
-      return redirect(get_next_page(), code = 303)
+    set_user(user)
+    flash("Welcome back! This email address already owns an account. If you wish to add/change your password, go to the Edit Profile page.", category = "SUCCESS")
+    return redirect(get_next_page(), code = 303)
 
   form = CreateAccountForm()
 

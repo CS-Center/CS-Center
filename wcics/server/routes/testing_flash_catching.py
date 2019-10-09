@@ -9,7 +9,7 @@ if app.testing:
   def check_flashes(response):
     fm = get_flashed_messages(False, "ERROR")
     if fm:
-      res = make_response(json.dumps(fm), 406, {'content-type' : 'application/json'})
+      res = make_response(json.dumps(fm), 400, {'content-type' : 'application/json'})
       return res
     else:
       return response
