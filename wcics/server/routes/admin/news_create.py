@@ -4,7 +4,7 @@ from wcics import app, db, md
 
 from wcics.auth.manage_user import assert_login, organization_page, user
 
-from wcics.database.models import News, NewsAuthors, Users
+from wcics.database.models import News, NewsAuthors, Organizations, Users
 from wcics.database.models.roles import NewsRoles
 from wcics.database.utils import db_commit
 
