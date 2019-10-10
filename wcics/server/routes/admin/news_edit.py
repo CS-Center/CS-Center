@@ -41,7 +41,7 @@ def serve_news_sudo_edit_request(org, nid):
   if form.validate_on_submit():
     if news_sudo_edit(article, form):
       flash("Successfully deleted news item!", category = "SUCCESS")
-      return redirect("/admin/news/", code = 303)
+      return redirect("/organization/%s/admin/news/" % org, code = 303)
     flash("Successfully updated news item!", category = "SUCCESS")
   else:
     flash_form_errors(form, "Changes not were saved!")
