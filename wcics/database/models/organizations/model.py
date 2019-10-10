@@ -28,7 +28,10 @@ class organizations(dbmodel, Helper):
     return "<organization oid=%s>" % (self.oid)
   
   def add_user(self, user):
+    # THiS IS IMPORTANT, IF NOT IT VALIDATES A FOREIGN KEY CONSTRAINT FOR ORGAQNIZATION_ROLES
     OrganizationUsers.add(oid = self.id, uid = user.id)
+    db_commit()
+    
     OrganizationRoles.add(oid = self.id, uid = user.id)
     db_commit()
     return self

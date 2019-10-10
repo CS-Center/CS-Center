@@ -4,7 +4,7 @@ from wcics import app, db, md
 
 from wcics.auth.manage_user import assert_login, organization_page, user
 
-from wcics.database.models import News, NewsAuthors, Users
+from wcics.database.models import News, NewsAuthors, Users, Organizations
 from wcics.database.models.roles import NewsRoles
 from wcics.database.utils import db_commit
 
@@ -38,6 +38,8 @@ def serve_news_sudo_create_request(org):
   return render_template("adminpages/news-create.html", sudo = True, active = "news", form = form)
 
 def news_sudo_create(form):
+  org = Organizations.query.filter_by(id = get_org_id()).first()
+  
   article = News.add(oid = get_org_id(), nid = form.nid.data, title = form.title.data, body = form.body.data, time = get_time())
   db_commit()
   
