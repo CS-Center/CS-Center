@@ -13,9 +13,7 @@ from flask import abort, redirect, render_template
 
 @app.route("/admin/news/")
 @assert_login
-def serve_news_sudo_home():
-  links = []
-  
+def serve_news_sudo_home():  
   links = [(organization.oid, organization.name) for organization in user.news_admin_organizations()]
   
   if links == []:
