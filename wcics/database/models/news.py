@@ -48,8 +48,11 @@ class news(dbmodel, Helper):
   
 # Store the authors to each news article
 class news_authors(dbmodel, Helper):
-  nid = dbcol(dbint, dbforkey('news.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
-  uid = dbcol(dbint, dbforkey('organization_users.uid', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
+  nid = dbcol(dbint, dbforkey(news.id, onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
+  uid = dbcol(dbint, dbforkey('users.id', onupdate="CASCADE", ondelete="CASCADE"), primary_key = True)
+  oid = dbcol(dbint, dbforkey('organizations.id', onupdate = "CASCADE", ondelete = "CASCADE"), nullable = False)
+  
+  __table_args__ = (db.ForeignKeyConstraint(("uid", "oid"), ("organization_users.uid", "organization_users.oid")), )
   
   def __repr__(self):
     return "<news_author article=%s, user=%s>" % (self.nid, self.uid)

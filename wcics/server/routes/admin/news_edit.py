@@ -22,13 +22,15 @@ def serve_news_sudo_edit_request(org, nid):
   article = News.query.filter_by(oid = get_org_id(), nid = nid).first()
   
   if not article:
-    return error_page(404, "There is no news item with this ID.")
+    return error_page(404, "There is no news item with the ID '%s'." % nid)
 
   if not (user.organization_roles.news >= NewsRoles.moderator or user.organization_roles.news >= NewsRoles.default and article.has_author(user.id)):
     abort(403)
 
   form = NewsSudoEditForm(article)
   
+  # Alex please review this, I think this thing should be done in the above constructor
+  """
   if form.nid.data is None:
     form.nid.data = article.nid
   
@@ -37,6 +39,7 @@ def serve_news_sudo_edit_request(org, nid):
   
   if form.body.data is None:
     form.body.data = article.body
+  """
     
   if form.validate_on_submit():
     if news_sudo_edit(article, form):
@@ -44,7 +47,7 @@ def serve_news_sudo_edit_request(org, nid):
       return redirect("/organization/%s/admin/news/" % org, code = 303)
     flash("Successfully updated news item!", category = "SUCCESS")
   else:
-    flash_form_errors(form, "Changes not were saved!")
+    flash_form_errors(form, "Changes were not saved!")
   
   return render_template("adminpages/news-edit.html", sudo = True, active = "news", article = article, form = form)
 
@@ -54,6 +57,7 @@ def news_sudo_edit(article, form):
     db_commit()
     return True
   
+  article.nid = form.nid.data
   article.title = form.title.data
   article.body = form.body.data
     

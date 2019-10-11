@@ -30,15 +30,15 @@ def serve_news_sudo_create_request(org):
     
   if form.validate_on_submit():
     flash("Successfully created news item!", category = "SUCCESS")
-    news_sudo_create(form)
+    news_sudo_create(form, org)
     return redirect("/organization/%s/admin/news/" % org, code = 303)
   else:
     flash_form_errors(form)
   
   return render_template("adminpages/news-create.html", sudo = True, active = "news", form = form)
 
-def news_sudo_create(form):
-  org = Organizations.query.filter_by(id = get_org_id()).first()
+def news_sudo_create(form, oid):
+  org = Organizations.query.filter_by(oid = oid).first()
   
   article = News.add(oid = get_org_id(), nid = form.nid.data, title = form.title.data, body = form.body.data, time = get_time())
   db_commit()
@@ -47,7 +47,13 @@ def news_sudo_create(form):
     NewsAuthors.add(nid = article.id, uid = int(uid))
   
   if form.email.data:
-    co = Organizations.query.filter_by(id = get_org_id())
-    send_many([tup[0] for tup in db.session.query(Users.email).filter(Users.subscribed == True).all()], "%s Announcement - %s" % ("CS Center" if org.id == 1 else org.name, form.title.data), md.render(form.body.data))
+    co = Organizations.query.filter_by(oid = get_org_id()).first()
+    send_many([
+      tup[0] 
+      for tup in db.session.query(Users.email).\
+        join(OrganizationUsers).\
+        filter(OrganizationUsers.oid == co.id, Users.subscribed == True).all()
+    ], 
+    "%s Announcement - %s" % ("CS Center" if org.id == 1 else org.name, form.title.data), md.render(form.body.data))
   
   db_commit()
