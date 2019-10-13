@@ -16,7 +16,7 @@ from flask import abort, redirect, render_template
 def serve_news_sudo_home():  
   links = [(organization.oid, organization.name) for organization in user.news_admin_organizations()]
   
-  if links == []:
+  if len(links) == 0:
     abort(403)
   
   return render_template("adminpages/news-home.html", sudo = True, active = "news", links = links)
@@ -28,4 +28,8 @@ def serve_news_sudo(org):
   if user.organization_roles.news <= NewsRoles.default:
     abort(403)
   
-  return render_template("adminpages/news.html", sudo = True, active = "news", oid = get_organization(), news = News.query.filter_by(oid = get_org_id()).order_by(News.time.desc()).all())
+  return render_template("adminpages/news.html", 
+                         sudo = True, 
+                         active = "news", 
+                         oid = get_organization(), 
+                         lessons = Lessons.query.filter_by(oid = get_org_id()).order_by(Lessons.time.desc()).all())

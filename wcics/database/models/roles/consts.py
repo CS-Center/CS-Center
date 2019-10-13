@@ -35,6 +35,12 @@ class UserRoles:
   default = 0
   moderator = 1
   admin = 2
+  
+class LessonRoles:
+  underprivileged = -1
+  default = 0
+  creator = 1
+  admin = 2
 
 class roles:
   database = DatabaseRoles
@@ -42,3 +48,8 @@ class roles:
   users = UserRoles
   attendance = AttendanceRoles
   topics = TopicRoles
+  
+  org_admin = OrganizationAdminRoles
+  org_manager = OrganizationManagerRoles
+  
+  lessons = LessonRoles
