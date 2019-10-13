@@ -47,30 +47,30 @@ class users(dbmodel, Helper):
   
   def attendance_organizations(self):
     time = get_time()
-    return Organizations.query.
-      join(OrganizationUsers).
-      join(Users).
-      join(AttendanceCodes).
+    return Organizations.query.\
+      join(OrganizationUsers).\
+      join(Users).\
+      join(AttendanceCodes).\
       filter(
-        ~db.exists().
+        ~db.exists().\
           where(db.and_(AttendanceRecords.uid == Users.id, AttendanceRecords.cid == AttendanceCodes.id)), 
         Users.id == self.id, AttendanceCodes.start <= time, time <= AttendanceCodes.end
       ).distinct(Organizations.id).all()
   
   def news_admin_organizations(self):
     subq = db.exists().where(db.and_(NewsAuthors.uid == self.id, News.oid == Organizations.id))
-    realq = Organizations.query.
-      join(OrganizationUsers).
-      join(OrganizationRoles).
+    realq = Organizations.query.\
+      join(OrganizationUsers).\
+      join(OrganizationRoles).\
       filter(OrganizationRoles.uid == self.id, db.or_(OrganizationRoles.news >= 1, subq))
       
     return realq.all()
   
   def lesson_admin_organizations(self):
     subq = db.exists().where(db.and_(LessonAuthors.uid == self.id, News.oid == Organizations.id))
-    realq = Organizations.query.
-      join(OrganizationUsers).
-      join(OrganizationRoles).
+    realq = Organizations.query.\
+      join(OrganizationUsers).\
+      join(OrganizationRoles).\
       filter(OrganizationRoles.uid == self.id, db.or_(OrganizationRoles.lessons >= 1, subq))
     return realq.all()
   
