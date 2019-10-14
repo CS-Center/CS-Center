@@ -18,7 +18,7 @@ def send_link_email(email, token, next):
   ## next -> the next page
   
   # Pass the domain for URL creation  
-  send_single(email, reset_subject, reset_body.format(
+  return send_single(email, reset_subject, reset_body.format(
     email = email,
     jwt = token,
     next = next,

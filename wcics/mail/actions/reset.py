@@ -17,7 +17,7 @@ def send_reset_email(email, token):
   ## jwt -> the jwt of the action
   
   # Pass the domain for URL creation  
-  send_single(email, reset_subject, reset_body.format(
+  return send_single(email, reset_subject, reset_body.format(
     email = email,
     jwt = token,
     DOMAIN = DOMAIN

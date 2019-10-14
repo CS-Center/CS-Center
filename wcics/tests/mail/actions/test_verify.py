@@ -18,7 +18,7 @@ def test_send_verify(addr):
   with app.app_context():
     # Record messages
     with mail_app.record_messages() as outbox:
-      send_verify_email(addr, test_token, test_next_url)
+      send_verify_email(addr, test_token, test_next_url).join()
       
       msg = outbox[0]
       
