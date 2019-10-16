@@ -13,8 +13,10 @@
     {{ lesson.name }}
   </h1>
   <hr />
-  <span class="small-text">By {{ lesson.authors | map("display_user_as_link") | list | english_join | safe }}</span>
-  <br>
+  {%- if lesson.authors -%}
+    <span class="small-text">By {{ lesson.authors | map("display_user_as_link") | list | english_join | safe }}</span>
+    <br />
+  {%- endif -%}
   <span class="small-text">Written {{ time_delta_display(lesson.create_time) }}</span>
 {% endblock %}
 

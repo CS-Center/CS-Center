@@ -21,6 +21,10 @@ class lessons(dbmodel, Helper):
   def authors(self):
     return Users.query.join(LessonAuthors).filter(LessonAuthors.lid == self.id).all()
   
+  @property
+  def topics(self):
+    return LessonTopics.query.filter_by(lid = self.id).all()
+  
 class lesson_topics(dbmodel, Helper):
   lid = dbcol(dbint, dbforkey(lessons.id, onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
   tid = dbcol(dbint, dbforkey(Topics.id, onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
