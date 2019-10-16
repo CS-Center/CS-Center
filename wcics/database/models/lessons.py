@@ -4,7 +4,6 @@ from .aliases import *
 from .helper import Helper
 from ..consts.lessons import LESSON_ID_MAX_LENGTH, LESSON_NAME_MAX_LENGTH, LESSON_BODY_MAX_LENGTH, LESSON_DESC_MAX_LENGTH
 from .topics import Topics
-from .users import Users
 
 from wcics.utils.time import get_time
 
@@ -17,8 +16,14 @@ class lessons(dbmodel, Helper):
   body = dbcol(dbstr(LESSON_BODY_MAX_LENGTH), nullable = False)
   create_time = dbcol(dbint, default = get_time, nullable = False)
   
+  def has_author(self, uid):
+    return LessonAuthors.query.filter_by(lid = self.id, uid = uid).count() > 0
+  
   @property
   def authors(self):
+    from .users import Users
+    # importing inside the function to avoid a circular import at the top
+    # the alternative is worse, which uses a private method and key access to the name directly
     return Users.query.join(LessonAuthors).filter(LessonAuthors.lid == self.id).all()
   
   @property
@@ -31,7 +36,10 @@ class lesson_topics(dbmodel, Helper):
   
 class lesson_authors(dbmodel, Helper):
   lid = dbcol(dbint, dbforkey(lessons.id, onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
-  uid = dbcol(dbint, dbforkey(Users.id, onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
+  uid = dbcol(dbint, dbforkey('users.id', onupdate = "CASCADE", ondelete = "CASCADE"), primary_key = True)
+  oid = dbcol(dbint, dbforkey('organizations.id', onupdate = "CASCADE", ondelete = "CASCADE"), nullable = False)
+  
+  __table_args__ = (db.ForeignKeyConstraint(("uid", "oid"), ("organization_users.uid", "organization_users.oid")), )
   
 Lessons = lessons
 LessonTopics = lesson_topics

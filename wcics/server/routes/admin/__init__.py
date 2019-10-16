@@ -2,6 +2,9 @@
 
 from .attendance import *
 from .database import *
+from .lessons import *
+from .lesson_create import *
+from .lesson_edit import *
 from .news import *
 from .news_create import *
 from .news_edit import *
