@@ -84,8 +84,8 @@ def serve_robots():
 # Temporary redirects here are a must, otherwise the route would hardcode to a location which would be BAD
 @app.route("/alticon.ico")
 def serve_alticon():
-  return redirect(indexed_url("/static/ico/alticon.ico")[0], code = 303)
+  return redirect(indexed_url("/static/ico/alticon.ico"), code = 303)
 
 @app.route("/favicon.ico")
 def serve_favicon():
-  return redirect(indexed_url("/static/ico/favicon.ico")[0], code = 303)
+  return redirect(indexed_url("/static/ico/favicon.ico"), code = 303)

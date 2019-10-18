@@ -10,6 +10,8 @@ from wcics.database.models.roles.consts import roles, OrganizationManagerRoles, 
 
 from wcics.database.utils import db_commit
 
+from werkzeug.urls import url_parse
+
 @pytest.fixture(scope = "session")
 def client():
   return app.test_client()
@@ -76,3 +78,13 @@ def user2():
 @pytest.fixture(scope = "session")
 def user3():
   return make_test_user(3)
+
+@pytest.fixture(scope = "session")
+def assert_redirect():
+  def inner(res, route, code = 303):
+    
+    assert res.status_code == code
+    
+    assert url_parse(res.headers['Location']).path == route
+    
+  return inner

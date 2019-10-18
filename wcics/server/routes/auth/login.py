@@ -4,6 +4,8 @@ from wcics import app
 
 from wcics.auth.manage_user import set_user, user
 
+from wcics.auth.hash import pass_hash
+
 from wcics.database.models import Users
 
 from wcics.server.consts import ERROR_MESSAGES

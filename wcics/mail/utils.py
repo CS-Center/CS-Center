@@ -26,7 +26,10 @@ def send_many(addrs, subject = "", body = ""):
     with app.app_context():
       with mail_app.connect() as conn:
         for addr in addrs:
-          conn.send_message(subject, recipients = [addr], html = body)
+          try:
+            conn.send_message(subject, recipients = [addr], html = body)
+          except:
+            pass
   
   t = threading.Thread(target = inner)
   
