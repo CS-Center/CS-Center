@@ -4,7 +4,7 @@ from wcics import app, db, md
 
 from wcics.auth.manage_user import assert_login, organization_page, user
 
-from wcics.database.models import News, NewsAuthors, Users, Organizations
+from wcics.database.models import News, NewsAuthors, Users, Organizations, OrganizationUsers
 from wcics.database.models.roles import NewsRoles
 from wcics.database.utils import db_commit
 
@@ -44,10 +44,10 @@ def news_sudo_create(form, oid):
   db_commit()
   
   for uid in form.authors.data.split():
-    NewsAuthors.add(nid = article.id, uid = int(uid))
+    NewsAuthors.add(nid = article.id, uid = int(uid), oid = get_org_id())
   
   if form.email.data:
-    co = Organizations.query.filter_by(oid = get_org_id()).first()
+    co = Organizations.query.filter_by(id = get_org_id()).first()
     send_many([
       tup[0] 
       for tup in db.session.query(Users.email).\
