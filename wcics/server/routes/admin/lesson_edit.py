@@ -8,7 +8,7 @@ from wcics.database.models import Lessons, LessonAuthors
 
 from wcics.database.utils import db_commit
 
-# from wcics.server.forms import LessonEditForm, flash_form_errors
+from wcics.server.forms import LessonEditForm, flash_form_errors
 
 from wcics.utils.routes import error_page
 from wcics.utils.url import get_org_id
@@ -29,12 +29,10 @@ def serve_lesson_edit(org, lid):
     
   form = LessonEditForm(lesson)
   
-  # If news required those three if statements, add them here too and explain with a comment -- Keenan
-  
   if form.validate_on_submit():
     if lesson_edit(lesson, form):
       flash("Successfully deleted lesson!", category = "SUCCESS")
-      return redirect("/organization/%s/admin/lesson/" % org, code = 303)
+      return redirect("/organization/%s/admin/lessons/" % org, code = 303)
     
     flash("Successfully updated lesson!", category = "SUCCESS")
   else:
@@ -42,7 +40,7 @@ def serve_lesson_edit(org, lid):
   
   return render_template("adminpages/lesson-edit.html", sudo = True, active = "lessons", lesson = lesson, form = form)
 
-def news_sudo_edit(lesson, form):
+def lesson_edit(lesson, form):
   if form.delete.data:
     Lessons.remove(lesson)
     db_commit()
@@ -61,8 +59,10 @@ def news_sudo_edit(lesson, form):
         LessonAuthors.remove(lesson_author)
       else:
         authors.remove(lesson_author.uid)
-
+    
+    print(authors)
+     
     for new_author in authors:
-      LessonAuthors.add(nid = lesson.id, uid = new_author)
+      LessonAuthors.add(lid = lesson.id, uid = new_author, oid = get_org_id())
 
   db_commit()

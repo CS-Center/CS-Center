@@ -1,0 +1,23 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - lessons
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - lessons
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <ul>
+    {%- for item in lessons -%}
+      {%- if user.organization_roles.lessons >= roles.lessons.admin or item.has_author(user.id) -%}
+        <li><a href="/organization/{{ oid }}/admin/lesson-edit/{{ item.lid }}">{{ item.title }}</a> (posted {{ time_delta_display(item.create_time) }})</li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+  <a class="button-link outlined-button" href="/organization/{{ oid }}/admin/lesson-create/">+ CREATE</a>
+{%- endblock -%}

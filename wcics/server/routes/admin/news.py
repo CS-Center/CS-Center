@@ -32,4 +32,4 @@ def serve_news_sudo(org):
                          sudo = True, 
                          active = "news", 
                          oid = get_organization(), 
-                         lessons = Lessons.query.filter_by(oid = get_org_id()).order_by(Lessons.time.desc()).all())
+                         news = News.query.filter_by(oid = get_org_id()).order_by(News.time.desc()).all())

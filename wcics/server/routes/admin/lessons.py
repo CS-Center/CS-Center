@@ -31,4 +31,4 @@ def serve_lesson_organization(org):
   return render_template("adminpages/lessons.html", 
                          sudo = True, active = "lessons", 
                          oid = get_organization(), 
-                         news = Lessons.query.filter_by(oid = get_org_id()).order_by(Lessons.create_time.desc()).all())
+                         lessons = Lessons.query.filter_by(oid = get_org_id()).order_by(Lessons.title).all())

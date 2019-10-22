@@ -1,6 +1,7 @@
 {%- if nomathjax -%}
   {{ js_link("/static/js/utils/markdown-preview-no-mathjax.js") }}
 {%- else -%}
+  
   {{ js_link("/static/js/utils/markdown-preview.js") }}
 {%- endif -%}
 <button id="preview-update-button" data-source="{{ source }}" class="outlined-button" type="button" {%- if disable_button -%} disabled {%- endif -%}>Update Preview</button>

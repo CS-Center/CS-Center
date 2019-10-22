@@ -1,0 +1,45 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - lesson
+{%- endblock -%}
+
+{%- block header -%}
+  <script src="/lesson-authors.js?lesson_id={{ lesson.id }}" type="text/javascript"></script>
+  {{ js_link("/static/js/adminpages/lesson-edit.js") }}
+  {%- include 'utils/mathjax-import.html' -%}
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - lesson [{{ lesson.lid }}]
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form method="post">
+    {{ form.csrf_token }}
+    {{ input_field(form.lid) }}<br /><br />
+    {{ input_field(form.title) }}<br /><br />
+    {{ textbox_field(form.desc) }}
+    {{ textbox_field(form.body) }}
+    <hr />
+    {%- with source = "body" -%}
+      {%- include 'utils/markdown-preview.html' -%}
+    {%- endwith -%}
+    <hr />
+    {{ form.authors(hidden = True) }}
+    {%- if user.organization_roles.lessons >= roles.lessons.admin -%}
+      {%- include 'utils/author-selector.html' -%}<br />
+      Consider sending the URL of this page to the authors so they can find the edit page more easily.<br /><br />
+    {%- endif -%}
+    {{ form.delete(hidden = True) }}
+  
+    {{ form.submit(class = "contained-button") }}
+    
+    {% if user.organization_roles.lessons >= roles.lessons.admin -%}
+      <button id="delete-lesson-button" class="text-button" type="button">Delete</button>
+    {%- endif -%}
+  </form>
+{%- endblock -%}

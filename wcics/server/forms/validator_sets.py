@@ -74,6 +74,23 @@ admin_news_edit_body = [length(max_length = NEWS_BODY_MAX_LENGTH, name = "News b
 admin_news_edit_authors = [author_format]
 admin_news_edit_delete = []
 
+# LESSONS #
+
+# CREATE
+admin_lesson_create_nid = [id_format, length(max_length = LESSON_ID_MAX_LENGTH, name = "Lesson ID"), require("Please enter an ID!"), check_unique(Lessons, "lid", name = "ID")]
+admin_lesson_create_title = [no_controls, length(max_length = LESSON_TITLE_MAX_LENGTH, name = "Lesson title"), require("Please enter a title!")]
+admin_lesson_create_desc = [length(max_length = LESSON_DESC_MAX_LENGTH, name = "Lesson description"), require("Please enter a description!")]
+admin_lesson_create_body = [length(max_length = LESSON_BODY_MAX_LENGTH, name = "Lesson body"), require("Please enter a body!")]
+admin_lesson_create_authors = [author_format]
+
+# EDIT
+admin_lesson_edit_nid = [id_format, length(max_length = LESSON_ID_MAX_LENGTH, name = "Lesson ID"), require("Please enter an ID!"), check_unique(Lessons, "lid", name = "ID")]
+admin_lesson_edit_title = [no_controls, length(max_length = LESSON_TITLE_MAX_LENGTH, name = "Lesson title"), require("Please enter a title!")]
+admin_lesson_edit_desc = [length(max_length = LESSON_DESC_MAX_LENGTH, name = "Lesson description"), require("Please enter a description!")]
+admin_lesson_edit_body = [length(max_length = LESSON_BODY_MAX_LENGTH, name = "Lesson body"), require("Please enter a body!")]
+admin_lesson_edit_authors = [author_format]
+admin_lesson_edit_delete = []
+
 # TOPICS #
 
 # CREATE

@@ -22,8 +22,8 @@ def admin_sublinks():
     links.append(("/admin/attendance/", "attendance", [("/organization/%s/admin/attendance/" % organization.oid, organization.name) for organization in Organizations.query.all() if organization.id != 1 and OrganizationUsers.query.filter_by(oid = organization.id, uid = user.id).count() > 0 and OrganizationRoles.query.filter_by(oid = organization.id, uid = user.id).first().attendance > AttendanceRoles.default]))
   if False:
     links.append(("/admin/topics/", "topics", []))
-  if False: # TODO
-    links.append(("/admin/learn/", "learn", []))
+  if user.lesson_admin_organizations(): # TODO
+    links.append(("/admin/lessons/", "lessons", []))
   if False: # TODO
     links.append(("/admin/problems/", "problems", []))
   if False: # TODO

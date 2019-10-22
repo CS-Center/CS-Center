@@ -1,0 +1,23 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - lessons
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - lessons
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  Welcome to the lesson admin landing page.
+  <ul>
+    {%- for oid, oname in links -%}
+      <li>
+        <a href="/organization/{{ oid }}/admin/lessons/">{{ oname }}</a>
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endblock -%}

@@ -5,7 +5,7 @@ from ..utils import db_commit
 from .aliases import *
 from .helper import Helper
 from .attendance import AttendanceCodes, AttendanceRecords
-from .lessons import LessonAuthors
+from .lessons import LessonAuthors, Lessons
 from .news import News, NewsAuthors
 from .organizations import Organizations, OrganizationUsers
 from .permissions import Permissions
@@ -69,7 +69,7 @@ class users(dbmodel, Helper):
     return realq.all()
   
   def lesson_admin_organizations(self):
-    subq = db.exists().where(db.and_(LessonAuthors.uid == self.id, News.oid == Organizations.id))
+    subq = db.exists().where(db.and_(LessonAuthors.uid == self.id, Lessons.oid == Organizations.id))
     realq = Organizations.query. \
       join(OrganizationUsers). \
       join(OrganizationRoles). \

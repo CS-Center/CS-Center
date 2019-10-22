@@ -2,7 +2,7 @@
 
 from .aliases import *
 from .helper import Helper
-from ..consts.lessons import LESSON_ID_MAX_LENGTH, LESSON_NAME_MAX_LENGTH, LESSON_BODY_MAX_LENGTH, LESSON_DESC_MAX_LENGTH
+from ..consts.lessons import LESSON_ID_MAX_LENGTH, LESSON_TITLE_MAX_LENGTH, LESSON_BODY_MAX_LENGTH, LESSON_DESC_MAX_LENGTH
 from .topics import Topics
 
 from wcics.utils.time import get_time
@@ -11,7 +11,7 @@ class lessons(dbmodel, Helper):
   id = dbcol(dbint, primary_key = True)
   lid = dbcol(dbstr(LESSON_ID_MAX_LENGTH), unique = True, nullable = False)
   oid = dbcol(dbint, dbforkey('organizations.id', ondelete = "CASCADE", onupdate = "CASCADE"))
-  name = dbcol(dbstr(LESSON_NAME_MAX_LENGTH), nullable = False)
+  title = dbcol(dbstr(LESSON_TITLE_MAX_LENGTH), nullable = False)
   desc = dbcol(dbstr(LESSON_DESC_MAX_LENGTH), nullable = False)
   body = dbcol(dbstr(LESSON_BODY_MAX_LENGTH), nullable = False)
   create_time = dbcol(dbint, default = get_time, nullable = False)
@@ -25,6 +25,10 @@ class lessons(dbmodel, Helper):
     # importing inside the function to avoid a circular import at the top
     # the alternative is worse, which uses a private method and key access to the name directly
     return Users.query.join(LessonAuthors).filter(LessonAuthors.lid == self.id).all()
+ 
+  @property
+  def author_ids(self):
+    return [uid for (uid,) in db.session.query(LessonAuthors.uid).filter_by(lid = self.id).all()]
   
   @property
   def topics(self):

@@ -28,18 +28,6 @@ def serve_news_sudo_edit_request(org, nid):
     abort(403)
 
   form = NewsSudoEditForm(article)
-  
-  # Alex please review this, I think this thing should be done in the above constructor
-  """
-  if form.nid.data is None:
-    form.nid.data = article.nid
-  
-  if form.title.data is None:
-    form.title.data = article.title
-  
-  if form.body.data is None:
-    form.body.data = article.body
-  """
     
   if form.validate_on_submit():
     if news_sudo_edit(article, form):
@@ -71,6 +59,6 @@ def news_sudo_edit(article, form):
         authors.remove(news_author.uid)
 
     for new_author in authors:
-      NewsAuthors.add(nid = article.id, uid = new_author)
+      NewsAuthors.add(nid = article.id, uid = new_author, oid = get_org_id())
 
   db_commit()
