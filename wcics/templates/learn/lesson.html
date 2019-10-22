@@ -5,12 +5,12 @@
 {%- endblock -%}
 
 {%- block title -%}
-  Lesson - {{ lesson.name }} - CSCenter
+  Lesson - {{ lesson.title }} - CSCenter
 {%- endblock -%}
 
 {% block content_header %}
   <h1 class="header">
-    {{ lesson.name }}
+    {{ lesson.title }}
   </h1>
   <hr />
   {%- if lesson.authors -%}

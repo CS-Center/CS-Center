@@ -13,15 +13,15 @@ from wcics.database.models import Organizations, Lessons
 
 from wcics.utils.routes import error_page
 
-@app.route("/learn/")
-@app.route("/organization/<oid>/learn/")
+@app.route("/lessons/")
+@app.route("/organization/<oid>/lessons/")
 @organization_page
 def serve_learn(oid = "main"):
   org = Organizations.query.filter_by(oid = oid).first()
   
-  page, pages, lessons = paged_data(Lessons.query.filter_by(oid = org.id).order_by(Lessons.name).all(), LESSONS_PER_PAGE)
+  page, pages, lessons = paged_data(Lessons.query.filter_by(oid = org.id).order_by(Lessons.title).all(), LESSONS_PER_PAGE)
   
-  return render_template("learn/lessons.html", lessons = lessons, organization = org, active = "Learn", page = page, pages = pages)
+  return render_template("learn/lessons.html", lessons = lessons, organization = org, active = "Lessons", page = page, pages = pages)
 
 @app.route("/lesson/<lid>/")
 @app.route("/organization/<oid>/lesson/<lid>/")
@@ -32,4 +32,4 @@ def serve_lesson(lid, oid = "main"):
   if lesson is None:
     return error_page(404, message = "No such lesson with code '%s'." % lid)
     
-  return render_template("learn/lesson.html", lesson = lesson, active = "Learn")
+  return render_template("learn/lesson.html", lesson = lesson, active = "Lessons")

@@ -35,7 +35,7 @@ def links():
   links = [
     ("/" if co.id == 1 else "/organization/%s" % co.oid, "CSCenter Home" if co.id == 1 else "%s Home" % co.name, [("/", "CSCenter Home") if org.id == 1 else ("/organization/%s" % org.oid, org.name + " Home") for org in Organizations.query.join(OrganizationUsers).filter(OrganizationUsers.uid == user.id, Organizations.id == OrganizationUsers.oid, Organizations.id != co.id).all()] if user else []),
 #     ("/problems/", "Problems", []),
-    ("/learn/" if co.id == 1 else "/organization/%s/learn/" % co.oid, "Learn", []),
+    ("/lessons/" if co.id == 1 else "/organization/%s/lessons/" % co.oid, "Lessons", []),
     ("/calendar/", "Calendar", []),
     ("/users/" if co.id == 1 else "/organization/%s/users/" % co.oid, "Users", []),
     ("/organizations/", "Organizations", []),

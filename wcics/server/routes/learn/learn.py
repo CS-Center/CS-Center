@@ -10,9 +10,9 @@ from wcics.database.models import Organizations
 
 from wcics.utils.indexed import indexed_url
 
-@app.route("/learn/")
-@app.route("/organization/<oid>/learn/")
-@organization_page
+#@app.route("/learn/")
+#@app.route("/organization/<oid>/learn/")
+#@organization_page
 def learnpage(oid = "main"):
   org = Organizations.query.filter_by(oid = oid).first()
   
