@@ -17,7 +17,7 @@ def send_verify_email(email, token, next):
   ## jwt -> the jwt of the action
   
   # Pass the domain for URL creation
-  send_single(email, verify_subject, verify_body.format(
+  return send_single(email, verify_subject, verify_body.format(
     next = next, 
     jwt = token,
     DOMAIN = DOMAIN

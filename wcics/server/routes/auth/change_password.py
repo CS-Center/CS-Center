@@ -31,7 +31,7 @@ def serve_change_password(form):
   user.password_hash = pass_hash(password, user.salt)
   user.permissions.revoke_tokens_before = get_time()
   db_commit()
-  
+    
   set_user(user._get_current_object())
   flash("Your account password has been updated!", category = "SUCCESS")
   return redirect("/edit-profile/", code = 303)

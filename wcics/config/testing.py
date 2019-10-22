@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask import templating, before_render_template, template_rendered
+from flask import templating, before_render_template, template_rendered, get_flashed_messages, make_response, json
 # Contains the configuration for the testing default configuration
 
 app_properties = dict(
@@ -28,12 +28,13 @@ configuration = dict(
 
 # A function to be run at configuration time, after the app has been constructed
 def setup_func():
-  def blank_render(template, context, app):
-    # Fake the signals, just in case code depends on them
-    before_render_template.send(app, template=template, context=context)
+  orig_render = templating._render
+  
+  def blank_render(template, context, app):    
+    fm = get_flashed_messages(False, "ERROR")
+    if fm:
+      return make_response(json.dumps(fm), 400, {'content-type' : 'application/json'})
     
-    template_rendered.send(app, template=template, context=context)
-    
-    return ""
+    return orig_render(template, context, app)
   
   templating._render = blank_render

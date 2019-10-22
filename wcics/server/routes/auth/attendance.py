@@ -22,9 +22,7 @@ from flask import flash, render_template
 def serve_attendance(org):
   form = AttendanceForm()
   
-  if form.validate_on_submit():
-    flash("Your attendance was confirmed!", category = "SUCCESS")
-    
+  if form.validate_on_submit():    
     AttendanceRecords.add(
       cid = AttendanceCodes.query.filter_by(code = form.attendance_code.data.strip()).first().id,
       oid = get_org_id(),
@@ -32,6 +30,8 @@ def serve_attendance(org):
       time = get_time()
     )
     db_commit()
+    
+    flash("Your attendance was confirmed!", category = "SUCCESS")
   
   flash_form_errors(form)
   

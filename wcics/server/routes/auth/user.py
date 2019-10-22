@@ -20,7 +20,7 @@ def serve_user(uid):
   try:
     uid = int(uid)
   except:
-    return error_page(404, message = "/user must be loaded with the user ID.")
+    return error_page(404, message = "Invalid user id: '%s'. Please note that user ids are integers." % uid)
   displayuser = Users.query.filter_by(id = uid).first()
   if not displayuser: 
     return error_page(404, message = "There is no user with this ID.")

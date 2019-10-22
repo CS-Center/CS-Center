@@ -61,6 +61,7 @@ class users(dbmodel, Helper):
   
   def news_admin_organizations(self):
     subq = db.exists().where(db.and_(NewsAuthors.uid == self.id, News.oid == Organizations.id))
+    
     realq = Organizations.query. \
       join(OrganizationUsers). \
       join(OrganizationRoles). \
@@ -70,10 +71,12 @@ class users(dbmodel, Helper):
   
   def lesson_admin_organizations(self):
     subq = db.exists().where(db.and_(LessonAuthors.uid == self.id, Lessons.oid == Organizations.id))
+
     realq = Organizations.query. \
       join(OrganizationUsers). \
       join(OrganizationRoles). \
       filter(OrganizationRoles.uid == self.id, db.or_(OrganizationRoles.lessons >= LessonRoles.creator, subq))
+
     return realq.all()
   
   @property

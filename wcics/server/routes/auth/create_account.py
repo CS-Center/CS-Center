@@ -5,7 +5,7 @@ from wcics import app
 from wcics.auth.create_account import create_account
 from wcics.auth.errors import ExpiredJWT, InvalidJWT
 from wcics.auth.jwt import make_jwt, verify_jwt
-from wcics.auth.manage_user import set_user
+from wcics.auth.manage_user import set_user, user
 
 from wcics.database.models import Users
 
@@ -30,15 +30,18 @@ def get_email_from_token():
 
 @app.route("/create-account/", methods = ["GET", "POST"])
 def serve_create_account_request():
+  if user:
+    return redirect(get_next_page(), code = 303)
+  
   try:
     email = get_email_from_token()
   except RedirectError as e:
     return e.response
 
-  user = Users.query.filter_by(email = email).first()
+  u = Users.query.filter_by(email = email).first()
 
-  if user:
-    set_user(user)
+  if u:
+    set_user(u)
     flash("Welcome back! This email address already owns an account. If you wish to add/change your password, go to the Edit Profile page.", category = "SUCCESS")
     return redirect(get_next_page(), code = 303)
 

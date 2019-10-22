@@ -20,7 +20,7 @@ def test_send_single(addr):
   with app.app_context():
     # Record messages
     with mail_app.record_messages() as outbox:
-      send_single(addr, test_subject, test_html)
+      send_single(addr, test_subject, test_html).join()
 
       assert len(outbox) == 1
       assert outbox[0].subject == test_subject
@@ -32,7 +32,7 @@ def test_send_many():
   with app.app_context():
     # Record messages
     with mail_app.record_messages() as outbox:
-      send_many(test_addrs, test_subject, test_html)
+      send_many(test_addrs, test_subject, test_html).join()
 
       assert len(outbox) == len(test_addrs)
       
