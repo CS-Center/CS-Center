@@ -20,6 +20,8 @@ def serve_admin_root():
     accessible.append(("news", "post/manage news items"))
   if any(role.attendance > AttendanceRoles.default for role in OrganizationRoles.query.filter_by(uid = user.id).all()):
     accessible.append(("attendance", "read/write organization attendance codes"))
+  if user.lesson_admin_organizations():
+    accessible.append(("lessons", "create/manage lessons"))
   if False: # TODO
     accessible.append(("topics", "create/edit lesson and problem topics"))
   return render_template("adminpages/admin.html", sudo = True, active = "admin", accessible = accessible)
