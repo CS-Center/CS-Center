@@ -133,7 +133,15 @@ def serve_user_list_js():
 
 @app.route("/article-authors.js")
 def serve_article_authors_js():
-  return Response("var authors = %s;" % json.dumps(News.query.filter_by(id = request.args.get("article_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
+  res = Response("var authors = %s;" % json.dumps(News.query.filter_by(id = request.args.get("article_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
+  res.headers['Cache-Control'] = 'no-cache'
+  return res
+
+@app.route("/lesson-authors.js")
+def serve_lesson_authors_js():
+  res = Response("var authors = %s;" % json.dumps(Lessons.query.filter_by(id = request.args.get("lesson_id", "")).first_or_404().author_ids), mimetype = "text/javascript")
+  res.headers['Cache-Control'] = 'no-cache'
+  return res
 
 @app.context_processor
 def context_processor():
