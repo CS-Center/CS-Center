@@ -15,7 +15,7 @@
   <ul>
     {%- for item in news -%}
       {%- if user.organization_roles.news >= roles.news.moderator or item.has_author(user.id) -%}
-        <li><a href="/organization/{{ oid }}/admin/news-edit/{{ item.nid }}">{{ item.title }}</a> (posted {{ time_delta_display(item.time) }})</li>
+        <li><a href="/organization/{{ oid }}/admin/news-edit/{{ item.id }}">{{ item.title }}</a> (posted {{ time_delta_display(item.time) }})</li>
       {%- endif -%}
     {%- endfor -%}
   </ul>

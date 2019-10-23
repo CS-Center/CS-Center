@@ -10,10 +10,17 @@ class LessonEditForm(FlaskForm):
     FlaskForm.__init__(self)
     self.assoc_obj = lesson
     
-    self.lid.data = lesson.lid
-    self.title.data = lesson.title
-    self.desc.data = lesson.desc
-    self.body.data = lesson.body
+    if self.lid.data is None:
+      self.lid.data = lesson.lid
+      
+    if self.title.data is None:
+      self.title.data = lesson.title
+    
+    if self.desc.data is None:
+      self.desc.data = lesson.desc
+    
+    if self.body.data is None:
+      self.body.data = lesson.body
 
   lid = StringField("ID", admin_lesson_edit_nid)
   title = StringField("Title", admin_lesson_edit_title)
