@@ -59,9 +59,7 @@ def lesson_edit(lesson, form):
         LessonAuthors.remove(lesson_author)
       else:
         authors.remove(lesson_author.uid)
-    
-    print(authors)
-     
+         
     for new_author in authors:
       LessonAuthors.add(lid = lesson.id, uid = new_author, oid = get_org_id())
 
