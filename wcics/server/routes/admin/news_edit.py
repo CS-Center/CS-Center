@@ -15,14 +15,14 @@ from wcics.utils.url import get_org_id
 
 from flask import abort, flash, redirect, render_template
 
-@app.route("/organization/<org>/admin/news-edit/<nid>", methods = ["GET", "POST"])
+@app.route("/organization/<org>/admin/news-edit/<int:id>", methods = ["GET", "POST"])
 @organization_page
 @assert_login
-def serve_news_sudo_edit_request(org, nid):
-  article = News.query.filter_by(oid = get_org_id(), nid = nid).first()
+def serve_news_sudo_edit_request(org, id):
+  article = News.query.filter_by(oid = get_org_id(), id = id).first()
   
   if not article:
-    return error_page(404, "There is no news item with the ID '%s'." % nid)
+    return error_page(404, "There is no news item with the ID %d." % id)
 
   if not (user.organization_roles.news >= NewsRoles.moderator or user.organization_roles.news >= NewsRoles.default and article.has_author(user.id)):
     abort(403)

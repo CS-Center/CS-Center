@@ -15,7 +15,7 @@
   <ul>
     {%- for item in lessons -%}
       {%- if user.organization_roles.lessons >= roles.lessons.admin or item.has_author(user.id) -%}
-        <li><a href="/organization/{{ oid }}/admin/lesson-edit/{{ item.lid }}">{{ item.title }}</a> (posted {{ time_delta_display(item.create_time) }})</li>
+        <li><a href="/organization/{{ oid }}/admin/lesson-edit/{{ item.id }}">{{ item.title }}</a> (posted {{ time_delta_display(item.create_time) }})</li>
       {%- endif -%}
     {%- endfor -%}
   </ul>

@@ -10,9 +10,14 @@ class NewsSudoEditForm(FlaskForm):
     FlaskForm.__init__(self)
     self.assoc_obj = article
     
-    self.nid.data = article.nid
-    self.title.data = article.title
-    self.body.data = article.body
+    if self.nid.data is None:
+      self.nid.data = article.nid
+      
+    if self.title.data is None:
+      self.title.data = article.title
+    
+    if self.body.data is None:
+      self.body.data = article.body
 
   nid = StringField("ID", admin_news_edit_nid)
   title = StringField("Title", admin_news_edit_title)

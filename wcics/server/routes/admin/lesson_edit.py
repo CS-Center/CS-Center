@@ -15,14 +15,14 @@ from wcics.utils.url import get_org_id
 
 from flask import abort, flash, redirect, render_template
 
-@app.route("/organization/<org>/admin/lesson-edit/<lid>", methods = ["GET", "POST"])
+@app.route("/organization/<org>/admin/lesson-edit/<int:id>", methods = ["GET", "POST"])
 @organization_page
 @assert_login
-def serve_lesson_edit(org, lid):
-  lesson = Lessons.query.filter_by(oid = get_org_id(), lid = lid).first()
+def serve_lesson_edit(org, id):
+  lesson = Lessons.query.filter_by(oid = get_org_id(), id = id).first()
   
   if not lesson:
-    return error_page(404, "There is no lesson with the ID '%s'." % lid)
+    return error_page(404, "There is no lesson with the ID %d." % id)
   
   if not (user.organization_roles.lessons >= LessonRoles.admin or user.organization_roles.lessons >= LessonRoles.default and lesson.has_author(user.id)):
     abort(403)
@@ -50,6 +50,8 @@ def lesson_edit(lesson, form):
   lesson.title = form.title.data
   lesson.body = form.body.data
   lesson.lid = form.lid.data
+  
+  print(lesson.lid)
     
   if user.organization_roles.lessons >= LessonRoles.admin:
     authors = list(map(int, form.authors.data.split()))
@@ -59,9 +61,7 @@ def lesson_edit(lesson, form):
         LessonAuthors.remove(lesson_author)
       else:
         authors.remove(lesson_author.uid)
-    
-    print(authors)
-     
+         
     for new_author in authors:
       LessonAuthors.add(lid = lesson.id, uid = new_author, oid = get_org_id())
 
