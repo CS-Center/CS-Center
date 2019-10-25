@@ -75,7 +75,7 @@ def authorize_google():
         "email": email,
         "real_name": userinfo.raw["name"]
       })
-      return redirect("/oauth-create-account/?next=%s&token=%s" % (get_next_page(), connect_token))
+      return redirect("/oauth-create-account/?next=%s&token=%s" % (data.get("next", "/"), connect_token))
   else:
     set_user(Users.query.filter_by(id = link.uid).first_or_404())
     flash("Welcome back!", category = "SUCCESS")
