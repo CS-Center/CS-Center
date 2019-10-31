@@ -2,7 +2,7 @@
 
 # Mailing utilities
 
-import threading
+import threading, traceback
 
 from wcics import mail_app, app
 
@@ -29,7 +29,7 @@ def send_many(addrs, subject = "", body = ""):
           try:
             conn.send_message(subject, recipients = [addr], html = body)
           except:
-            pass
+            traceback.print_exc()
   
   t = threading.Thread(target = inner)
   
