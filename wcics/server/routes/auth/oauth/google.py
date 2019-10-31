@@ -4,7 +4,7 @@
 
 from wcics import app
 
-from wcics.auth.jwt import make_jwt, verify_jwt
+from wcics.auth.jwt import make_jwt, verify_jwt, InvalidJWT, ExpiredJWT
 from wcics.auth.manage_user import set_user
 from wcics.auth.oauth.google import GoogleOAuth
 
@@ -13,6 +13,7 @@ from wcics.consts import DOMAIN
 from wcics.database.models import GoogleLinks, Users
 
 from wcics.utils.url import get_next_page
+from wcics.utils.routes import error_page
 
 from flask import abort, flash, json, redirect, render_template, request, session
 
@@ -39,15 +40,21 @@ def login_google():
 @app.route("/authorized/google/")
 def authorize_google():
   if 'state' not in session:
-    abort(401)
+    return error_page(400, message = "No state was provided! Please return to /login to retrieve a valid state.")
 
   state = request.args.get('state', '')
   sess_state = session.get('state')
+  
+  try:
+    next_url = verify_jwt(session['state']).get("next", "/")
+  except (InvalidJWT, ExpiredJWT):
+    del session['state']
+    return error_page(400, message = "The provided state is invalid! Please return to /login to retrieve a new state.")
+  
   del session['state']
-
+  
   if state != sess_state:
-    # TODO: Error nicely
-    abort(401)
+    return error_page(400, message = "The provided state is invalid! Please return to /login to retrieve a new state.")
 
   code = request.args.get('code', '')
 
@@ -75,7 +82,7 @@ def authorize_google():
         "email": email,
         "real_name": userinfo.raw["name"]
       })
-      return redirect("/oauth-create-account/?next=%s&token=%s" % (data.get("next", "/"), connect_token))
+      return redirect("/oauth-create-account/?next=%s&token=%s" % (next_url, connect_token))
   else:
     set_user(Users.query.filter_by(id = link.uid).first_or_404())
     flash("Welcome back!", category = "SUCCESS")
