@@ -20,6 +20,7 @@ NO_REDIRECT = []
 FLASHES = ["ERROR", "SUCCESS", "INFO", "DEBUG"] # TODO
 
 ERRORS = {
+  400: "Bad Request",
   403: "Permission Denied",
   404: "Page Not Found",
   500: "Internal Server Error"

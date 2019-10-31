@@ -4,7 +4,7 @@ from wcics import app
 
 from wcics.auth.create_account import create_blank_account
 from wcics.auth.jwt import verify_jwt, InvalidJWT, ExpiredJWT
-from wcics.auth.manage_user import set_user
+from wcics.auth.manage_user import set_user, user
 
 from wcics.database.models import GoogleLinks, GithubLinks
 from wcics.database.utils import db_commit
@@ -18,6 +18,10 @@ from flask import abort, flash, redirect, render_template, request
 
 @app.route("/oauth-create-account/", methods = ["GET", "POST"])
 def oauth_create_account():
+  global user
+  if user is not None:
+    return redirect(get_next_page(), code = 303)
+  
   try:
     data = verify_jwt(request.args.get("token", ""))
   except (InvalidJWT, ExpiredJWT):
