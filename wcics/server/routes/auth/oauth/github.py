@@ -37,7 +37,7 @@ def login_github():
 
 @app.route("/authorized/github/")
 def authorize_github():  
-  if user is not None:
+  if user:
     next_url = request.args.get("next")
     if next_url is None:
       try:

@@ -39,7 +39,7 @@ def login_google():
 
 @app.route("/authorized/google/")
 def authorize_google():
-  if user is not None:
+  if user:
     next_url = request.args.get("next")
     if next_url is None:
       try:
