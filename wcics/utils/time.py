@@ -39,7 +39,7 @@ def time_delta_display(dt):
   
   if time_within(n, d, h, m, s):
     Y -= 1
-    M += 12
+    N += 12
   
   for val, name in [(Y, "year"), (N, "month"), (D, "day"), (H, "hour"), (M, "minute"), (S, "second")]:
     if val == 1:
