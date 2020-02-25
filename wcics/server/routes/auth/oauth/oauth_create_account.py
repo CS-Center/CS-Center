@@ -4,7 +4,7 @@ from wcics import app
 
 from wcics.auth.create_account import create_blank_account
 from wcics.auth.jwt import verify_jwt, InvalidJWT, ExpiredJWT
-from wcics.auth.manage_user import set_user
+from wcics.auth.manage_user import set_user, user
 
 from wcics.database.models import GoogleLinks, GithubLinks
 from wcics.database.utils import db_commit
@@ -18,6 +18,9 @@ from flask import abort, flash, redirect, render_template, request
 
 @app.route("/oauth-create-account/", methods = ["GET", "POST"])
 def oauth_create_account():
+  if user:
+    return redirect(get_next_page(), code = 303)
+  
   try:
     data = verify_jwt(request.args.get("token", ""))
   except (InvalidJWT, ExpiredJWT):
@@ -35,16 +38,16 @@ def oauth_create_account():
     form.real_name.data = data["real_name"]
 
   if form.validate_on_submit():
-    user = create_blank_account(form.email.data, form.username.data, form.real_name.data, form.subscribed.data)
+    new_user = create_blank_account(form.email.data, form.username.data, form.real_name.data, form.subscribed.data)
 
     if data["provider"] == "Google":
-      GoogleLinks.add(uid = user.id, gid = data["pid"])
+      GoogleLinks.add(uid = new_user.id, gid = data["pid"])
     elif data["provider"] == "GitHub":
-      GithubLinks.add(uid = user.id, gid = data["pid"])
+      GithubLinks.add(uid = new_user.id, gid = data["pid"])
 
     db_commit()
 
-    set_user(user)
+    set_user(new_user)
 
     flash("Welcome!", category = "SUCCESS")
     return redirect(get_next_page(), code = 303)
