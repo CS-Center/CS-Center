@@ -14,12 +14,15 @@ int absolute_token_check(const char* expected, const char* user, const char* arg
   ld edub = strtold(expected, &eptr);
   ld udub = strtold(user, &uptr);
   
+  bool b1 = uptr != user + strlen(user);
+  bool b2 = eptr != expected + strlen(expected);
+  
   // conversion for both failed, so compare the raw tokens
-  if(uptr != user + strlen(user) && eptr != expected + strlen(expected))
+  if(b1 && b2)
     return strcmp(expected, user) == 0;
     
   // one of the two tokens failed, so they are not equal enough
-  if(uptr != user + strlen(user) || eptr != expected + strlen(expected))
+  if(b1 || b2)
     return 0;
     
   ld epsilon = strtold(arg, &argptr);
