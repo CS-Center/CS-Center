@@ -33,7 +33,8 @@ class ProblemJudging(dbmodel, Helper):
   checker_lang = dbcol(dbstr(LANG_MAX_LENGTH))
   checker_arg = dbcol(dbstr(ARG_MAX_LENGTH), nullable = False)
   
-  interactor_id = dbcol(dbstr(ID_MAX_LENGTH), nullable = False)
+  custom_interactor = dbcol(dbbool, nullable = False)
   interactor_code = dbcol(dbstr(CODE_MAX_LENGTH))
   interactor_lang = dbcol(dbstr(LANG_MAX_LENGTH))
-  interactor_arg = dbcol(dbstr(ARG_MAX_LENGTH), nullable = False)
+  
+  __tablename__ = "problem_judging"
