@@ -1,12 +1,13 @@
+#define _GNU_SOURCE // required for memfd_create()
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/mman.h>
 
 #include "compiled_executor.hpp"
 
 #include "sandbox/process/insecure_process.hpp"
 #include "sandbox/config.hpp"
 #include "sandbox/process_result.hpp"
-#include "sandbox/communicator.hpp"
 
 #include "utils/pipes.hpp"
 
@@ -61,18 +62,23 @@ int CompiledExecutor::compile() {
   
   make_compiler_config(cconf);
   
-  Communicator comm(in, out, err, cconf, PIPE_NULL, PIPE_NULL, PIPE_NORMAL, status);
-  AsyncCommunicator acomm(comm);
+  int temp_fd = memfd_create("stderr", MFD_CLOEXEC);
   
-  if(status) {
-    (*res).death_ie("CompiledExecutor::prepare: Failed to construct communicator", false);
+  if(temp_fd < 0) {
+    perror("CompiledExecutor::compile");
+    
+    (*res).death_ie("CompiledExecutor::compile: Failed to create a temporary file for stderr");
+    
     return -1;
   }
   
-  InsecureProcess proc(acomm, get_compiler(), cargs, environ, cconf, res);
+  // file_config
+  file_config file_conf(null_read_fd, null_write_fd, temp_fd);
   
-  if(proc.launch()) {
-    (*res).death_ie("CompiledExecutor::prepare: error when launching compiling process"); 
+  InsecureProcess proc(get_compiler(), cargs, environ, cconf, res);
+  
+  if(proc.launch(file_conf)) {
+    (*res).death_ie("CompiledExecutor::compile: error when launching compiling process"); 
     status = -1;
   }
   
@@ -82,9 +88,24 @@ int CompiledExecutor::compile() {
     compiled = true;
     
   if(unlink(filepath)) {
-    (*res).death_ie("CompiledExecutor::prepare: Failed to unlink the source file", false);
+    (*res).death_ie("CompiledExecutor::compile: Failed to unlink the source file", false);
 
     return -1; 
+  }
+  
+  int cnt, offset = 0;
+  
+  do {
+    // dump temp_fd's contents into the compiler error buffer
+    cnt = read(temp_fd, compiler_info + offset, INFO_BUF_LEN - offset);
+    
+    offset += cnt;
+  while(cnt > 0 && offset < INFO_BUF_LEN);
+  
+  if(cnt < 0) {
+    perror("Could not transfer compiler error into buffer");
+    
+    strncpy(compiler_info, "Could not get compiler error. Please contact an admin.", INFO_BUF_LEN);
   }
     
   return status;

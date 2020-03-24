@@ -3,8 +3,6 @@
 #include <limits.h>
 
 #include "sandbox/config.hpp"
-#include "sandbox/communicator.hpp"
-#include "utils/async_launcher.hpp"
 #include "sandbox/process/secure_process/secure_process.hpp"
 #include "sandbox/file-access-checker/file_access_checker.hpp"
 #include "sandbox/process_result.hpp"
@@ -32,9 +30,6 @@ protected:
   
   // config
   config& conf;
-  
-  // communicator
-  AsyncCommunicator& comm;
   
   // fac
   FileAccessChecker& fac;
@@ -72,7 +67,7 @@ protected:
   
 public:
   // file is the file name to put the code in
-  Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config&, AsyncCommunicator&, FileAccessChecker&, SharedProcessResult& res);
+  Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
 
   // prepare for launching
   // this _MUST_ be called before launch, and launch can be called many times after this is called
@@ -84,5 +79,7 @@ public:
   // called for cleanup
   virtual int cleanup();
 
-  virtual int launch();
+  virtual int launch(file_config&);
+  
+  void set_config(config&);
 };

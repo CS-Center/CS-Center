@@ -37,7 +37,6 @@ ull SecureProcess::get_arg3() {
 }
 
 SecureProcess::SecureProcess(
-  AsyncCommunicator& comm,
   const char* file, 
   const char* const* args, 
   const char* const* env, 
@@ -45,7 +44,7 @@ SecureProcess::SecureProcess(
   SharedProcessResult& pres,
   FileAccessChecker& checker
 ) :
-  Process(comm, file, args, env, conf, pres), 
+  Process(file, args, env, conf, pres), 
   sps(*this),
   shock(sps),
   fac(checker)

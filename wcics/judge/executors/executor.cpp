@@ -46,13 +46,12 @@ int Executor::add_args(const char** base_args) {
   return 0;
 }
 
-Executor::Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf, AsyncCommunicator& comm, FileAccessChecker& fac, SharedProcessResult& res) :
+Executor::Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf,  FileAccessChecker& fac, SharedProcessResult& res) :
   file(file),
   code(code),
   extra_args(extra_args),
   env(env),
   conf(conf),
-  comm(comm),
   fac(fac),
   res(res)
 {
@@ -132,11 +131,15 @@ int Executor::cleanup() {
   return 0;
 }
 
-int Executor::launch() {
-  SecureProcess proc(comm, get_exec(), args, env, conf, res, fac);
+int Executor::launch(file_config& file_conf) {
+  SecureProcess proc(get_exec(), args, env, conf, res, fac);
   
-  if(proc.launch() == -1)
+  if(proc.launch(file_conf) == -1)
     return -1;
   
   return 0;
+}
+
+void Executor::set_config(config& new_conf) {
+  conf = new_conf;
 }

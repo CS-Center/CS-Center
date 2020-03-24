@@ -8,10 +8,10 @@ int InsecureProcess::monitor() {
   struct timespec tv, total, start, end, delta;
   total.tv_sec = total.tv_nsec = 0;
   
-  // delay is .1 seconds
+  // delay is .5 seconds
   // process may not get a fully fair timelimit because of this delay, but i dont really care
   tv.tv_sec = 0;
-  tv.tv_nsec = 1e8;
+  tv.tv_nsec = 5e8;
   
   pid_t ret;
   int status;
@@ -60,12 +60,11 @@ int InsecureProcess::monitor() {
 void InsecureProcess::child_func() {}
 
 InsecureProcess::InsecureProcess(
-  AsyncCommunicator& comm,
   const char* file, 
   const char* const* args, 
   const char* const* env, 
   config& conf,
   SharedProcessResult& pres
 ) : 
-  Process(comm, file, args, env, conf, pres)
+  Process(file, args, env, conf, pres)
 {}

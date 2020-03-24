@@ -36,7 +36,7 @@ void SecureProcess::child_func() {
     _exit(-1);
   }
   
-  // trace me daddy
+  // Have the parent trace the child
   if(ptrace(PTRACE_TRACEME, 0, 0, 0)) {
     res.death_ie("SecureProcess::child_func: ptrace");
     _exit(-1);
@@ -108,15 +108,6 @@ int SecureProcess::monitor() {
     if(tid == -1) {
       // process must already be dead, so just exit
       res.death_ie("SecureProcess::monitor: waitpid");
-      return 0;
-    }
-    
-    if(comm.get_obj().is_ole()) {
-      res.death_ole();
-      
-      terminate();
-      wait_death();
-      
       return 0;
     }
             

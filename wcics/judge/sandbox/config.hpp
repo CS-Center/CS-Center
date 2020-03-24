@@ -10,12 +10,6 @@ struct config {
   // this is monitored in a different way
   double timelimit;
   
-  // standard streams, suitable for calls to dup2()
-  // pstdin must be readable; pstdout and pstderr must be writable
-  // a value of -1 indicates that the file descriptor will not 
-     // be changed from its parent
-  int pstdin, pstdout, pstderr;
-  
   // RLIMIT_CORE
   int core;
   
@@ -33,7 +27,18 @@ struct config {
   
   config();
   
-  // 0 on success, -1 on error
+  void init(process_result&);
+};
+
+// since this has to be redone every time the process is run, this is a separate structure
+struct file_config {
+  // streams
+  // -1 indicates stream inheritance
+  int pstdin, pstdout, pstderr;
+  
+  file_config(int in, int out, int err);
+  
+  // initiailize
   void init(process_result&);
   
   // cleanup the parent context

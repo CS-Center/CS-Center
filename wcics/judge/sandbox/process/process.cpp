@@ -14,8 +14,7 @@
 #include "utils/args.hpp"
 #include "utils/time.hpp"
 
-Process::Process(AsyncCommunicator& comm, const char* file, const char* const *args, const char* const *env, config& conf, SharedProcessResult& pr) :
-  comm(comm),
+Process::Process(const char* file, const char* const *args, const char* const *env, config& conf, SharedProcessResult& pr) :
   pathname(file),
   argv(args),
   envp(env),
@@ -29,7 +28,7 @@ void Process::terminate() {
   }
 }
 
-int Process::fork_and_exec() {      
+int Process::fork_and_exec(file_config& file_conf) {      
   pid = fork();
   if(pid == -1) {
     res.death_ie("Process: launch: fork");
@@ -38,6 +37,8 @@ int Process::fork_and_exec() {
   if(pid == 0) {  
     // child
     pconf.init(res);
+    
+    file_conf.init(res);
         
     child_func();
     
@@ -48,22 +49,18 @@ int Process::fork_and_exec() {
     _exit(-1);
   }
   
-  if(pconf.parent_cleanup()) {
-    fputs("Process::fork_and_exec: failed to cleanup config\n", stderr);
+  if(file_conf.parent_cleanup()) {
+    fputs("Process::fork_and_exec: failed to cleanup file_config\n", stderr);
   }
   
   return 0;
 }
 
-int Process::launch(void) {
+int Process::launch(file_config& file_conf) {
   int status = 0;
-  if(!fork_and_exec()) {  
-    comm.monitor();
-    
+  if(!fork_and_exec(file_conf)) {      
     if(monitor())
       status = -1;
-    
-    comm.wait();
   }
   
   return status;

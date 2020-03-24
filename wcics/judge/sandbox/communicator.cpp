@@ -72,7 +72,7 @@ Communicator::Communicator(
   out(outfd),
   err(errfd)
 {
-  status = make_pipes(*this, conf, pipe_stdin, pipe_stdout, pipe_stderr);
+//  status = make_pipes(*this, conf, pipe_stdin, pipe_stdout, pipe_stderr);
   
   if(status)
     return;
@@ -217,8 +217,6 @@ int Communicator::launch(void) {
 
               break;
             }
-
-            perror("error on stdin");
 
             if(errno == EWOULDBLOCK || errno == EAGAIN)
               break;

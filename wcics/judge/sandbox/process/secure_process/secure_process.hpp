@@ -96,7 +96,6 @@ private:
   
 public:
   SecureProcess(
-    AsyncCommunicator& comm,
     const char*, 
     const char* const*, 
     const char* const*, 

@@ -7,13 +7,14 @@
 
 int get_null_read_fd() {
   // if we cant open the null fd, what should we do?
-  // we decide to return an invalid fd and print a loud warning
+  // we die. Doing anything else just causes future errors.
   
   int fd = open("/dev/null", O_RDONLY | O_CLOEXEC);
   
   if(fd == -1) {
-    perror("\n\nWARNING: COULD NOT OPEN /dev/null FOR READING");
-    fputs("\n\n", stderr);
+    perror("WARNING: COULD NOT OPEN /dev/null FOR READING");
+    
+    _exit(-1);
   }
   
   return fd;
@@ -23,8 +24,8 @@ int get_null_write_fd() {
   int fd = open("/dev/null", O_WRONLY | O_CLOEXEC);
   
   if(fd == -1) {
-    perror("\n\nWARNING: COULD NOT OPEN /dev/null FOR WRITING");
-    fputs("\n\n", stderr);
+    perror("WARNING: COULD NOT OPEN /dev/null FOR WRITING");
+    _exit(-1);
   }
   
   return fd;
