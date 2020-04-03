@@ -81,4 +81,4 @@ public:
 
   virtual int launch(file_config&);
   
-  virtual void set_env(const char* con
+  void set_env(const char* const*);

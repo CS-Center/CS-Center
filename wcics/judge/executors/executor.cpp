@@ -135,3 +135,7 @@ int Executor::launch(file_config& file_conf) {
   
   return 0;
 }
+
+void Executor::set_env(const char* const* new_env) {
+  env = new_env;
+}
