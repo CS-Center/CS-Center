@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <utility>
 
 #include "executor.hpp"
 
@@ -74,20 +75,15 @@ int Executor::create_files() {
   strncat(filepath, get_ext(), PATH_MAX - dir_len - 1 - file_len - 1);
   
   // open and create the new file
-  int fd = open(filepath, O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, 0644);
-  
-  if(fd == -1) {
+  scoped_fd code_fd("executor_code");
+    
+  if(code_fd.open(filepath, O_WRONLY | O_CREAT | O_EXCL, 0600)) {
     perror("Failed to open the file for writing");
     return -1;
   }
   
-  if(write(fd, code, strlen(code)) == -1) {
+  if(code_fd.write(code, strlen(code)) == -1) {
     perror("Failed to write contents to file");
-    return -1;
-  }
-  
-  if(close(fd)) {
-    perror("Failed to close fd");
     return -1;
   }
   
@@ -138,8 +134,4 @@ int Executor::launch(file_config& file_conf) {
     return -1;
   
   return 0;
-}
-
-void Executor::set_config(config& new_conf) {
-  conf = new_conf;
 }

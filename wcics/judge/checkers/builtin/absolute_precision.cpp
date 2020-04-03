@@ -35,6 +35,6 @@ int absolute_token_check(const char* expected, const char* user, const char* arg
   return abs(edub - udub) <= epsilon;
 }
 
-int absolute_precision_check(const char* expected, const char* user, const char* arg) {
-  return check_tokens(expected, user, absolute_token_check, arg);
+int absolute_precision_check(int jfd, int ufd, const char* arg) {
+  return check_tokens(jfd, ufd, absolute_token_check, arg);
 }

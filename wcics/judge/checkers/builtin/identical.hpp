@@ -1,1 +1,1 @@
-int identical_check(const char* expected, const char* user, const char* arg);
+int identical_check(int jfd, int ufd, const char* arg);

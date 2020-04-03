@@ -4,7 +4,7 @@
 
 #include "executor.hpp"
 
-typedef Executor* (*get_executor_sig) (const char* code, const char* file, const char* const* extra_args, const char* const* env, config&, AsyncCommunicator&, FileAccessChecker&, SharedProcessResult& res);
+typedef Executor* (*get_executor_sig) (const char* code, const char* file, const char* const* extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
 
 #define EXECUTOR_INFO_LEN 4096
 

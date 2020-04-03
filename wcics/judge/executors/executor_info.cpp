@@ -1,4 +1,5 @@
 #include <string.h>
+#include <fcntl.h>
 
 #include "executors/clang/clang_executor.hpp"
 #include "executors/clang++/clangpp_executor.hpp"
@@ -10,12 +11,10 @@
 
 #include "sandbox/process/insecure_process.hpp"
 
-#include "utils/pipes.hpp"
-
 #include "executor_info.hpp"
 
-#define DEF_INFO_FUNC(name) Executor* New##name##Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf, AsyncCommunicator& acomm, FileAccessChecker& fac, SharedProcessResult& res) {\
-  return new name##Executor(code, file, extra_args, env, conf, acomm, fac, res); \
+#define DEF_INFO_FUNC(name) Executor* New##name##Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {\
+  return new name##Executor(code, file, extra_args, env, conf, fac, res); \
 }
 
 #ifdef C_ENABLED
@@ -310,55 +309,62 @@ const char* ExecutorInfo::get_info() {
 
   has_version = true;
 
-  communicate_fd in, out, err;
+  file_config file_conf(-1, -1, -1);
+
+  scoped_fd temp_fd("exec_info_stream");
   
-  int pipe_stdout = PIPE_NULL, pipe_stderr = PIPE_NULL;
+  if(temp_fd.open("/tmp", O_RDWR | O_TMPFILE, 0600) < 0) {
+    fprintf(stderr, "Failed to get executor info for %s ", shortname);
+    perror("open /tmp/__executor_info_stream");
+    
+    return "Error getting info, please contact an admin.";
+  }
+
   if(stderr_version) {
-    err.buffer = info;
-    err.length = EXECUTOR_INFO_LEN;
-    pipe_stderr = PIPE_NORMAL;
+    file_conf.pstderr = temp_fd.fd;
   }
   else {
-    out.buffer = info;
-    out.length = EXECUTOR_INFO_LEN;
-    pipe_stdout = PIPE_NORMAL;
+    file_conf.pstdout = temp_fd.fd;
   }
   
   config conf;
   conf.memory = 128 * 1024 * 1024;
   conf.nproc = -1;
   conf.timelimit = 2;
+  conf.fsize = EXECUTOR_INFO_LEN;
   
-  int status = 0;
-  Communicator comm(in, out, err, conf, PIPE_NULL, pipe_stdout, pipe_stderr, status);
-  
-  if(status) {
-    fprintf(stderr, "Failed to get executor info for %s", shortname);
-    perror("Communicator");
-    
-    return "Error getting info: Communicator couldn't be constructed!";
-  }
-  
-  AsyncCommunicator acomm(comm);
-  
+  int status;
   SharedProcessResult shres(status);
   
   if(status) {
-    fprintf(stderr, "Failed to get executor info for %s", shortname);
+    fprintf(stderr, "Failed to get executor info for %s ", shortname);
     perror("SharedProcessResult");
     
-    return "Error getting info: SharedProcessResult couldn't be constructed!";
+    strncpy(info, "Error getting info. Please contact an admin", INFO_BUF_LEN);
   }
   
   const char* null[] = {0};
   
-  InsecureProcess proc(acomm, exec, version_args, null, conf, shres);
+  InsecureProcess proc(exec, version_args, null, conf, shres);
   
-  proc.launch();
+  proc.launch(file_conf);
   
   // if they error, return that to user
   if((*shres).death_type != DEATH_NORMAL || (*shres).exit_info)
     strncpy(info, (*shres).info, EXECUTOR_INFO_LEN);
+    
+  int cnt = temp_fd.read(info, INFO_BUF_LEN);
+  
+  if(cnt < 0) {
+    fprintf(stderr, "Failed to get executor info for %s ", shortname);
+    perror("read");
+    
+    strncpy(info, "Error getting info. Please contact an admin.", INFO_BUF_LEN);
+    
+    return info;
+  }
+  
+  info[cnt] = 0;
   
   // success!
   return info;

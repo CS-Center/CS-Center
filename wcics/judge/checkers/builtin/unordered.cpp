@@ -1,7 +1,11 @@
 #include <vector>
 #include <algorithm>
 #include <string.h>
-#include <stdio.h>
+#include <ctype.h>
+
+#include "checkers/utils/whole_file_check.hpp"
+
+#include "unordered.hpp"
 
 struct string_result {
   const char* ptr;
@@ -10,19 +14,13 @@ struct string_result {
   string_result(const char* ptr, int len) : ptr(ptr), len(len) {}
   
   bool operator<(const string_result& other) const {
-    // printf("comparing %s with %s", ptr, other.ptr);
-  
-    int r1 = strncmp(ptr, other.ptr, std::min(len, other.len));
+    // sort by lengths because it's faster
     
-    // printf(": strncmp: %d\n", r1);
+    if(len < other.len) return 1;
+    if(len > other.len) return 0;
     
-    // equal
-    // check lengths 
-    if(r1 == 0)
-      return len < other.len;
-      
-    // otherwise, if <0, then yes, otherwise no
-    return r1 < 0;
+    // same length, compare lex
+    return strncmp(ptr, other.ptr, len) < 0;
   };
   
   bool operator==(const string_result& other) const {
@@ -30,42 +28,41 @@ struct string_result {
   };
 };
 
-int unordered_check(const char* expected, const char* user, const char* arg) {
-  int eoff, uoff, eres, ures, elen, ulen;
-  
-  char ebuf[4096], ubuf[4096];
-  
-  std::vector<string_result> etkns, utkns;
-  
-  while(1) {
-    // scanf both
-    eres = sscanf(expected, "%4095s%n", ebuf, &eoff);
+void tokenize(char* buffer, std::vector<string_result>& vec) {
+  while(*buffer) {
     
-    ures = sscanf(user, "%4095s%n", ubuf, &uoff);
+    // next non-whitespace
+    while(isspace(*buffer) && *buffer) buffer++;
+
+    char* start = buffer;
     
-    expected += eoff;
-    user += uoff;
+    // next whitespace
+    while(!isspace(*buffer) && *buffer) buffer++;
     
-    // if one got a token but other doesnt, we dont match
-    if(eres != ures)
-      return 0;
-      
-    // if both have EOF, we break 
-    if(eres == EOF)
-      break;
-      
-    // add tokens
-    elen = strlen(ebuf);
-    ulen = strlen(ubuf);
-    
-    etkns.emplace_back(expected - elen, elen);
-    utkns.emplace_back(user - ulen, ulen);
+    // buffer == start if we hit EOF
+    if(buffer != start) {
+      vec.emplace_back(start, buffer - start);
+    }
   }
+}
+
+int _unordered_check(char* judge_out, char* user_out, const void* arg) {
+  std::vector<string_result> jtkns, utkns;
+  
+  tokenize(judge_out, jtkns);
+  tokenize(user_out, utkns);
+  
+  // short circuit - if sizes don't match, don't bother sorting
+  if(jtkns.size() != utkns.size()) return 0;
   
   // order them
-  std::sort(etkns.begin(), etkns.end());
+  std::sort(jtkns.begin(), jtkns.end());
   std::sort(utkns.begin(), utkns.end());
   
   // if they are equal, then yes, otherwise no
-  return etkns == utkns;
+  return jtkns == utkns;
+}
+
+int unordered_check(int jfd, int ufd, const char* arg) {
+  return whole_file_check(jfd, ufd, _unordered_check, arg);
 }

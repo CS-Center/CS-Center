@@ -1,36 +1,75 @@
-#include <stdio.h>
+#include <ctype.h>
 
+#include "checkers/utils/whole_file_check.hpp"
 #include "tokenizer.hpp"
 
-int check_tokens(const char* expected, const char* user, check_token_sig func, const char* arg) {
-  int eoff, uoff, eres, ures, fres;
+struct token_arg {
+  check_token_sig func;
+  const char* arg;
+};
+
+
+int _check_tokens(char* judge_out, char* user_out, const void* varg) {
+
+  const token_arg * ta = (const token_arg*) varg;
+
+  auto func = ta->func;
+  auto arg = ta->arg;
   
-  char ebuf[4096], ubuf[4096];
+  while(*judge_out && *user_out) {
   
-  while(1) {
-    // scanf both
-    eres = sscanf(expected, "%4095s%n", ebuf, &eoff);
+    // search for non-whitespace
     
-    ures = sscanf(user, "%4095s%n", ubuf, &uoff);
+    while(isspace(*judge_out) && *judge_out) judge_out++;
     
-    expected += eoff;
-    user += uoff;
+    // search for whitespace
+    char* jtkn = judge_out;
     
-    // if one got a token but other doesnt, we dont match
-    if(eres != ures)
-      return 0;
-      
-    // if both have EOF, we succeed 
-    if(eres == EOF)
-      return 1;
-      
-    // call func
-    fres = func(ebuf, ubuf, arg);
+    while(!isspace(*judge_out) && *judge_out) judge_out++;
     
-    // if they didnt match, fail
-    if(fres != 1)
-      return fres;
+    bool jeof = jtkn == judge_out;
+    
+    // search for non-whitespace
+    while(isspace(*user_out) && *user_out) user_out++;
+    
+    char* utkn = user_out;
+    
+    while(!isspace(*user_out) && *user_out) user_out++;
+    
+    bool ueof = utkn == user_out;
+    
+    // one eof and the other didn't, so fail
+    if(ueof != jeof) return 0;
+    
+    // both EOF, so correct
+    if(ueof && jeof) return 1;
+    
+    // neither EOF
+    
+    // since the func requires a null terminated string, we null terminate it here and then re-write the old character back.
+    char jcur = *judge_out;
+    char ucur = *user_out;
+    
+    *judge_out = 0;
+    *user_out = 0;
+    
+    // failed.
+    if(!func(judge_out, user_out)) return 1;
+    
+    // replace old chars
+    *judge_out = jcur;
+    *user_out = ucur;
   }
   
-  return -1;
+  // both EOF, so we return success
+  return 1;
+}
+
+int check_tokens(int jfd, int ufd, check_token_sig func, const char* arg) {
+  token_arg ta;
+  
+  ta.func = func;
+  ta.arg = arg;
+  
+  return whole_file_check(jfd, ufd, _check_tokens, &ta);
 }

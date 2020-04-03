@@ -49,10 +49,6 @@ int Process::fork_and_exec(file_config& file_conf) {
     _exit(-1);
   }
   
-  if(file_conf.parent_cleanup()) {
-    fputs("Process::fork_and_exec: failed to cleanup file_config\n", stderr);
-  }
-  
   return 0;
 }
 

@@ -1,7 +1,6 @@
-#define _GNU_SOURCE // required for memfd_create()
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/mman.h>
+#include <string.h>
 
 #include "compiled_executor.hpp"
 
@@ -52,19 +51,14 @@ int CompiledExecutor::compile() {
     return -1;
   }
   
-  int status;
-  communicate_fd in, out, err;
-  err.buffer = compiler_info;
-  err.length = INFO_BUF_LEN;
-  
   // get compiler config
   config cconf;
   
   make_compiler_config(cconf);
   
-  int temp_fd = memfd_create("stderr", MFD_CLOEXEC);
-  
-  if(temp_fd < 0) {
+  scoped_fd temp_fd("compiler_stderr");
+    
+  if(temp_fd.open("/tmp", O_RDWR | O_TMPFILE, 0600)) {
     perror("CompiledExecutor::compile");
     
     (*res).death_ie("CompiledExecutor::compile: Failed to create a temporary file for stderr");
@@ -73,9 +67,11 @@ int CompiledExecutor::compile() {
   }
   
   // file_config
-  file_config file_conf(null_read_fd, null_write_fd, temp_fd);
+  file_config file_conf(null_read_fd, null_write_fd, temp_fd.fd);
   
   InsecureProcess proc(get_compiler(), cargs, environ, cconf, res);
+  
+  int status;
   
   if(proc.launch(file_conf)) {
     (*res).death_ie("CompiledExecutor::compile: error when launching compiling process"); 
@@ -86,26 +82,16 @@ int CompiledExecutor::compile() {
     status = COMPILER_ERROR;
   else
     compiled = true;
-    
-  if(unlink(filepath)) {
-    (*res).death_ie("CompiledExecutor::compile: Failed to unlink the source file", false);
-
-    return -1; 
-  }
   
-  int cnt, offset = 0;
-  
-  do {
-    // dump temp_fd's contents into the compiler error buffer
-    cnt = read(temp_fd, compiler_info + offset, INFO_BUF_LEN - offset);
-    
-    offset += cnt;
-  while(cnt > 0 && offset < INFO_BUF_LEN);
+  // dump temp_fd content into compiler_info buffer
+  int cnt = temp_fd.read(compiler_info, INFO_BUF_LEN);
   
   if(cnt < 0) {
     perror("Could not transfer compiler error into buffer");
     
     strncpy(compiler_info, "Could not get compiler error. Please contact an admin.", INFO_BUF_LEN);
+    
+    return status;
   }
     
   return status;
@@ -120,6 +106,13 @@ int CompiledExecutor::cleanup() {
     return 0;
   
   has_cleanup = true;
+    
+  // remove the source file
+  if(unlink(filepath)) {
+    (*res).death_ie("CompiledExecutor::cleanup: Failed to unlink the source file", false);
+
+    return -1; 
+  }
   
   // if they didnt manage to compile, everything is fine
   if(!compiled)

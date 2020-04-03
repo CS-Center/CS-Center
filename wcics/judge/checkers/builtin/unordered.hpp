@@ -1,1 +1,1 @@
-int unordered_check(const char* expected, const char* user, const char* arg);
+int unordered_check(int jfd, int ufd, const char* arg);

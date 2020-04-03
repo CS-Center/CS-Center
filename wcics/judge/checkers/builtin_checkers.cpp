@@ -10,25 +10,25 @@
 #include "builtin/relative_precision.hpp"
 #include "builtin/unordered.hpp"
 
-int builtin_check(const char* checkername, const char* expected, const char* user, const char* arg) {
+checker_sig get_checker(const char* checkername) {
   if(strcmp(checkername, "standard") == 0)
-    return standard_check(expected, user, arg);
+    return standard_check;
   
   if(strcmp(checkername, "identical") == 0)
-    return identical_check(expected, user, arg);
+    return identical_check;
     
   if(strcmp(checkername, "standard_precision") == 0)
-    return standard_precision_check(expected, user, arg);
+    return standard_precision_check;
     
   if(strcmp(checkername, "relative_precision") == 0)
-    return relative_precision_check(expected, user, arg);
+    return relative_precision_check;
     
   if(strcmp(checkername, "absolute_precision") == 0)
-    return absolute_precision_check(expected, user, arg);
+    return absolute_precision_check;
     
   if(strcmp(checkername, "unordered") == 0)
-    return unordered_check(expected, user, arg);
+    return unordered_check;
     
   errno = ENOENT;
-  return -1;
+  return 0;
 }

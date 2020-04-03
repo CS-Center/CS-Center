@@ -16,6 +16,6 @@ int standard_token_check(const char* expected, const char* user, const char* arg
   return absolute_token_check(expected, user, arg);
 }
 
-int standard_precision_check(const char* expected, const char* user, const char* arg) {
-  return check_tokens(expected, user, standard_token_check, arg);
+int standard_precision_check(int jfd, int ufd, const char* arg) {
+  return check_tokens(jfd, ufd, standard_token_check, arg);
 }

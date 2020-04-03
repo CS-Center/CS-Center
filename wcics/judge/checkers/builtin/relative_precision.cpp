@@ -43,6 +43,6 @@ int relative_token_check(const char* expected, const char* user, const char* arg
   return std::min(r1, r2) <= udub && udub <= std::max(r1, r2);
 }
 
-int relative_precision_check(const char* expected, const char* user, const char* arg) {
-  return check_tokens(expected, user, relative_token_check, arg);
+int relative_precision_check(int jfd, int ufd, const char* arg) {
+  return check_tokens(jfd, ufd, relative_token_check, arg);
 }

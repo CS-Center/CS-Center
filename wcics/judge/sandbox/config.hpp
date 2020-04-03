@@ -2,6 +2,8 @@
 
 #include "process_result.hpp"
 
+#include "utils/scoped_fd.hpp"
+
 // A structure for a process config
 struct config {
   // RLIMIT_DATA & RLIMIT_STACK
@@ -40,7 +42,4 @@ struct file_config {
   
   // initiailize
   void init(process_result&);
-  
-  // cleanup the parent context
-  int parent_cleanup();
 };

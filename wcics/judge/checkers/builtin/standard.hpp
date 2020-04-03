@@ -1,1 +1,1 @@
-int standard_check(const char* expected, const char* user, const char* arg);
+int standard_check(int jfd, int ufd, const char* arg);

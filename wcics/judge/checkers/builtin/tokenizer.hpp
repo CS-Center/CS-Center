@@ -5,4 +5,4 @@
 
 typedef int (*check_token_sig) (const char*, const char*, const char*);
 
-int check_tokens(const char* expected, const char* user, check_token_sig, const char* arg);
+int check_tokens(int jfd, int ufd, check_token_sig, const char* arg);

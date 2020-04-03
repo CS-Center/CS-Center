@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
+#include <utility>
 
 #include "utils/pipes.hpp"
 #include "config.hpp"
@@ -61,11 +62,6 @@ void config::init(process_result& res) {
     res.death_ie("config::init: RLIMIT_CORE");
     _exit(-1);
   }
-  
-  if(movefd(pstderr, 2)) {
-    res.death_ie("config::init: movefd(pstderr)");
-    _exit(-1);
-  }
       
   if(dir) {
     if(chdir(dir)) {
@@ -92,32 +88,4 @@ file_config::init(process_result& res) {
     res.death_ie("config::init: movefd(pstderr)");
     _exit(-1);
   }
-}
-
-// cleanup the dupped files
-// cant think of any reason for the parent to need to keep them
-// if they do, they can dup them
-int file_config::parent_cleanup() {
-  if(pstdin != -1 && pstdin != null_read_fd) {
-    if(close(pstdin)) {
-      perror("config::parent_cleanup: Failed to close pstdin");
-      return -1;
-    }
-  }
-  
-  if(pstdout != -1 && pstdout != null_write_fd) {
-    if(close(pstdout)) {
-      perror("config::parent_cleanup: Failed to close pstdout");
-      return -1;
-    }
-  }
-  
-  if(pstderr != -1 && pstderr != null_write_fd) {
-    if(close(pstderr)) {
-      perror("config::parent_cleanup: Failed to close pstderr");   
-      return -1;
-    }
-  }
-  
-  return 0;
 }

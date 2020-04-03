@@ -5,11 +5,13 @@
 
 #include "scoped_executor.hpp"
 
-ScopedExecutor::ScopedExecutor(const char* id, const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf, AsyncCommunicator& acomm, FileAccessChecker& fac, SharedProcessResult& res) {
-  for(const ExecutorInfo& ei : executors)
-    if(strcmp(ei.shortname, id) == 0)
-      return ei.make_executor(code, file, extra_args, env, conf, acomm, fac, res);
-      
+ScopedExecutor::ScopedExecutor(const char* id, const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {
+  for(const ExecutorInfo& ei : executors) {
+    if(strcmp(ei.shortname, id) == 0) {
+      ptr = ei.make_executor(code, file, extra_args, env, conf, fac, res);
+      return;
+    }
+  }   
   
   ptr = 0;
   errno = ENOENT;
