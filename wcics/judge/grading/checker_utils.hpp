@@ -1,36 +1,46 @@
-#include "executors/executor.hpp"
-#include "checkers/builtin_checkers.hpp"
+#pragma once
 
-union checker_union {
-  checker_sig cfunc;
-  Executor* exec;
-};
+#include "executors/scoped_executor.hpp"
+#include "checkers/builtin_checkers.hpp"
+#include "pyapi/db_info.hpp"
 
 struct checker_result {
   bool ac;
   int points;
 };
 
-// all the arguments passed to the checker
-// custom checkers can use all of these, but builtin checkers use barely any
-struct checker_args {
-  const char* checker_arg;
-
-  int points, output_limit, case_num, suite_num;
-    
-  int user_out_fd;
+// interface for checking policies, both builtin checkers and custom checkers
+struct checker_policy {  
+  virtual void set_suite(int suite, int points) = 0;
   
-  int judge_out_fd;
+  virtual checker_result operator() (int casenum, int in_fd, int judge_out_fd, int user_out_fd) = 0;
 };
 
-typedef checker_result (*_do_check)(checker_union&, checker_args&);
+struct builtin_checker_policy : checker_policy {
+  
+  checker_sig func;
+  const char* arg;
+  int points;
+  
+  builtin_checker_policy(const submission_info& si);
+  
+  virtual void set_suite(int suite, int points);
+  
+  virtual checker_result operator() (int casenum, int in_fd, int judge_out_fd, int user_out_fd);
+  
+};
 
-struct checker_callable {
-  checker_union cu;
-  _do_check func;
+struct custom_checker_policy : checker_policy {
+
+  ScopedExecutor se;
   
-  checker_callable(Executor* checker_exec);
-  checker_callable(const char* name);
+  char points_env[64];
+  char suite_env[64];
+  char code_file_env[64];
   
-  checker_result operator() (checker_args& ca);
+  custom_checker_policy(const submission_info& si);
+  
+  virtual void set_suite(int suite, int points);
+  
+  virtual checker_result operator() (int casenum, int in_fd, int judge_out_fd, int user_out_fd);  
 };

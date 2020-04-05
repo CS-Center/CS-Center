@@ -2,26 +2,8 @@
 
 #include "checker_utils.hpp"
 
-checker_result do_builtin_check(checker_union& cu, checker_args& ca);
-
-checker_result do_custom_check(checker_union& cu, checker_args& ca);
-
-checker_callable::checker_callable(const char* name) : func(do_builtin_check) {
-  cu.cfunc = get_checker(name);
-}
-
-checker_callable::checker_callable(Executor* exec) : func(do_custom_check) {
-  cu.exec = exec;
-}
-
-checker_result checker_callable::operator() (checker_args& ca) {
-  return func(cu, ca);
-}
-
-checker_result do_builtin_check(checker_union& cu, checker_args& ca) {
-  checker_sig cfunc = cu.cfunc;
-  
-  int r = cfunc(ca.judge_out_fd, ca.user_out_fd, ca.checker_arg);
+checker_result builtin_checker_policy::operator () (int casenum, int in_fd, int judge_out_fd, int user_out_fd) {  
+  int r = func(judge_out_fd, user_out_fd, arg);
   
   checker_result ret;
   
@@ -40,3 +22,7 @@ checker_result do_builtin_check(checker_union& cu, checker_args& ca) {
   
   return ret;
 }
+
+builtin_checker_policy::builtin_checker_policy(const submission_info& si) : func(get_checker(si.problem.checker_id)), arg(si.problem.checker_arg) {}
+
+builtin_checker_policy::set_suite(int suite, int pts) { points = pts; }
