@@ -33,12 +33,17 @@ struct builtin_checker_policy : checker_policy {
 struct custom_checker_policy : checker_policy {
 
   ScopedExecutor se;
+  SharedProcessResult shres;
+  config conf;
+  FileAccessChecker fac;
   
   char points_env[64];
   char suite_env[64];
   char code_file_env[64];
   
-  custom_checker_policy(const submission_info& si);
+  custom_checker_policy();
+  
+  int init(const submission_info& si);
   
   virtual void set_suite(int suite, int points);
   

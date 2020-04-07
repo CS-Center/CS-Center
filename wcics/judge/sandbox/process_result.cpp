@@ -77,17 +77,20 @@ void process_result::death_mle() {
   strncpy(info, "Process MLEd!", INFO_BUF_LEN);
 }
 
-SharedProcessResult::SharedProcessResult(int& status) {
-  status = 0;
+SharedProcessResult::SharedProcessResult() : ptr(0) {}
+
+int SharedProcessResult::init() {
   ptr = (process_result*)mmap(0, sizeof(process_result), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+  
+  if(ptr == 0) {
+    perror("Failed to mmap for SharedProcessResult");
+    return -1;
+  }
   
   // call constructor
   new (ptr) process_result;
   
-  if(ptr == 0) {
-    perror("Failed to mmap for SharedProcessResult");
-    status = -1; 
-  }
+  return 0;
 }
 
 SharedProcessResult::~SharedProcessResult() {

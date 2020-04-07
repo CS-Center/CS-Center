@@ -54,7 +54,10 @@ class SharedProcessResult {
   process_result* ptr;
 
 public:
-  SharedProcessResult(int&);
+  // make a null SPR
+  SharedProcessResult();
+  
+  int init();
   
   process_result& operator*();
   

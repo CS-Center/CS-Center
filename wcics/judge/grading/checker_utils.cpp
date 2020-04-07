@@ -1,4 +1,6 @@
-#include "stdio.h"
+#include <stdio.h>
+
+#include "consts.hpp"
 
 #include "checker_utils.hpp"
 
@@ -26,3 +28,12 @@ checker_result builtin_checker_policy::operator () (int casenum, int in_fd, int 
 builtin_checker_policy::builtin_checker_policy(const submission_info& si) : func(get_checker(si.problem.checker_id)), arg(si.problem.checker_arg) {}
 
 builtin_checker_policy::set_suite(int suite, int pts) { points = pts; }
+
+
+custom_checker_policy::custom_checker_policy() {}
+
+custom_checker_policy::init(const submission_info& si) : se(si.lang, si.code, CODE_FILE_NAME, blank_arg, 0, conf, fac, shres) {
+
+  
+
+}
