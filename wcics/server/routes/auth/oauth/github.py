@@ -2,8 +2,8 @@
 
 from wcics import app
 
-from wcics.auth.jwt import make_jwt, verify_jwt
-from wcics.auth.manage_user import set_user
+from wcics.auth.jwt import make_jwt, verify_jwt, InvalidJWT, ExpiredJWT
+from wcics.auth.manage_user import set_user, user
 from wcics.auth.oauth.github import GithubOAuth
 
 from wcics.consts import DOMAIN
@@ -11,6 +11,7 @@ from wcics.consts import DOMAIN
 from wcics.database.models import GithubLinks, Users
 
 from wcics.utils.url import get_next_page
+from wcics.utils.routes import error_page 
 
 from flask import abort, flash, json, redirect, render_template, request, session
 
@@ -35,59 +36,68 @@ def login_github():
   return github_oauth_client.authorize_user(state)
 
 @app.route("/authorized/github/")
-def authorize_github():
+def authorize_github():  
+  if user:
+    next_url = request.args.get("next")
+    if next_url is None:
+      try:
+        if 'state' in session:
+          state = session['state']
+        else:
+          state = request.args.get("state", "")
+        
+        data = verify_jwt(state)
+        
+        next_url = data.get("next", "/")
+      except (InvalidJWT, ExpiredJWT):
+        next_url = "/"
+    
+    return redirect(next_url, code = 303)
+  
   if 'state' not in session:
-    abort(401)
+    return error_page(400, message = "No state was provided! Please return to /login to retrieve a valid state.")
 
   state = request.args.get('state', '')
   sess_state = session.get('state')
+  
   del session['state']
-
+    
   if state != sess_state:
-    # TODO: Error nicely
-    abort(401)
+    return error_page(400, message = "The provided state is invalid! Please return to /login to retrieve a new state.")
+  
+  try:
+    next_url = verify_jwt(sess_state).get("next", "/")
+  except (InvalidJWT, ExpiredJWT):
+    return error_page(400, message = "The provided state is invalid! Please return to /login to retrieve a new state.")
 
   code = request.args.get('code', '')
 
   userinfo = github_oauth_client.get_userinfo(code)
 
   gid = str(userinfo.id)
-  emails = userinfo.emails
+  email = userinfo.raw["email"]
 
   link = GithubLinks.query.filter_by(gid = gid).first()
 
   if link is None:
-    users = Users.query.filter(Users.email.in_(emails)).all()
-    used_emails = {user.email for user in users}
-    options = [(email, make_jwt({
-      "provider": "GitHub",
-      "pid": gid,
-      "email": email,
-      "username": userinfo.username,
-      "real_name": userinfo.real_name
-    })) for email in emails]
-    if users:
-      link_tokens = [make_jwt({
-        "provider": "GitHub",
+    link_user = Users.query.filter_by(email = email).first()
+    if link_user is not None:
+      link_token = make_jwt({
+        "provider": "Github",
         "pid": gid,
-        "email": user.email,
-        "uid": user.id
-      }) for user in users]
-      return render_template(
-        "account/link-accounts.html",
-        provider = "GitHub",
-        matches = [(user.email, user, link_token) for user, link_token in zip(users, link_tokens)],
-        no_signup = False,
-        pid = gid,
-        other_emails = [(email, token) for email, token in options if email not in used_emails]
-      )
-    elif len(options) > 1:
-      return render_template("account/oauth-select-email.html", provider = "GitHub", next = get_next_page(), options = options)
+        "email": email,
+        "uid": link_user.id
+      })
+      return render_template("account/link-accounts.html", provider = "Github", matches = [(email, link_user, link_token)], no_signup = True, pid = gid)
     else:
-      return redirect("/oauth-create-account/?next=%s&token=%s" % (get_next_page(), options[0][1]))
+      connect_token = make_jwt({
+        "provider": "Github",
+        "pid": gid,
+        "email": email,
+        "real_name": userinfo.raw["name"]
+      })
+      return redirect("/oauth-create-account/?next=%s&token=%s" % (next_url, connect_token))
   else:
     set_user(Users.query.filter_by(id = link.uid).first_or_404())
     flash("Welcome back!", category = "SUCCESS")
-    data = verify_jwt(state)
-    print(data.get("next", "/"))
-    return redirect(data.get("next", "/"), code = 303)
+    return redirect(next_url, code = 303)
