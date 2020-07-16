@@ -13,19 +13,19 @@ struct scoped_fd {
   
   scoped_fd(scoped_fd&& other);
 
-  static int pipe(scoped_fd& rd, scoped_fd& wr);
+  static void pipe(scoped_fd& rd, scoped_fd& wr);
 
   // open a file (replace fd)
-  int open(const char* file, int flags, int mode);
+  void open(const char* file, int flags, int mode);
   
   // seek to a set position
-  int seek(int);
+  void seek(int);
   
   // ftruncate
-  int trunc(int);
+  void trunc(int);
   
   // close the fd
-  int close();
+  void close();
   
   int write(const char* buf, int len);
   int read(char* buf, int len);

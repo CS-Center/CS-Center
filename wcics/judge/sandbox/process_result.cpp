@@ -1,40 +1,46 @@
-// this is required to get the posix compliant version of strerror_r
-// which is much better
-#undef _GNU_SOURCE
-#include <string.h>
-
 extern const char* const sys_siglist[];
 
-#include <new>
+#include <string.h>
 #include <sys/mman.h>
 #include <errno.h>
 #include <stdio.h>
+#include <algorithm>
 
 #include "process_result.hpp"
 #include "syscalls/syscall_names.hpp"
 
+using namespace std;
+
 process_result::process_result() {
   info[0] = 0;
+  info_ind = 0;
+  
+  // this ensures that there will at least be SOME terminator
+  info[INFO_BUF_LEN] = 0;
 }
 
 void process_result::death_normal(int status) {
   death_type = DEATH_NORMAL;
   exit_info = status;
   
-  snprintf(info, INFO_BUF_LEN, "Process died with %d", status);
+  snprintf(buf_ptr(), INFO_BUF_LEN - info_ind + 1, "Process died with %d\n", status);
+  
+  adv_ind();
 }
 
 void process_result::death_signal(int sig) {
   death_type = DEATH_SIGNAL;
   exit_info = sig;
   
-  snprintf(info, INFO_BUF_LEN, "Process killed by signal: %s", sys_siglist[sig]);
+  snprintf(buf_ptr(), INFO_BUF_LEN - info_ind + 1, "Process killed by signal: %s\n", sys_siglist[sig]);
+  
+  adv_ind();
 }
 
 void process_result::death_tle() {
   death_type = DEATH_TLE;
   
-  strncpy(info, "Process TLEd!", INFO_BUF_LEN);
+  add_msg("Process TLEd!\n");
 }
 
 void process_result::death_ill(int call_no) {
@@ -42,9 +48,11 @@ void process_result::death_ill(int call_no) {
   exit_info = call_no;
   
   if(syscall_names[call_no])
-    snprintf(info, INFO_BUF_LEN, "Process invoked illegal syscall %s", syscall_names[call_no]);
+    snprintf(buf_ptr(), INFO_BUF_LEN - info_ind + 1, "Process invoked illegal syscall %s\n", syscall_names[call_no]);
   else
-    snprintf(info, INFO_BUF_LEN, "Process invoked unknown syscall with number %d", call_no);
+    snprintf(buf_ptr(), INFO_BUF_LEN - info_ind + 1, "Process invoked unknown syscall with number %d\n", call_no);
+    
+  adv_ind();
 }
 
 void process_result::death_ie(const char* msg, bool add_errno) {
@@ -54,13 +62,12 @@ void process_result::death_ie(const char* msg, bool add_errno) {
   exit_info = errno;
 
   if(msg) {
-    int msglen = strlen(msg);
-    strncpy(info, msg, INFO_BUF_LEN);
+    add_msg(msg);
 
     if(add_errno) {
-      strncat(info, ": ", INFO_BUF_LEN - msglen);
-      // This can throw ERANGE, but since this is already an error handler, we consider this a "best attempt"
-      strerror_r(errno, info + msglen + 2, INFO_BUF_LEN - msglen - 2);
+      add_msg(": ");
+      add_msg(strerror(errno));
+      add_msg("\n");
     }
   }
 }
@@ -68,37 +75,45 @@ void process_result::death_ie(const char* msg, bool add_errno) {
 void process_result::death_ole() {
   death_type = DEATH_OLE;
   
-  strncpy(info, "Process OLEd!", INFO_BUF_LEN);
+  add_msg("Process OLE'd!\n");
 }
 
 void process_result::death_mle() {
   death_type = DEATH_MLE;
   
-  strncpy(info, "Process MLEd!", INFO_BUF_LEN);
+  add_msg("Process MLE'd!\n");
 }
 
-SharedProcessResult::SharedProcessResult() : ptr(0) {}
 
-int SharedProcessResult::init() {
-  ptr = (process_result*)mmap(0, sizeof(process_result), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+
+void process_result::add_msg(const char* s) {
+  int l = strlen(s);
+
+  strncpy(info + info_ind, s, min(INFO_BUF_LEN - info_ind, l));
   
-  if(ptr == 0) {
-    perror("Failed to mmap for SharedProcessResult");
-    return -1;
-  }
+  info_ind += l;
+}
+
+void process_result::buf_ptr() {
+  return info + info_ind;
+}
+
+void process_result::adv_ind() {
+  info_ind += strlen(info + info_ind);
+}
+
+
+
+SharedProcessResult::SharedProcessResult() {
+  ptr = (process_result*)
+    RUNTIME_FUNC_EQ(mmap(0, sizeof(process_result), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0), MAP_FAILED);
   
   // call constructor
   new (ptr) process_result;
-  
-  return 0;
 }
 
 SharedProcessResult::~SharedProcessResult() {
-  // if munmap fails, we probably have a memory leak
-  // However, we cant throw an exception or anything...
-  // the best we can do is print an error
-  if(munmap(ptr, sizeof(process_result)))
-    perror("SharedProcessResult: munmap");
+  RUNTIME_FUNC(munmap(ptr, sizeof(process_result)));
 }
 
 process_result& SharedProcessResult::operator* () {

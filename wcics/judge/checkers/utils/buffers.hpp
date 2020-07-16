@@ -13,7 +13,7 @@ private:
   
   bool _eof;
   
-  int pos;
+  int pos, cur_cnt;
   
   char* buf;
   
@@ -25,6 +25,4 @@ public:
   int get(); // return and pop
   
   bool eof() const;
-    
-  static const int FAIL = -1000;
 };

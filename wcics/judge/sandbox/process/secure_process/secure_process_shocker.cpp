@@ -5,8 +5,10 @@
 #include "secure_process_shocker.hpp"
 #include "secure_process.hpp"
 
+#include "utils/debug.hpp"
+
 // TODO: make res.error use a futex?
-int SecureProcessShocker::launch() {
+void SecureProcessShocker::launch() {
   struct timespec delay;
   delay.tv_sec = 0;
   delay.tv_nsec = 1e8;
@@ -17,10 +19,10 @@ int SecureProcessShocker::launch() {
     // send SIGWINCH
     if(killpg(proc.pid, SIGWINCH)) {
       if(errno == ESRCH)
-        return 0;
+        return;
         
       proc.death_ie("SecureProcess::shocker_main: kill");      
-      return -1;
+      RUNTIME_FUNC(-1);
     }
   }
 }

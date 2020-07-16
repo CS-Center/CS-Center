@@ -11,7 +11,10 @@
 #include "sandbox/syscalls/syscalls.hpp"
 #include "utils/memory.hpp"
 #include "utils/time.hpp"
+#include "utils/debug.hpp"
 #include "secure_process.hpp"
+
+using namespace std;
 
 // do child initialization
 // load the seccomp filter and do other initialization
@@ -56,15 +59,15 @@ void SecureProcess::child_func() {
   }
 }
 
+void launch_thread(SecureProcessShocker* arg) {
+  arg->launch();
+}
+
 // the big boi function
 // this is the most important function in the whole judge
-int SecureProcess::monitor() {
-  if(shock.monitor()) {
-    death_ie(0);
-    
-    return -1;
-  }
-          
+void SecureProcess::monitor() {
+  shock_thread = thread(launch_thread, sps);
+   
   int status;
   bool first = true;
   
@@ -96,7 +99,7 @@ int SecureProcess::monitor() {
 
         terminate();
         wait_death();
-        return 0;
+        return;
       }
     }
     
@@ -108,7 +111,7 @@ int SecureProcess::monitor() {
     if(tid == -1) {
       // process must already be dead, so just exit
       res.death_ie("SecureProcess::monitor: waitpid");
-      return 0;
+      return;
     }
             
     // normal death
@@ -154,7 +157,7 @@ int SecureProcess::monitor() {
         // continue the process
         if(ptrace(PTRACE_CONT, tid, 0, 0) && errno != ESRCH) {
           death_ie("SIGWINCH PTRACE_CONT");
-          return -1;
+          RUNTIME_FUNC(-1);
         }
         continue;
       }
@@ -246,7 +249,7 @@ int SecureProcess::monitor() {
       
         if(ptrace(PTRACE_CONT, tid, 0, signal) && errno != ESRCH) {
           death_ie("Exit PTRACE_CONT");
-          return -1;
+          RUNTIME_FUNC(-1);
         }
       }
       
@@ -259,7 +262,7 @@ int SecureProcess::monitor() {
         
         if(ptrace(PTRACE_CONT, tid, 0, 0)) {
           death_ie("Clone PTRACE_CONT");
-          return -1;
+          RUNTIME_FUNC(-1);
         }
       }
       
@@ -269,13 +272,11 @@ int SecureProcess::monitor() {
         // just send it back
         if(ptrace(PTRACE_CONT, tid, 0, signal)) {
           death_ie("Signal PTRACE_CONT");
-          return -1;
+          RUNTIME_FUNC(-1);
         }
       }
     }
   }
-    
-  return 0;
 }
 
 void SecureProcess::wait_death() {

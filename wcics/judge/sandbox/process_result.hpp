@@ -9,7 +9,7 @@
 #define DEATH_OLE 6
 #define DEATH_MLE 7
 
-#define INFO_BUF_LEN 256
+#define INFO_BUF_LEN 2048
 typedef char info_buf[INFO_BUF_LEN + 1];
 
 // a structure to contain results for a process
@@ -30,6 +30,7 @@ struct process_result {
   
   // info string
   info_buf info;
+  int info_ind;
   
   void death_normal(int status);
   
@@ -47,6 +48,12 @@ struct process_result {
   void death_ole();
   
   process_result();
+  
+private:
+  void add_msg(const char*);
+  
+  void info_ptr();
+  void adv_ind();
 };
 
 // a class to facilitate sharing of process_result for initialization errors
@@ -56,8 +63,6 @@ class SharedProcessResult {
 public:
   // make a null SPR
   SharedProcessResult();
-  
-  int init();
   
   process_result& operator*();
   

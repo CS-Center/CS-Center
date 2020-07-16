@@ -3,6 +3,9 @@
 #include <limits.h>
 #include <sys/user.h>
 #include <set>
+#include <string>
+#include <vector>
+#include <thread>
 
 #include "sandbox/process/process.hpp"
 #include "secure_process_shocker.hpp"
@@ -22,7 +25,7 @@ private:
   
   // shocker
   SecureProcessShocker sps;
-  AsyncShocker shock;
+  std::thread shock_thread;
   
   // The file access checker
   FileAccessChecker& fac;
@@ -51,7 +54,7 @@ private:
   ull get_arg3();
   
   // read file path from strptr
-  int readpath(ull strptr, char[PATH_MAX]);
+  int readpath(ull strptr, string&);
   
   // file access check
   // return -1 on error
@@ -96,9 +99,9 @@ private:
   
 public:
   SecureProcess(
-    const char*, 
-    const char* const*, 
-    const char* const*, 
+    std::string,
+    std::vector<std::string>,
+    std::vector<std::string>,
     config&,
     SharedProcessResult&,
     FileAccessChecker&

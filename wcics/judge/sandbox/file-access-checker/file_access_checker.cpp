@@ -5,37 +5,43 @@
 
 #include "file_access_checker.hpp"
 
-FileAccessChecker::FileAccessChecker(const char* const* dirs, const char* const* readables, const char* const* writables, int& status) :
-  dir_trie(dirs, status),
-  read_fs(readables),
-  write_fs(writables)
-{}
+using namespace std;
 
-bool linear_search(const char* const* arr, const char* elem) {
-  for(; *arr; arr++) {
-    if(strcmp(*arr, elem) == 0) {
-      return 1;
-    }
-  }
+FileAccessChecker::init(vector<string> dirs, vector<string> readables, vector<string> writables) {
+  
+  dir_fs = dirs;
+  read_fs = readables;
+  write_fs = writables;
+  
   return 0;
 }
 
-bool FileAccessChecker::check(const char* file, bool is_write) {
-  if(is_write)
-    return linear_search(write_fs, file);
-  
-  bool ret = linear_search(read_fs, file);
-  
-  if(ret)
-    return true;
-
-  // if it errors, no problem, just pass it up the line
-  return dir_trie.find(file);
+bool prefix_search(vector<string>& items, const string& elem) {
+  for(string& s : items)
+    if(s.size() <= elem.size() && elem.substr(0, s.size()) == s) 
+      return 1;
+      
+  return 0;
 }
 
-std::vector<const char*> base_dir_fs = { "/usr/", "/lib/", "/proc/self/", };
+bool linear_search(vector<string> items, const string& elem) {
+  for(string& s : items)
+    if(s == elem)
+      return 1;
+      
+  return 0;
+}
 
-std::vector<const char*> base_read_fs = { 
+bool FileAccessChecker::check(const string& s, bool is_write) {
+  if(is_write)
+    return linear_search(write_fs, file);
+
+  return linear_search(dir_fs, file, true) || linear_search(read_fs, file);
+}
+
+vector<string> base_dir_fs = { "/usr/", "/lib/", "/lib64/", "/proc/self/", };
+
+vector<string> base_read_fs = { 
   "/usr", 
   "/lib", 
   "/proc/self",
@@ -48,6 +54,7 @@ std::vector<const char*> base_read_fs = {
   "/etc/nsswitch.conf",
   
   "/dev/stdin",
+  "/dev/null",
 
   "/proc/meminfo",
   "/proc/cpuinfo",

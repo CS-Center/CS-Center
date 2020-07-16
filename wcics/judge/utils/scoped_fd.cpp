@@ -4,18 +4,17 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#include "utils/debug.hpp"
+
 #include "scoped_fd.hpp"
 
-int scoped_fd::pipe(scoped_fd& rd, scoped_fd& wr) {
+void scoped_fd::pipe(scoped_fd& rd, scoped_fd& wr) {
   int p[2];
   
-  if(pipe2(p, O_CLOEXEC))
-    return -1;
+  RUNTIME_FUNC(pipe2(p, O_CLOEXEC));
 
   rd.fd = p[0];
   wr.fd = p[1];
-  
-  return 0;
 }
 
 scoped_fd::scoped_fd(const char* name) : name(name), fd(-1) {}
@@ -26,34 +25,24 @@ scoped_fd::scoped_fd(scoped_fd&& other) : fd(other.fd), name(other.name) {
   other.fd = -1;
 };
 
-int scoped_fd::open(const char* name, int flags, int mode) {
-  fd = ::open(name, flags | O_CLOEXEC, mode);
-  
-  if(fd < 0)
-    return fd;
-    
-  return 0;
+void scoped_fd::open(const char* name, int flags, int mode) {
+  fd = RUNTIME_FUNC(::open(name, flags | O_CLOEXEC, mode));
 }
 
-int scoped_fd::seek(int pos) {
-  return lseek(fd, pos, SEEK_SET) == -1;
+void scoped_fd::seek(int pos) {
+  RUNTIME_FUNC(lseek(fd, pos, SEEK_SET));
 }
 
-int scoped_fd::trunc(int len) {
-  return ftruncate(fd, len);
+void scoped_fd::trunc(int len) {
+  RUNTIME_FUNC(ftruncate(fd, len));
 }
 
-int scoped_fd::close() {
-  if(fd == -1) return 0;
-  
-  int res = ::close(fd);
-  
-  if(res)
-    return res;
-    
-  fd = -1;
-  
-  return 0;
+void scoped_fd::close() {
+  if(fd != -1) {
+    RUNTIME_FUNC(::close(fd));
+
+    fd = -1;
+  }
 }
 
 int scoped_fd::write(const char* buf, int len) {
@@ -62,12 +51,10 @@ int scoped_fd::write(const char* buf, int len) {
   do{
     offset += cnt;
 
-    cnt = ::write(fd, buf + offset, len - offset);
+    cnt = RUNTIME_FUNC(::write(fd, buf + offset, len - offset));
   }
   while(cnt > 0 && len > offset);
-  
-  if(cnt < 0) return -1;
-  
+    
   return offset;
 }
 
@@ -77,19 +64,13 @@ int scoped_fd::read(char* buf, int len) {
   do{
     offset += cnt;
 
-    cnt = ::read(fd, buf + offset, len - offset);
+    cnt = RUNTIME_FUNC(::read(fd, buf + offset, len - offset));
   }
   while(cnt > 0 && len > offset);
-  
-  if(cnt < 0) return -1;
-  
+    
   return offset;
 }
 
 scoped_fd::~scoped_fd() {
-  if(this->close()) {
-    fprintf(stderr, "Could not close scoped_fd with name = ");
-    
-    perror(name);
-  }
+  this->close();
 }

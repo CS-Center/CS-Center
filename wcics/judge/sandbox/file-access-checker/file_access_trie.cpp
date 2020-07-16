@@ -15,7 +15,7 @@ FAT_node::FAT_node(const FAT_node& other) {
   
   for(int i = 0; i < 256; i++) {
     if(other.children[i])
-      children[i] = new FAT_node(other.children[i]);
+      children[i] = new FAT_node(*other.children[i]);
     else
       children[i] = 0;
   }
@@ -71,15 +71,16 @@ void FAT_del(FAT_node* tree) {
   delete tree;
 }
 
-FileAccessTrie::FileAccessTrie(const char* const* arr, int& status) : root(0) {
-  status = 0;
-  
+FileAccessTrie::FileAccessTrie() : root(0) {}
+
+int FileAccessTrie::init(const char* const* arr) {
   for(; *arr; arr++) {
     if(FAT_insert(&root, *arr)) {
-      status = -1;
-      return;
+      return -1;
     }
   }
+  
+  return 0;
 }
 
 bool FileAccessTrie::find(const char* str) {

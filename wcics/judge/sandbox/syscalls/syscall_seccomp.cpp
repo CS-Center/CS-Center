@@ -12,7 +12,7 @@ scmp_filter_ctx get_default_seccomp_filter() {
   static scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_TRACE(0));
   if(ctx == 0) {
     perror("seccomp_init");
-    _exit(0);
+    _exit(-1);
   }
 
   short* handlers = get_syscall_handlers();
@@ -22,7 +22,7 @@ scmp_filter_ctx get_default_seccomp_filter() {
       // add to whitelist
       if(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, i, 0)) {
         perror("seccomp_rule_add");
-        _exit(0);
+        _exit(-1);
       }
     }
     // if not whitelisted, it probably traps

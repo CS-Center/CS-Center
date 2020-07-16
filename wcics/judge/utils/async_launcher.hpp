@@ -8,6 +8,8 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#include "utils/debug.hpp"
+
 #define MONITOR_STACK_SIZE (1 << 16)
 
 template<typename T>
@@ -21,36 +23,32 @@ class AsyncLauncher {
 public:
   AsyncLauncher(T& o) : obj(o), started(false) {}
   
-  static int start(void* arg) {
-    syscall(SYS_exit, ((T*) arg)->launch());
-    perror("Could not exit from monitoring thread!");
-    return -1;
+  static void start(void* arg) {
+    RUNTIME_FUNC(syscall(SYS_exit, ((T*) arg)->launch()));
   }
   
-  int monitor() {
-    tid = clone(AsyncLauncher<T>::start, stack + sizeof(stack),
-      CLONE_CHILD_CLEARTID | CLONE_CHILD_SETTID | CLONE_FILES | CLONE_FS | CLONE_IO |
-      CLONE_PARENT_SETTID | CLONE_SIGHAND | CLONE_THREAD | CLONE_VM,
-      &obj, &ctid, 0, &ctid);
-      
-    if(tid == -1)
-      return -1;
-      
+  void monitor() {
+    tid = RUNTIME_FUNC(
+    
+      clone(AsyncLauncher<T>::start, stack + sizeof(stack),
+        CLONE_CHILD_CLEARTID | CLONE_CHILD_SETTID | CLONE_FILES | CLONE_FS | CLONE_IO |
+        CLONE_PARENT_SETTID | CLONE_SIGHAND | CLONE_THREAD | CLONE_VM,
+        &obj, &ctid, 0, &ctid)
+        
+    );
+            
     started = true;
-      
-    return 0;
   }
   
-  int wait() {
+  void wait() {
     if(!started) {
       fputs("Warning: Not waiting for monitoring thread, thread not started!\n", stderr);
-      return 0;
+      return;
     }
   
-    if(syscall(SYS_futex, &ctid, FUTEX_WAIT, tid, 0) && errno != EAGAIN)
-      return -1;
+    int r = syscall(SYS_futex, &ctid, FUTEX_WAIT, tid, 0);
     
-    return 0;
+    if(r < 0 && errno != EAGAIN) RUNTIME_FUNC(-1);
   }
   
   T& get_obj() { return obj; }

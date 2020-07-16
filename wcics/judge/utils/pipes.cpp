@@ -6,27 +6,13 @@
 #include "pipes.hpp"
 
 int get_null_read_fd() {
-  // if we cant open the null fd, what should we do?
-  // we die. Doing anything else just causes future errors.
-  
-  int fd = open("/dev/null", O_RDONLY | O_CLOEXEC);
-  
-  if(fd == -1) {
-    perror("WARNING: COULD NOT OPEN /dev/null FOR READING");
-    
-    _exit(-1);
-  }
+  int fd = RUNTIME_FUNC(open("/dev/null", O_RDONLY | O_CLOEXEC));
   
   return fd;
 }
 
 int get_null_write_fd() {
-  int fd = open("/dev/null", O_WRONLY | O_CLOEXEC);
-  
-  if(fd == -1) {
-    perror("WARNING: COULD NOT OPEN /dev/null FOR WRITING");
-    _exit(-1);
-  }
+  int fd = RUNTIME_FUNC(open("/dev/null", O_WRONLY | O_CLOEXEC));
   
   return fd;
 }
@@ -34,25 +20,24 @@ int get_null_write_fd() {
 int null_read_fd = get_null_read_fd();
 int null_write_fd = get_null_write_fd();
 
-int make_pipe(int& read_fd, int& write_fd) {
+void make_pipe(int& read_fd, int& write_fd) {
   int p[2];
-  if(pipe2(p, O_CLOEXEC))
-    return -1;
+  
+  RUNTIME_FUNC(pipe2(p, O_CLOEXEC));
   
   read_fd = p[0];
   write_fd = p[1];
-  
-  return 0;
 }
 
 inline bool validate_comm(int flag) {
   return flag == PIPE_NULL || flag == PIPE_INHERIT || flag == PIPE_NORMAL;
 }
 
-int make_pipes(Communicator& comm, config& conf, int pipe_stdin, int pipe_stdout, int pipe_stderr) {
+
+void make_pipes(Communicator& comm, file_config& conf, int pipe_stdin, int pipe_stdout, int pipe_stderr) {
   if(!validate_comm(pipe_stdin) || !validate_comm(pipe_stdout) || !validate_comm(pipe_stderr)) {
     errno = EINVAL;
-    return -1;
+    RUNTIME_FUNC(-1);
   }
 
   if(pipe_stdin == PIPE_NULL) {
@@ -68,8 +53,7 @@ int make_pipes(Communicator& comm, config& conf, int pipe_stdin, int pipe_stdout
   }
   
   else {
-    if(make_pipe(conf.pstdin, comm.get_in().fd))
-      return -1;
+    PUSH_STACK(make_pipe(conf.pstdin, comm.get_in().fd));
   }
   
   // stdout
@@ -86,8 +70,7 @@ int make_pipes(Communicator& comm, config& conf, int pipe_stdin, int pipe_stdout
   }
   
   else {
-    if(make_pipe(comm.get_out().fd, conf.pstdout))
-      return -1;
+    PUSH_STACK(make_pipe(comm.get_out().fd, conf.pstdout));
   }
   
   // stderr
@@ -104,9 +87,6 @@ int make_pipes(Communicator& comm, config& conf, int pipe_stdin, int pipe_stdout
   }
   
   else {
-    if(make_pipe(comm.get_err().fd, conf.pstderr))
-      return -1;
+    PUSH_STACK(make_pipe(comm.get_err().fd, conf.pstderr));
   }
-  
-  return 0;
 }

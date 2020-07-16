@@ -5,8 +5,9 @@ struct scoped_mmap {
 
 	scoped_mmap();
 	scoped_mmap(void*);
-
-	int mmap_whole(int fd, int flen = -1);
+	scoped_mmap(int fd, int flen = -1);
+  
+  void munmap_obj();
 
 	~scoped_mmap();
 

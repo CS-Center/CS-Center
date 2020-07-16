@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "consts.hpp"
+#include "utils/args.hpp"
 
 #include "checker_utils.hpp"
 
@@ -32,7 +33,17 @@ builtin_checker_policy::set_suite(int suite, int pts) { points = pts; }
 
 custom_checker_policy::custom_checker_policy() {}
 
-custom_checker_policy::init(const submission_info& si) : se(si.lang, si.code, CODE_FILE_NAME, blank_arg, 0, conf, fac, shres) {
+custom_checker_policy::init(const submission_info& si) {
+  
+  if(shres.init()) {
+    perror("custom_checker_policy::init: failed to initialize SharedProcessResult");
+    return -1;
+  }
+  
+  if(se.init(si.checker_lang, CODE_FILE_NAME, si.checker_code, blank_args, 0, conf, fac, shres)) {
+    perror("custom_checker_policy::init: failed to initialize scoped executor");
+    return -1;
+  }
 
   
 

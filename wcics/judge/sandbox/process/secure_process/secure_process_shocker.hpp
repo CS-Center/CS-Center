@@ -10,7 +10,5 @@ class SecureProcessShocker {
 public:
   SecureProcessShocker(SecureProcess&);
   
-  int launch();
+  void launch();
 };
-
-using AsyncShocker = AsyncLauncher<SecureProcessShocker>;

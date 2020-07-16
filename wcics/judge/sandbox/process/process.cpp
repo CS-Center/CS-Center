@@ -14,7 +14,9 @@
 #include "utils/args.hpp"
 #include "utils/time.hpp"
 
-Process::Process(const char* file, const char* const *args, const char* const *env, config& conf, SharedProcessResult& pr) :
+using namespace std;
+
+Process::Process(string file, vector<string> args, vector<string> env, config& conf, SharedProcessResult& pr) :
   pathname(file),
   argv(args),
   envp(env),
@@ -28,11 +30,11 @@ void Process::terminate() {
   }
 }
 
-int Process::fork_and_exec(file_config& file_conf) {      
+void Process::fork_and_exec(file_config& file_conf) {      
   pid = fork();
   if(pid == -1) {
     res.death_ie("Process: launch: fork");
-    return -1;
+    RUNTIME_FUNC(-1);
   }
   if(pid == 0) {  
     // child
@@ -42,22 +44,17 @@ int Process::fork_and_exec(file_config& file_conf) {
         
     child_func();
     
-    execve(pathname, const_cast<char* const*>(argv), const_cast<char* const*>(envp));
+    execve(pathname.c_str(), to_charpp(argv), to_charpp(envp));
         
     res.death_ie("Process: launch: execve");
         
     _exit(-1);
   }
-  
-  return 0;
 }
 
-int Process::launch(file_config& file_conf) {
-  int status = 0;
-  if(!fork_and_exec(file_conf)) {      
-    if(monitor())
-      status = -1;
-  }
+void Process::launch(file_config& file_conf) {
+  fork_and_exec(file_conf);
+  monitor();
   
   return status;
 } 

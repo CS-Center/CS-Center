@@ -2,6 +2,8 @@
 
 #include "secure_process.hpp"
 
+using namespace std;
+
 int SecureProcess::get_regs() {
   return ptrace(PTRACE_GETREGS, tid, 0, &regs);
 }
@@ -37,9 +39,9 @@ ull SecureProcess::get_arg3() {
 }
 
 SecureProcess::SecureProcess(
-  const char* file, 
-  const char* const* args, 
-  const char* const* env, 
+  string file,
+  vector<string> args, 
+  vector<string> env,
   config& conf,
   SharedProcessResult& pres,
   FileAccessChecker& checker
@@ -57,7 +59,7 @@ void SecureProcess::death_illegal(int call_no) {
   wait_death();
 }
 
-void SecureProcess::death_ie(const char* msg) {
+void SecureProcess::death_ie(string) {
   res.death_ie(msg);
   
   terminate();

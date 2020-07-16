@@ -13,10 +13,9 @@ int whole_file_check(int jfd, int ufd, whole_check_sig func, const void* arg) {
   
   char* judge_buf;
   
-  int l1 = file_len(jfd);
-  if(l1 < 0) {
-    perror("whole_file_check: file_len judge");
-  }
+  int l1;
+  
+  PUSH_STACK(l1 = file_len(jfd));
   
   if(l1 <= BUF_SIZE) {
     int offset = 0, cnt = 0;
@@ -44,10 +43,9 @@ int whole_file_check(int jfd, int ufd, whole_check_sig func, const void* arg) {
   judge_buf[l1] = 0;
   
 
-  int l2 = file_len(ufd);
-  if(l2 < 0) {
-    perror("unordered_check: file_len user");
-  }
+  int l2;
+  
+  PUSH_STACK(l2 = file_len(ufd));
   
   int ret;
   if(l2 <= BUF_SIZE) {

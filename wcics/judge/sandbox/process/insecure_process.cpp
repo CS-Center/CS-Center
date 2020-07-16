@@ -4,7 +4,7 @@
 #include "insecure_process.hpp"
 #include "utils/time.hpp"
 
-int InsecureProcess::monitor() {
+void InsecureProcess::monitor() {
   struct timespec tv, total, start, end, delta;
   total.tv_sec = total.tv_nsec = 0;
   
@@ -41,7 +41,7 @@ int InsecureProcess::monitor() {
     
     res.death_type = DEATH_TLE;
     
-    return 0;
+    return;
   }
   
   if(WIFEXITED(status)) {
@@ -53,18 +53,6 @@ int InsecureProcess::monitor() {
     res.death_type = DEATH_SIGNAL;
     res.exit_info = WTERMSIG(status);
   }
-  
-  return 0;
 }
 
 void InsecureProcess::child_func() {}
-
-InsecureProcess::InsecureProcess(
-  const char* file, 
-  const char* const* args, 
-  const char* const* env, 
-  config& conf,
-  SharedProcessResult& pres
-) : 
-  Process(file, args, env, conf, pres)
-{}

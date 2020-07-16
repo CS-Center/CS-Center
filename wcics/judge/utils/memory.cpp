@@ -3,28 +3,20 @@
 #include <string.h>
 #include <fcntl.h>
 
+#include "utils/debug.hpp"
+
 long get_proc_memory_field(pid_t p, const char* pat) {
   char buf[4096];
   snprintf(buf, 4095, "/proc/%d/status", p);
   
   int pat_len = strlen(pat);
   
-  int fd = open(buf, O_RDONLY | O_CLOEXEC);
-  
-  if(fd == -1)
-    return -1;
+  int fd = RUNTIME_FUNC(open(buf, O_RDONLY | O_CLOEXEC));
     
   int cnt;
   
   do {
-    cnt = read(fd, buf, 4095);
-    
-    if(cnt == -1) {
-      if(close(fd))
-        perror("Warning: error closing fd in get_proc_memory_field");
-      perror("Warning: error reading from fd in get_proc_memory_field");
-      return -1;
-    }
+    cnt = RUNTIME_FUNC(read(fd, buf, 4095));
     
     buf[cnt] = 0;
         
@@ -34,8 +26,7 @@ long get_proc_memory_field(pid_t p, const char* pat) {
         long ret;
         sscanf(cur + 2 + pat_len, "%ld kB", &ret);
         
-        if(close(fd))
-          perror("Could not close fd before returning from proc memory reading");
+        RUNTIME_FUNC(close(fd));
         
         return ret * 1024L;
       }
@@ -44,10 +35,9 @@ long get_proc_memory_field(pid_t p, const char* pat) {
     }
   } while(cnt);
   
-  fputs("Warning: could not read field from proc fs\n", stderr);
+  errno = EINVAL;
   
-  if(close(fd))
-    perror("Could not close fd before returning from failed proc memory reading");
+  perror("Could not find the required field when reading process memory amount");
   
-  return -1;
+  RUNTIME_FUNC(-1);
 }

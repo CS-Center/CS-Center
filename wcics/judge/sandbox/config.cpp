@@ -4,9 +4,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <utility>
+#include <string>
 
 #include "utils/pipes.hpp"
 #include "config.hpp"
+#include "utils/debug.hpp"
+
+using namespace std;
 
 config::config() :
   memory(64 * 1024 * 1024),
@@ -18,74 +22,57 @@ config::config() :
   dir(0)
 {}
 
-inline int setr(int res, struct rlimit& rlim, rlim_t val) { 
+inline void _setr(int res, struct rlimit& rlim, rlim_t val, const char* name, process_result& pres) { 
   rlim.rlim_cur = rlim.rlim_max = val; 
   if(setrlimit(res, &rlim)) { 
-    return -1; 
+    string out = string("Error setting resource ") + name + " in _setr (child)";
+    
+    pres.death_ie(out.c_str());
+    _exit(-1);
   }
-  return 0;
 }
 
-inline int movefd(int oldfd, int newfd) {
+#define setr(res, rlim, val, pres) _setr(res, rlim, val, #res, pres)
+
+inline void _movefd(int oldfd, int newfd, const char* nm, process_result& pres) {
   // don't close oldfd, we assume that it is marked Close-on-exec, as it should be
-  if(oldfd != -1)
-    if(dup2(oldfd, newfd) == -1)
-      return -1;
-  return 0;
+  if(oldfd != -1 && dup2(oldfd, newfd)) {
+    string out = string("Error setting child fd '") + nm + "'";
+    
+    pres.death_ie(out.c_str();
+    _exit(-1);
+  }
 }
+
+#define movefd(old, new, pres) _movefd(old, new, #old, pres)
 
 // if any init fails, kill the process
 void config::init(process_result& res) {
   struct rlimit rlim;
   
-  if(setr(RLIMIT_DATA, rlim, memory)) {
-    res.death_ie("config::init: RLIMIT_DATA");
-    _exit(-1);
-  }
+  setr(RLIMIT_DATA, rlim, memory, res);
   
-  if(setr(RLIMIT_STACK, rlim, memory)) {
-    res.death_ie("config::init: RLIMIT_STACK");
-    _exit(-1);
-  }
+  setr(RLIMIT_STACK, rlim, memory, res);
   
-  if(setr(RLIMIT_FSIZE, rlim, fsize)) {
-    res.death_ie("config::init: RLIMIT_FSIZE");
-    _exit(-1);
-  }
+  setr(RLIMIT_FSIZE, rlim, fsize, res);
   
-  if(nproc != -1 && setr(RLIMIT_NPROC, rlim, nproc)) {
-    res.death_ie("config::init: RLIMIT_NPROC");
-    _exit(-1);
-  }
+  if(nproc != -1)
+    setr(RLIMIT_NPROC, rlim, nproc, res);
   
-  if(setr(RLIMIT_CORE, rlim, core)) {
-    res.death_ie("config::init: RLIMIT_CORE");
-    _exit(-1);
-  }
+  setr(RLIMIT_CORE, rlim, core, res);
       
-  if(dir) {
-    if(chdir(dir)) {
-      res.death_ie("config::init: chdir");
-      _exit(-1);
-    }
+  if(dir && chdir(dir)) {
+    res.death_ie("config::init: chdir");
+    _exit(-1);
   }
 }
 
 file_config::file_config(int in, int out, int err) : pstdin(in), pstdout(out), pstderr(err) {}
 
 file_config::init(process_result& res) {
-  if(movefd(pstdin, 0)) {
-    res.death_ie("config::init: movefd(pstdin)");
-    _exit(-1);
-  }
+  movefd(pstdin, 0, res);
   
-  if(movefd(pstdout, 1)) {
-    res.death_ie("config::init: movefd(pstdout)");
-    _exit(-1);
-  }
+  movefd(pstdout, 1, res);
   
-  if(movefd(pstderr, 2)) {
-    res.death_ie("config::init: movefd(pstderr)");
-    _exit(-1);
-  }
+  movefd(pstderr, 2, res);
 }

@@ -10,6 +10,8 @@
 #include "builtin/relative_precision.hpp"
 #include "builtin/unordered.hpp"
 
+#include "utils/debug.hpp"
+
 checker_sig get_checker(const char* checkername) {
   if(strcmp(checkername, "standard") == 0)
     return standard_check;
@@ -30,5 +32,5 @@ checker_sig get_checker(const char* checkername) {
     return unordered_check;
     
   errno = ENOENT;
-  return 0;
+  RUNTIME_FUNC(-1);
 }
