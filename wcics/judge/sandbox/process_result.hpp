@@ -52,7 +52,7 @@ struct process_result {
 private:
   void add_msg(const char*);
   
-  void info_ptr();
+  char* buf_ptr();
   void adv_ind();
 };
 

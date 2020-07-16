@@ -63,7 +63,7 @@ private:
   int file_access_check(int dirfd, ull strptr, int flags);
   
   // overridden virtual functions
-  virtual int monitor();
+  virtual void monitor();
   
   virtual void child_func();
   
@@ -74,9 +74,12 @@ private:
   // if msg is null, just kill the process
   void death_ie(const char* msg);
   
+  // Kill the process and call _wait_death
+  void terminate();
+  
   // Wait for the process to die by signal
   // used by death_ie and death_illegal to wait for it to die by SIGKILL
-  void wait_death();
+  void _wait_death();
   
   // declare friends :D
   friend int empty_check(SecureProcess&);
@@ -99,9 +102,9 @@ private:
   
 public:
   SecureProcess(
-    std::string,
-    std::vector<std::string>,
-    std::vector<std::string>,
+    const char*,
+    const char* const*,
+    const char* const*,
     config&,
     SharedProcessResult&,
     FileAccessChecker&

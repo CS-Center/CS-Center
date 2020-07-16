@@ -39,7 +39,7 @@ inline void _movefd(int oldfd, int newfd, const char* nm, process_result& pres) 
   if(oldfd != -1 && dup2(oldfd, newfd)) {
     string out = string("Error setting child fd '") + nm + "'";
     
-    pres.death_ie(out.c_str();
+    pres.death_ie(out.c_str());
     _exit(-1);
   }
 }
@@ -69,7 +69,7 @@ void config::init(process_result& res) {
 
 file_config::file_config(int in, int out, int err) : pstdin(in), pstdout(out), pstderr(err) {}
 
-file_config::init(process_result& res) {
+void file_config::init(process_result& res) {
   movefd(pstdin, 0, res);
   
   movefd(pstdout, 1, res);

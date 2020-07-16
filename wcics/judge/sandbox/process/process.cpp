@@ -13,10 +13,9 @@
 #include "process.hpp"
 #include "utils/args.hpp"
 #include "utils/time.hpp"
+#include "utils/debug.hpp"
 
-using namespace std;
-
-Process::Process(string file, vector<string> args, vector<string> env, config& conf, SharedProcessResult& pr) :
+Process::Process(const char* file, const char* const* args, const char* const* env, config& conf, SharedProcessResult& pr) :
   pathname(file),
   argv(args),
   envp(env),
@@ -44,7 +43,7 @@ void Process::fork_and_exec(file_config& file_conf) {
         
     child_func();
     
-    execve(pathname.c_str(), to_charpp(argv), to_charpp(envp));
+    execve(pathname, const_cast<char* const*>(argv), const_cast<char* const*>(envp));
         
     res.death_ie("Process: launch: execve");
         
@@ -55,8 +54,6 @@ void Process::fork_and_exec(file_config& file_conf) {
 void Process::launch(file_config& file_conf) {
   fork_and_exec(file_conf);
   monitor();
-  
-  return status;
 } 
 
 const process_result& Process::get_result() {

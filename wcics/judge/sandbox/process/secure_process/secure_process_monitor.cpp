@@ -66,7 +66,7 @@ void launch_thread(SecureProcessShocker* arg) {
 // the big boi function
 // this is the most important function in the whole judge
 void SecureProcess::monitor() {
-  shock_thread = thread(launch_thread, sps);
+  shock_thread = thread(launch_thread, &sps);
    
   int status;
   bool first = true;
@@ -98,7 +98,6 @@ void SecureProcess::monitor() {
         res.death_tle();
 
         terminate();
-        wait_death();
         return;
       }
     }
@@ -182,20 +181,11 @@ void SecureProcess::monitor() {
           case HANDLER_DENY:
           case HANDLER_SPECIAL:
             death_illegal(call_no);
-            return 0;
+            return;
             
           case HANDLER_INSPECT: {
             // call inspector gadget
-            int ret = syscall_inspectors[call_no](*this);
-            
-            // -1 means they errored
-            if(ret == -1) {
-              death_ie(0);
-              update_result(-ENOSYS);
-              skip_call();
-              set_regs();
-              return -1;
-            }
+            int ret = RUNTIME_FUNC(syscall_inspectors[call_no](*this));
                         
             // if they returned 0, syscall runs
             // if they returned positive, errno will be returned!
@@ -213,19 +203,20 @@ void SecureProcess::monitor() {
             break;
             
           default:
+            string out = string("Invalid syscall handler ") + to_string(syscall_handlers[call_no]) + " for ";
+          
             if(syscall_names[call_no])
-              snprintf(res.info, INFO_BUF_LEN, "Invalid syscall handler %d for %s", syscall_handlers[call_no], syscall_names[call_no]);
+              out += syscall_names[call_no];
             else
-              snprintf(res.info, INFO_BUF_LEN, "Invalid syscall handler %d for unknown syscall %d", syscall_handlers[call_no], call_no);
+              out += to_string(call_no);
               
-            death_ie(0);
-            res.exit_info = call_no;
-            return 0;
+            res.death_ie(out.c_str());
+            RUNTIME_FUNC(-1);
         }
                 
         if(ptrace(PTRACE_CONT, tid, 0, 0) && errno != ESRCH) {
           death_ie("Seccomp PTRACE_CONT");
-          return -1;
+          RUNTIME_FUNC(-1);
         }
       }
       
@@ -234,7 +225,7 @@ void SecureProcess::monitor() {
         
         if(ptrace(PTRACE_CONT, tid, 0, 0) && errno != ESRCH) {
           death_ie("Exec PTRACE_CONT");
-          return -1;
+          RUNTIME_FUNC(-1);
         }
       }
       
@@ -260,26 +251,20 @@ void SecureProcess::monitor() {
         // printf("New thread: %lu\n", newtid);
         children.insert(newtid);
         
-        if(ptrace(PTRACE_CONT, tid, 0, 0)) {
-          death_ie("Clone PTRACE_CONT");
-          RUNTIME_FUNC(-1);
-        }
+        RUNTIME_FUNC(ptrace(PTRACE_CONT, tid, 0, 0));
       }
       
       else {
         // no event
         // this means we have an ACTUAL SIGNAL
         // just send it back
-        if(ptrace(PTRACE_CONT, tid, 0, signal)) {
-          death_ie("Signal PTRACE_CONT");
-          RUNTIME_FUNC(-1);
-        }
+        RUNTIME_FUNC(ptrace(PTRACE_CONT, tid, 0, signal));
       }
     }
   }
 }
 
-void SecureProcess::wait_death() {
+void SecureProcess::_wait_death() {
   int status;
   while(!children.empty()) {
     // TODO: determine what to wait on based on where we died (pgid or pid)
@@ -310,13 +295,13 @@ void SecureProcess::wait_death() {
         // we already sent SIGKILL, so what can we really do if this fails?
         // we print a warning and return
         // this is fine because it should really only give ESRCH
-        perror("SecureProcess::wait_death: ptrace");
+        perror("SecureProcess::_wait_death: ptrace");
         return;
       }
     }
     
     else {
-      fprintf(stderr, "Invalid status value in wait_death: %d\n", status);
+      fprintf(stderr, "Invalid status value in _wait_death: %d\n", status);
       // we dont know what to do here
       // so we just leave
       return;

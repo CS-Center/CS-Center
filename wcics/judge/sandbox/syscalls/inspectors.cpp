@@ -13,8 +13,8 @@ int exec_check (SecureProcess& proc) {
   static bool has_execve = false;
   
   if(has_execve) {
-    res.death_ie("Process called execve twice!\n");
-    res.death_type = DEATH_ILL;
+    proc.res.death_ill(SYS_execve);
+    proc.res.death_type = DEATH_ILL;
     
     return -1;
   }
@@ -24,7 +24,7 @@ int exec_check (SecureProcess& proc) {
 }
 
 int empty_check (SecureProcess& proc) {
-  res.death_ie("Error: syscall without inspector called!\n", false);
+  proc.res.death_ie("Error: syscall without inspector called!\n", false);
   return -1;
 }
 

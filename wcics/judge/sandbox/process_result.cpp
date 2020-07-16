@@ -8,6 +8,7 @@ extern const char* const sys_siglist[];
 
 #include "process_result.hpp"
 #include "syscalls/syscall_names.hpp"
+#include "utils/debug.hpp"
 
 using namespace std;
 
@@ -94,7 +95,7 @@ void process_result::add_msg(const char* s) {
   info_ind += l;
 }
 
-void process_result::buf_ptr() {
+char* process_result::buf_ptr() {
   return info + info_ind;
 }
 

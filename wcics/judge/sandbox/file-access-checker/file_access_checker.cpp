@@ -7,41 +7,42 @@
 
 using namespace std;
 
-FileAccessChecker::init(vector<string> dirs, vector<string> readables, vector<string> writables) {
+FileAccessChecker::FileAccessChecker(const char* const* dirs, const char* const* readables, const char* const* writables) {
   
   dir_fs = dirs;
   read_fs = readables;
   write_fs = writables;
+}
+
+bool prefix_search(const char* const* items, const char* elem) {
+  for(; *items; items++) {
+    int l = strlen(*items);
+    
+    if(strncmp(*items, elem, l) == 0)
+      return 1;
+  }
   
   return 0;
 }
 
-bool prefix_search(vector<string>& items, const string& elem) {
-  for(string& s : items)
-    if(s.size() <= elem.size() && elem.substr(0, s.size()) == s) 
+bool linear_search(const char* const* items, const char* elem) {
+  for(; *items; items++)
+    if(strcmp(*items, elem) == 0) 
       return 1;
       
   return 0;
 }
 
-bool linear_search(vector<string> items, const string& elem) {
-  for(string& s : items)
-    if(s == elem)
-      return 1;
-      
-  return 0;
-}
-
-bool FileAccessChecker::check(const string& s, bool is_write) {
+bool FileAccessChecker::check(const char* file, bool is_write) {
   if(is_write)
     return linear_search(write_fs, file);
 
-  return linear_search(dir_fs, file, true) || linear_search(read_fs, file);
+  return prefix_search(dir_fs, file) || linear_search(read_fs, file);
 }
 
-vector<string> base_dir_fs = { "/usr/", "/lib/", "/lib64/", "/proc/self/", };
+const char* const _base_dir_fs[] = { "/usr/", "/lib/", "/lib64/", "/proc/self/", 0 };
 
-vector<string> base_read_fs = { 
+const char* const _base_read_fs[] = { 
   "/usr", 
   "/lib", 
   "/proc/self",
@@ -61,11 +62,17 @@ vector<string> base_read_fs = {
   
   "/etc/os-release",
   "/proc/sys/vm/overcommit_memory",
+  0
 };
 
-std::vector<const char*> base_write_fs = {
+const char* const _base_write_fs[] = {
   "/dev/null", 
   
   "/dev/stdout",
-  "/dev/stderr"
+  "/dev/stderr",
+  0
 };
+
+const char* const* base_dir_fs = _base_dir_fs;
+const char* const* base_read_fs = _base_read_fs;
+const char* const* base_write_fs = _base_write_fs;

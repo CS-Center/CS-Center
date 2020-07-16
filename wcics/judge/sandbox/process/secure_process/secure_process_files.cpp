@@ -77,7 +77,7 @@ int SecureProcess::file_access_check(int dirfd, ull strptr, int flags) {
     path = fulljoin(dirbuf, path);
   }
   
-  if(!fac.check(path, is_write)) {
+  if(!fac.check(path.c_str(), is_write)) {
     // if they try to write to a file that they cant, EACCES
     if(is_write) {
       fprintf(stderr, "Denied write access to %s\n", path.c_str());

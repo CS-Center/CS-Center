@@ -39,29 +39,32 @@ ull SecureProcess::get_arg3() {
 }
 
 SecureProcess::SecureProcess(
-  string file,
-  vector<string> args, 
-  vector<string> env,
+  const char* file,
+  const char* const* args, 
+  const char* const* env,
   config& conf,
   SharedProcessResult& pres,
   FileAccessChecker& checker
 ) :
   Process(file, args, env, conf, pres), 
   sps(*this),
-  shock(sps),
   fac(checker)
 {}
+
+void SecureProcess::terminate() {
+  Process::terminate();
+  
+  _wait_death();
+}
 
 void SecureProcess::death_illegal(int call_no) {
   res.death_ill(call_no);
   
   terminate();
-  wait_death();
 }
 
-void SecureProcess::death_ie(string) {
+void SecureProcess::death_ie(const char* msg) {
   res.death_ie(msg);
   
   terminate();
-  wait_death();
 }

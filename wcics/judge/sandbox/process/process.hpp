@@ -11,8 +11,9 @@
 class Process {
 protected:
   // variables to be passed to execve
-  std::string pathname;
-  std::vector<std::string> argv, envp;
+  const char* pathname;
+  const char* const* argv;
+  const char* const* envp;
   
   // The process pid, only available after calling launch()
   pid_t pid;
@@ -37,9 +38,9 @@ protected:
   
 public:
   Process(
-    std::string file, 
-    std::vector<std::string> args, 
-    std::vector<std::string> env, 
+    const char* file, 
+    const char* const* args, 
+    const char* const* env, 
     config& conf,
     SharedProcessResult& pres
   );
