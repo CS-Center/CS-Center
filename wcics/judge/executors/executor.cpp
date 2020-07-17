@@ -15,9 +15,9 @@ int Executor::get_nproc() {
 }
 
 const char* Executor::get_exec() {
-  exec = "./" + file;
+  exec = string("./") + file;
 
-  return exec;
+  return exec.c_str();
 }
 
 const char* Executor::get_exec_name() {
@@ -34,7 +34,7 @@ void Executor::make_args() {
   args.push_back(0);
 }
 
-Executor::Executor(string code, const char* file, const char* const* extra_args, const char* const* env, config& conf,  FileAccessChecker& fac, SharedProcessResult& res) :
+Executor::Executor(string code, const char* file, vector<const char*> extra_args, const char* const* env, config& conf,  FileAccessChecker& fac, SharedProcessResult& res) :
   file(file),
   code(code),
   extra_args(extra_args),

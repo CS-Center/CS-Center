@@ -63,7 +63,7 @@ protected:
   
 public:
   // file is the file name to put the code in
-  Executor(std::string code, std::string file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
+  Executor(std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
 
   // prepare for launching
   // this _MUST_ be called before launch, and launch can be called many times after this is called
@@ -76,4 +76,4 @@ public:
   virtual void cleanup();
 
   virtual void launch();
-}
+};
