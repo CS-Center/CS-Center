@@ -6,7 +6,7 @@
 #include "scoped_executor.hpp"
 #include "utils/debug.hpp"
 
-void ScopedExecutor::ScopedExecutor(const char* id, std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {
+ScopedExecutor::ScopedExecutor(const char* id, std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {
   for(const ExecutorInfo& ei : executors) {
     if(strcmp(ei.shortname, id) == 0) {
       ptr = ei.make_executor(code, file, extra_args, env, conf, fac, res);

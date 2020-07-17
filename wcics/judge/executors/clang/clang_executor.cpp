@@ -2,18 +2,16 @@
 
 #if defined C_ENABLED && defined CLANG_ENABLED
 
-  const char* ClangExecutor::get_ext() { return "c"; }
+  const char* ClangExecutor::get_source_ext() { return ".c"; }
   
-  const char* ClangExecutor::get_compiler() { return CLANG_PATH; }
+  const char* ClangExecutor::get_compiler_exec() { return CLANG_PATH; }
   
   const char* ClangExecutor::get_compiler_name() { return "clang"; }
   
-  int ClangExecutor::make_compiler_args() {
-    const char* base_cargs[] = {
-      "clang", "-O", "-Wall", "-DONLINE_JUDGE", get_standard(), "-o", file, filepath, 0
+  std::vector<const char*> ClangExecutor::get_compiler_flags() {
+    return {
+      "-O", "-Wall", "-DONLINE_JUDGE", get_standard(), "-o", compiled_filename.c_str()
     };
-    
-    return copy_compiler_args(base_cargs);
   }
   
   #ifdef CLANG_90_ENABLED

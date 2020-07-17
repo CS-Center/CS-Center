@@ -25,13 +25,21 @@ const char* Executor::get_exec_name() {
   return get_exec();
 }
 
+void Executor::make_base_args() {
+  args = { get_exec_name() };
+}
+
 void Executor::make_args() {
-  args = {get_exec_name()};
+  make_base_args();
   
-  for(const char* s : extra_args)
-    args.push_back(s);
+  add_extra_args();
     
   args.push_back(0);
+}
+
+void Executor::add_extra_args() {
+  for(const char* s : extra_args)
+    args.push_back(s);
 }
 
 Executor::Executor(string code, const char* file, vector<const char*> extra_args, const char* const* env, config& conf,  FileAccessChecker& fac, SharedProcessResult& res) :

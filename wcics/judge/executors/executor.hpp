@@ -47,7 +47,9 @@ protected:
   std::string source_filename;
   
   // make arguments
+  virtual void make_base_args();
   virtual void make_args();
+  virtual void add_extra_args();
   
   // get executable path and name
   virtual const char* get_exec();

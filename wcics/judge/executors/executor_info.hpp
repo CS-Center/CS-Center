@@ -4,7 +4,7 @@
 
 #include "executor.hpp"
 
-typedef Executor* (*get_executor_sig) (const char* code, const char* file, const char* const* extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
+typedef Executor* (*get_executor_sig) (std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
 
 #define EXECUTOR_INFO_LEN 4096
 
@@ -37,9 +37,9 @@ public:
   
   bool has_version = false;
   
-  char info[EXECUTOR_INFO_LEN + 1];
+  std::string info;
   
-  const char* get_info();
+  std::string get_info();
   
   ExecutorInfo(const char* exec, const char* fullname, const char* shortname, const char* lang, int version, const char* runtime, const char* const* args, bool, get_executor_sig);
 };

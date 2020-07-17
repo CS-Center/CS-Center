@@ -2,15 +2,11 @@
 
 #if defined PYTHON_ENABLED && defined CPYTHON_ENABLED
 
-  int CPythonExecutor::make_args() {
-    const char* base_args[] = {
-      get_exec_name(), "-BS", filepath, 0
-    };
-    
-    return add_args(base_args);
+  void CPythonExecutor::make_base_args() {
+    args = { get_exec_name(), "-BS", source_filename.c_str() };
   }
   
-  const char* CPythonExecutor::get_ext() { return "py"; }
+  const char* CPythonExecutor::get_source_ext() { return ".py"; }
   
   #ifdef CPYTHON2_ENABLED
   

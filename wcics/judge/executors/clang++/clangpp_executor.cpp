@@ -2,18 +2,16 @@
 
 #if defined CPP_ENABLED && defined CLANGPP_ENABLED
 
-  const char* ClangppExecutor::get_ext() { return "cpp"; }
+  const char* ClangppExecutor::get_ext() { return ".cpp"; }
   
-  const char* ClangppExecutor::get_compiler() { return CLANGPP_PATH; }
+  const char* ClangppExecutor::get_compiler_exec() { return CLANGPP_PATH; }
   
   const char* ClangppExecutor::get_compiler_name() { return "clang++"; }
   
-  int ClangppExecutor::make_compiler_args() {
-    const char* base_cargs[] = {
-      "clang++", "-O", "-Wall", "-DONLINE_JUDGE", get_standard(), "-o", file, filepath, 0
+  std::vector<const char*> ClangppExecutor::get_compiler_flags() {
+    return {
+      "-O", "-Wall", "-DONLINE_JUDGE", get_standard(), "-o", compiled_filename.c_str(),
     };
-    
-    return copy_compiler_args(base_cargs);
   }
   
   #ifdef CLANGPP_98_ENABLED

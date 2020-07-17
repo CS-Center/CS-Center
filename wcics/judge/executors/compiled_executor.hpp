@@ -11,7 +11,7 @@ class CompiledExecutor : public Executor {
 protected:
   bool compiled = false;
   
-  std::string compiled_file, compiled_filepath;
+  std::string compiled_filename, compiled_filepath;
   
   SharedProcessResult comp_res;
   std::string compiler_output;
@@ -23,10 +23,11 @@ protected:
   virtual double get_compiler_timelimit();
   virtual int get_max_file_size();
 
-  virtual const char* get_compiler() = 0;
+  virtual const char* get_compiler_exec() = 0;
   virtual const char* get_compiler_name() = 0;
 
   virtual void make_compiler_args();
+  virtual std::vector<const char*> get_compiler_flags();
   
   virtual process_result* get_compiler_result();
   virtual std::string get_compiler_output();

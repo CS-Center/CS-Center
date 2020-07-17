@@ -13,7 +13,12 @@
 
 #include "sandbox/process/insecure_process.hpp"
 
+#include "utils/pipes.hpp"
+#include "utils/files.hpp"
+
 #include "executor_info.hpp"
+
+using namespace std;
 
 #define DEF_INFO_FUNC(name) Executor* New##name##Executor(std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {\
   return new name##Executor(code, file, extra_args, env, conf, fac, res); \
@@ -305,69 +310,42 @@ ExecutorInfo::ExecutorInfo(const char* exec, const char* fullname, const char* s
   exec(exec), fullname(fullname), shortname(shortname), language(lang), major_version(version), runtime(runtime), version_args(args), make_executor(func), stderr_version(stderr)
 {}
 
-const char* ExecutorInfo::get_info() {
+std::string ExecutorInfo::get_info() {
   if(has_version)
     return info;
 
   has_version = true;
 
-  file_config file_conf(-1, -1, -1);
-
-  scoped_fd temp_fd("exec_info_stream");
-  
-  if(temp_fd.open("/tmp", O_RDWR | O_TMPFILE, 0600) < 0) {
-    fprintf(stderr, "Failed to get executor info for %s ", shortname);
-    perror("open /tmp/__executor_info_stream");
-    
-    return "Error getting info, please contact an admin.";
-  }
-
-  if(stderr_version) {
-    file_conf.pstderr = temp_fd.fd;
-  }
-  else {
-    file_conf.pstdout = temp_fd.fd;
-  }
+  int fd = RUNTIME_FUNC(open("/tmp", O_RDWR | O_TMPFILE, 0600));
   
   config conf;
   conf.memory = 128 * 1024 * 1024;
   conf.nproc = -1;
   conf.timelimit = 2;
   conf.fsize = EXECUTOR_INFO_LEN;
+  conf.pstdin = null_read_fd;
   
-  int status;
-  SharedProcessResult shres(status);
-  
-  if(status) {
-    fprintf(stderr, "Failed to get executor info for %s ", shortname);
-    perror("SharedProcessResult");
-    
-    strncpy(info, "Error getting info. Please contact an admin", INFO_BUF_LEN);
+  if(stderr_version) {
+    conf.pstderr = fd;
   }
+  else {
+    conf.pstdout = fd;
+  }
+  
+  SharedProcessResult shres;
   
   const char* null[] = {0};
   
   InsecureProcess proc(exec, version_args, null, conf, shres);
   
-  proc.launch(file_conf);
+  proc.launch();
   
   // if they error, return that to user
   if((*shres).death_type != DEATH_NORMAL || (*shres).exit_info)
-    strncpy(info, (*shres).info, EXECUTOR_INFO_LEN);
+    info = (*shres).info;
+  else {
+    info = read_from_file(fd);
     
-  int cnt = temp_fd.read(info, INFO_BUF_LEN);
-  
-  if(cnt < 0) {
-    fprintf(stderr, "Failed to get executor info for %s ", shortname);
-    perror("read");
-    
-    strncpy(info, "Error getting info. Please contact an admin.", INFO_BUF_LEN);
-    
-    return info;
-  }
-  
-  info[cnt] = 0;
-  
   // success!
   return info;
 }

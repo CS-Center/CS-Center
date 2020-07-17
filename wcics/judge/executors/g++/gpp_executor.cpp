@@ -2,18 +2,16 @@
 
 #if defined CPP_ENABLED && defined GPP_ENABLED
 
-  const char* GppExecutor::get_ext() { return "cpp"; }
+  const char* GppExecutor::get_source_ext() { return ".cpp"; }
   
-  const char* GppExecutor::get_compiler() { return GPP_PATH; }
+  const char* GppExecutor::get_compiler_exec() { return GPP_PATH; }
   
   const char* GppExecutor::get_compiler_name() { return "g++"; }
   
-  int GppExecutor::make_compiler_args() {
-    const char* base_cargs[] = {
-      "g++", "-O", "-Wall", "-DONLINE_JUDGE", "-o", get_standard(), file, filepath, 0
+  std::vector<const char*> GppExecutor::get_compiler_flags() {
+    return {
+      "-O", "-Wall", "-DONLINE_JUDGE", "-o", compiled_filename.c_str(), get_standard()
     };
-    
-    return copy_compiler_args(base_cargs);
   }
   
   #ifdef GPP_98_ENABLED

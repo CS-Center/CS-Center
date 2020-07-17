@@ -2,18 +2,16 @@
 
 #if defined C_ENABLED && defined GCC_ENABLED
 
-  const char* GCCExecutor::get_ext() { return "c"; }
+  const char* GCCExecutor::get_source_ext() { return ".c"; }
   
-  const char* GCCExecutor::get_compiler() { return GCC_PATH; }
+  const char* GCCExecutor::get_compiler_exec() { return GCC_PATH; }
   
   const char* GCCExecutor::get_compiler_name() { return "gcc"; }
   
-  int GCCExecutor::make_compiler_args() {
-    const char* base_cargs[] = {
-      "gcc", "-Wall", "-DONLINE_JUDGE", "-O", "-o", get_standard(), file, filepath, 0
+  std::vector<const char*> GCCExecutor::get_compiler_flags() {
+    return {
+      "-Wall", "-DONLINE_JUDGE", "-O", get_standard(), "-o", compiled_filename.c_str()
     };
-    
-    return copy_compiler_args(base_cargs);
   }
   
   #ifdef GCC_90_ENABLED

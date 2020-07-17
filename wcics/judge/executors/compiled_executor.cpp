@@ -21,8 +21,16 @@ int CompiledExecutor::get_max_file_size() {
 }
 
 void CompiledExecutor::make_compiler_args() {
-  cargs = vector<const char*>({ get_compiler_name(), filepath.c_str(), 0 });
+  cargs = { get_compiler_name() };
+  
+  for(const char* c : get_compiler_flags())
+    cargs.push_back(c);
+    
+  cargs.push_back(source_filename.c_str());
+  cargs.push_back(0);
 }
+
+std::vector<const char*> get_compiler_flags() { return {}; }
 
 void CompiledExecutor::make_compiler_config(config& cconf) {
   cconf.dir = conf.dir;
@@ -36,7 +44,7 @@ process_result* CompiledExecutor::get_compiler_result() {
   return &(*comp_res);
 }
 
-string CompiledExecutor::get_compiler_output() {
+std::string CompiledExecutor::get_compiler_output() {
   return compiler_output;
 }
 
@@ -52,11 +60,11 @@ void CompiledExecutor::compile() {
       
   int temp_fd = RUNTIME_FUNC(open("/tmp", O_RDWR | O_TMPFILE, 0600));
   
-  vector<const char*> null_env = {0};
+  std::vector<const char*> null_env = {0};
   
   cconf.set_streams(null_read_fd, null_write_fd, temp_fd);
   
-  InsecureProcess proc(get_compiler(), cargs.data(), null_env.data(), cconf, comp_res);
+  InsecureProcess proc(get_compiler_exec(), cargs.data(), null_env.data(), cconf, comp_res);
     
   proc.launch();
   
@@ -64,8 +72,8 @@ void CompiledExecutor::compile() {
   
   compiler_output = read_from_file(temp_fd);
   
-  compiled_file = string(base_filename) + get_compiled_ext();
-  compiled_filepath = conf.dir + compiled_file;
+  compiled_filename = string(base_filename) + get_compiled_ext();
+  compiled_filepath = conf.dir + compiled_filename;
   
   RUNTIME_FUNC(close(temp_fd));
 }
@@ -87,7 +95,7 @@ void CompiledExecutor::cleanup() {
   if(!compiled)
     return;
 
-  RUNTIME_FUNC(unlink(compiled_file.c_str()));
+  RUNTIME_FUNC(unlink(compiled_filename.c_str()));
 }
 
 CompiledExecutor::~CompiledExecutor() {}

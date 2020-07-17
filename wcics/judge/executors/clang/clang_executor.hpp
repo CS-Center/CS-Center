@@ -11,12 +11,12 @@
   
     virtual const char* get_standard() = 0;
   
-    int make_compiler_args();
+    std::vector<const char*> get_compiler_flags();
   
-    const char* get_compiler();
+    const char* get_compiler_exec();
     const char* get_compiler_name();
     
-    const char* get_ext();
+    const char* get_source_ext();
   };
   
   #ifdef CLANG_90_ENABLED

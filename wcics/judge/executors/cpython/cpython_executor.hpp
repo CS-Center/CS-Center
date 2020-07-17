@@ -9,9 +9,9 @@
   class CPythonExecutor : public Executor {
     using Executor::Executor;
     
-    int make_args();
+    void make_base_args();
     
-    const char* get_ext();
+    const char* get_source_ext();
     
     // make it abstract :)
     const char* get_exec() = 0;
