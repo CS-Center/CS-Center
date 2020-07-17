@@ -1,5 +1,7 @@
 #include <string.h>
+#include <string>
 #include <fcntl.h>
+#include <vector>
 
 #include "executors/clang/clang_executor.hpp"
 #include "executors/clang++/clangpp_executor.hpp"
@@ -13,7 +15,7 @@
 
 #include "executor_info.hpp"
 
-#define DEF_INFO_FUNC(name) Executor* New##name##Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {\
+#define DEF_INFO_FUNC(name) Executor* New##name##Executor(std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {\
   return new name##Executor(code, file, extra_args, env, conf, fac, res); \
 }
 

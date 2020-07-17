@@ -15,7 +15,7 @@ int Executor::get_nproc() {
 }
 
 const char* Executor::get_exec() {
-  exec = string("./") + file;
+  exec = string("./") + base_filename;
 
   return exec.c_str();
 }
@@ -35,7 +35,7 @@ void Executor::make_args() {
 }
 
 Executor::Executor(string code, const char* file, vector<const char*> extra_args, const char* const* env, config& conf,  FileAccessChecker& fac, SharedProcessResult& res) :
-  file(file),
+  base_filename(file),
   code(code),
   extra_args(extra_args),
   env(env),
@@ -44,13 +44,15 @@ Executor::Executor(string code, const char* file, vector<const char*> extra_args
   res(res)
 {}
 
-const char* Executor::get_ext() { return ""; }
+const char* Executor::get_source_ext() { return ""; }
 
 void Executor::create_files() {
   // this isnt really a create_files step, but its necessary
   conf.nproc = get_nproc();
   
-  filepath = string(conf.dir) + "/" + file + get_ext();
+  source_filename = string(base_filename) + get_source_ext();
+  
+  filepath = string(conf.dir) + "/" + source_filename;
   
   write_to_file(filepath.c_str(), code);
   
@@ -62,6 +64,8 @@ void Executor::compile() {}
 process_result* Executor::get_compiler_result() {
   return 0;
 }
+
+std::string Executor::get_compiler_output() { return ""; }
 
 void Executor::prepare() {
   create_files();

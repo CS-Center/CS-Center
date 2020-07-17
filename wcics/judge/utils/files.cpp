@@ -32,8 +32,6 @@ void write_to_file(int fd, string content, int len) {
   RUNTIME_FUNC_NEQ(fclose(f), 0);
 }
 
-
-
 string _read_from_file(FILE* f) {
   RUNTIME_FUNC(fseek(f, 0, SEEK_END));
   
@@ -49,7 +47,11 @@ string _read_from_file(FILE* f) {
 string read_from_file(const char* name) {
   FILE* f = RUNTIME_FUNC_EQ(fopen(name, "rb"), (FILE*)0);
   
-  return _read_from_file(f);
+  string ret = _read_from_file(f);
+  
+  RUNTIME_FUNC_NEQ(fclose(f), 0);
+  
+  return ret;
 }
 
 string read_from_file(int fd) {

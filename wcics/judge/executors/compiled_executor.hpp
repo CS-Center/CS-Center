@@ -10,9 +10,13 @@ class CompiledExecutor : public Executor {
 
 protected:
   bool compiled = false;
+  
+  std::string compiled_file, compiled_filepath;
+  
+  SharedProcessResult comp_res;
+  std::string compiler_output;
 
-  arg_arr cargs;
-  int cargi = 0;
+  std::vector<const char*> cargs;
   
   void make_compiler_config(config& cconf);
   
@@ -22,15 +26,17 @@ protected:
   virtual const char* get_compiler() = 0;
   virtual const char* get_compiler_name() = 0;
 
-  virtual int copy_compiler_args(const char**);
-  virtual int make_compiler_args();
+  virtual void make_compiler_args();
   
-  virtual const char* get_output_file();
+  virtual process_result* get_compiler_result();
+  virtual std::string get_compiler_output();
+  
+  virtual const char* get_compiled_ext();
   
 public:
-  virtual int compile();
+  virtual void compile();
   
-  virtual int cleanup();
+  virtual void cleanup();
   
   ~CompiledExecutor();
 };

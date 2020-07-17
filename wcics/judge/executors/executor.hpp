@@ -17,7 +17,7 @@ protected:
   bool has_cleanup = false;
 
   // the file
-  const char* file;
+  const char* base_filename;
   
   std::string code;
   
@@ -43,6 +43,9 @@ protected:
   // the full path and ext of file
   std::string filepath;
   
+  // base_filename + get_source_ext()
+  std::string source_filename;
+  
   // make arguments
   virtual void make_args();
   
@@ -54,9 +57,10 @@ protected:
   virtual int get_nproc();
   
   virtual process_result* get_compiler_result();
+  virtual std::string get_compiler_output();
   
   // getters
-  virtual const char* get_ext();
+  virtual const char* get_source_ext();
   
   virtual void create_files();
   virtual void compile();
