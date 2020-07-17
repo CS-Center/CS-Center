@@ -2,8 +2,6 @@
 
 #include "process_result.hpp"
 
-#include "utils/scoped_fd.hpp"
-
 // A structure for a process config
 struct config {
   // RLIMIT_DATA & RLIMIT_STACK
@@ -27,19 +25,13 @@ struct config {
   // Dir to chdir into
   const char* dir;
   
-  config();
-  
-  void init(process_result&);
-};
-
-// since this has to be redone every time the process is run, this is a separate structure
-struct file_config {
   // streams
   // -1 indicates stream inheritance
   int pstdin, pstdout, pstderr;
   
-  file_config(int in, int out, int err);
+  config();
   
-  // initiailize
+  void set_streams(int, int, int);
+  
   void init(process_result&);
 };

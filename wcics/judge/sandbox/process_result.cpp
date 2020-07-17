@@ -13,6 +13,13 @@ extern const char* const sys_siglist[];
 using namespace std;
 
 process_result::process_result() {
+  reset();
+}
+
+void reset() {
+  rss = -1;
+  time = -1;
+  
   info[0] = 0;
   info_ind = 0;
   

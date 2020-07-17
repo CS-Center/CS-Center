@@ -17,13 +17,13 @@ typedef char info_buf[INFO_BUF_LEN + 1];
 // and other codes depending on TLE, ILL
 
 struct process_result {
-  long rss = -1;
+  long rss;
   
   // time spent
   double time;
 
   // one of the above constants, the death type of the process
-  int death_type = NO_DEATH;
+  int death_type;
   
   // the extra info (exit status, signal, 0, ill syscall, errno?, 0)
   int exit_info;
@@ -49,7 +49,11 @@ struct process_result {
   
   process_result();
   
+  process_result(process_result&) = delete;
+  
+  void reset();
 private:
+
   void add_msg(const char*);
   
   char* buf_ptr();

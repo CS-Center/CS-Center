@@ -29,7 +29,7 @@ void Process::terminate() {
   }
 }
 
-void Process::fork_and_exec(file_config& file_conf) {      
+void Process::fork_and_exec() {      
   pid = fork();
   if(pid == -1) {
     res.death_ie("Process: launch: fork");
@@ -38,9 +38,7 @@ void Process::fork_and_exec(file_config& file_conf) {
   if(pid == 0) {  
     // child
     pconf.init(res);
-    
-    file_conf.init(res);
-        
+            
     child_func();
     
     execve(pathname, const_cast<char* const*>(argv), const_cast<char* const*>(envp));
@@ -51,8 +49,8 @@ void Process::fork_and_exec(file_config& file_conf) {
   }
 }
 
-void Process::launch(file_config& file_conf) {
-  fork_and_exec(file_conf);
+void Process::launch() {
+  fork_and_exec();
   monitor();
 } 
 

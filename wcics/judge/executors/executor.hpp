@@ -1,6 +1,8 @@
 #pragma once
 
 #include <limits.h>
+#include <string>
+#include <vector>
 
 #include "sandbox/config.hpp"
 #include "sandbox/process/secure_process/secure_process.hpp"
@@ -17,15 +19,13 @@ protected:
   // the file
   const char* file;
   
-  const char* code;
+  std::string code;
   
   // args array, filled after prepare()
-  arg_arr args;
-  
-  int argi = 0;
-  
+  std::vector<const char*> args;
+    
   // the extra args and env
-  const char* const* extra_args;
+  std::vector<const char*> extra_args;
   const char* const* env;
   
   // config
@@ -38,19 +38,13 @@ protected:
   SharedProcessResult& res;
   
   // the executable
-  char exec[FILE_MAX_LEN + 1];
+  std::string exec;
   
   // the full path and ext of file
-  char filepath[PATH_MAX + 1];
-  
-  // the compiler error
-  char compiler_info[INFO_BUF_LEN + 1];
+  std::string filepath;
   
   // make arguments
-  virtual int make_args();
-  
-  // add to base arguments, and null terminate the array
-  virtual int add_args(const char** base);
+  virtual void make_args();
   
   // get executable path and name
   virtual const char* get_exec();
@@ -59,26 +53,27 @@ protected:
   // get nproc (default 0)
   virtual int get_nproc();
   
-  // getters
-  virtual const char* get_ext() = 0;
+  virtual process_result* get_compiler_result();
   
-  virtual int create_files();
-  virtual int compile();
+  // getters
+  virtual const char* get_ext();
+  
+  virtual void create_files();
+  virtual void compile();
   
 public:
   // file is the file name to put the code in
-  Executor(const char* code, const char* file, const char* const* extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
+  Executor(std::string code, std::string file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
 
   // prepare for launching
   // this _MUST_ be called before launch, and launch can be called many times after this is called
-  virtual int prepare();
+  virtual void prepare();
   
   // get the compiler error
   const char* get_compiler_info();
   
   // called for cleanup
-  virtual int cleanup();
+  virtual void cleanup();
 
-  virtual int launch(file_config&);
-  
-  void set_env(const char* const*);
+  virtual void launch();
+}

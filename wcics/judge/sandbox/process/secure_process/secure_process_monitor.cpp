@@ -34,6 +34,8 @@ void SecureProcess::child_func() {
   }
 
   // important or something
+  // see https://man7.org/linux/man-pages/man2/prctl.2.html
+  // or `man 2 prctl`
   if(prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
     res.death_ie("SecureProcess::child_func: prctl: privs");
     _exit(-1);

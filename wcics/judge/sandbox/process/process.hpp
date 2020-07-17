@@ -28,7 +28,7 @@ protected:
   void terminate();
   
   // fork and exec the process
-  void fork_and_exec(file_config& conf);
+  void fork_and_exec();
   
   // monitor process
   virtual void monitor() = 0;
@@ -46,7 +46,7 @@ public:
   );
   
   // launch the process
-  void launch(file_config& conf);
+  void launch();
   
   const process_result& get_result();
 };

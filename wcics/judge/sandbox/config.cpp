@@ -19,7 +19,10 @@ config::config() :
   memlock(0),
   fsize(0),
   nproc(0),
-  dir(0)
+  dir(0),
+  pstdin(-1),
+  pstdout(-1),
+  pstderr(-1)
 {}
 
 inline void _setr(int res, struct rlimit& rlim, rlim_t val, const char* name, process_result& pres) { 
@@ -65,14 +68,16 @@ void config::init(process_result& res) {
     res.death_ie("config::init: chdir");
     _exit(-1);
   }
-}
-
-file_config::file_config(int in, int out, int err) : pstdin(in), pstdout(out), pstderr(err) {}
-
-void file_config::init(process_result& res) {
+  
   movefd(pstdin, 0, res);
   
   movefd(pstdout, 1, res);
   
   movefd(pstderr, 2, res);
+}
+
+config::set_streams(int in, int out, int err) {
+  pstdin = in;
+  pstdout = out;
+  pstderr = err;
 }
