@@ -2,14 +2,12 @@
 
 #if defined PYTHON_ENABLED && defined PYPY_ENABLED
 
-  int PyPyExecutor::make_args() {
-    const char* base_args[] = { get_exec_name(), "-BS", filepath, 0 };
-    
-    return add_args(base_args);
+  void PyPyExecutor::make_base_args() {
+    args = { get_exec_name(), "-BS", source_filename.c_str() };
   }
 
-  const char* PyPyExecutor::get_ext() {
-    return "py";
+  const char* PyPyExecutor::get_source_ext() {
+    return ".py";
   }
   
   #ifdef PYPY2_ENABLED

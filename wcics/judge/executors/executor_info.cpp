@@ -343,9 +343,9 @@ std::string ExecutorInfo::get_info() {
   // if they error, return that to user
   if((*shres).death_type != DEATH_NORMAL || (*shres).exit_info)
     info = (*shres).info;
-  else {
+  else
     info = read_from_file(fd);
     
-  // success!
+  // success! 
   return info;
 }

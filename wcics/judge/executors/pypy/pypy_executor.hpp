@@ -7,9 +7,9 @@
   class PyPyExecutor : public Executor {
     using Executor::Executor;
     
-    int make_args();  
+    void make_base_args();  
     
-    const char* get_ext();
+    const char* get_source_ext();
     
     virtual const char* get_exec() = 0;
     virtual const char* get_exec_name() = 0;

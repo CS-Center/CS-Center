@@ -1,6 +1,6 @@
 #pragma once
 
-#define JAVA_ENABLED 1
+//#define JAVA_ENABLED 1
 
 #define JAVA_VM_PATH "/usr/bin/java"
 
