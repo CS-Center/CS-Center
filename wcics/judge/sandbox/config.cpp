@@ -76,7 +76,7 @@ void config::init(process_result& res) {
   movefd(pstderr, 2, res);
 }
 
-config::set_streams(int in, int out, int err) {
+void config::set_streams(int in, int out, int err) {
   pstdin = in;
   pstdout = out;
   pstderr = err;

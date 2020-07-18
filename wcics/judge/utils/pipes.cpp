@@ -34,6 +34,7 @@ inline bool validate_comm(int flag) {
 }
 
 
+/*
 void make_pipes(Communicator& comm, file_config& conf, int pipe_stdin, int pipe_stdout, int pipe_stderr) {
   if(!validate_comm(pipe_stdin) || !validate_comm(pipe_stdout) || !validate_comm(pipe_stderr)) {
     errno = EINVAL;
@@ -89,4 +90,4 @@ void make_pipes(Communicator& comm, file_config& conf, int pipe_stdin, int pipe_
   else {
     PUSH_STACK(make_pipe(comm.get_err().fd, conf.pstderr));
   }
-}
+}*/

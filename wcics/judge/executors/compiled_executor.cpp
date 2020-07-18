@@ -30,7 +30,7 @@ void CompiledExecutor::make_compiler_args() {
   cargs.push_back(0);
 }
 
-std::vector<const char*> get_compiler_flags() { return {}; }
+std::vector<const char*> CompiledExecutor::get_compiler_flags() { return {}; }
 
 void CompiledExecutor::make_compiler_config(config& cconf) {
   cconf.dir = conf.dir;
@@ -78,7 +78,7 @@ void CompiledExecutor::compile() {
   RUNTIME_FUNC(close(temp_fd));
 }
 
-const char* get_compiled_ext() {
+const char* CompiledExecutor::get_compiled_ext() {
   return "";
 }
 

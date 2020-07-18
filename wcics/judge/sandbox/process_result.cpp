@@ -16,7 +16,7 @@ process_result::process_result() {
   reset();
 }
 
-void reset() {
+void process_result::reset() {
   rss = -1;
   time = -1;
   
