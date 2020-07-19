@@ -10,4 +10,5 @@ logs.txt
 .cache
 .pytest_cache
 bin
+deps
 _hashed_static.*
