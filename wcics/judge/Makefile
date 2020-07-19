@@ -1,13 +1,14 @@
 BINDIR = bin
 DEPDIR = deps
+SOURCEDIRS = executors sandbox runtimes utils
 
-SOURCES = $(shell find * -name '*.cpp')
+SOURCES = $(shell find $(SOURCEDIRS) -name '*.cpp')
 OBJECTS = $(SOURCES:%.cpp=$(BINDIR)/%.o)
 DEPS = $(SOURCES:%.cpp=$(DEPDIR)/%.d)
 
 
 CPP_FLAGS += -I. -std=c++11
-LDFLAGS += 
+LDFLAGS += -lpthread -lseccomp
 
 .PHONY: all clean
 all: main
