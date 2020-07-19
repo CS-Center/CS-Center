@@ -1,5 +1,5 @@
-BINDIR = bin
-DEPDIR = deps
+BINDIR = build/bin
+DEPDIR = build/deps
 SOURCEDIRS = executors sandbox runtimes utils
 
 SOURCES = $(shell find $(SOURCEDIRS) -name '*.cpp')
@@ -10,21 +10,25 @@ DEPS = $(SOURCES:%.cpp=$(DEPDIR)/%.d)
 CPP_FLAGS += -I. -std=c++11
 LDFLAGS += -lpthread -lseccomp
 
-.PHONY: all clean
+.PHONY: all clean mkbuild
 all: main
+
+build/.hasbuild:
+	mkdir -p build
+	sudo mount -t tmpfs tmpfs build/
+	touch build/.hasbuild
 
 main: $(DEPS) $(OBJECTS)
 	g++ $(LDFLAGS) -o $@ $(OBJECTS)
 	
 
-$(OBJECTS): $(BINDIR)/%.o: %.cpp
+$(OBJECTS): $(BINDIR)/%.o: %.cpp build/.hasbuild
 	@mkdir -p $(dir $@)
 	g++ -c -o $@ $(CPP_FLAGS) $< 
 	
 	
-$(DEPS): $(DEPDIR)/%.d: %.cpp
+$(DEPS): $(DEPDIR)/%.d: %.cpp build/.hasbuild
 	@mkdir -p $(dir $@)
-	@touch $@
 	g++ $(CPP_FLAGS) -MP -MM -MT $(BINDIR)/$(basename $<).o $< > $@
 	
 ifneq ($(MAKECMDGOALS),clean)
@@ -32,4 +36,5 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 	
 clean:
-	rm -r $(BINDIR) $(DEPDIR)
+	sudo umount build
+	rm -r build
