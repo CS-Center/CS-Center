@@ -11,4 +11,6 @@ logs.txt
 .pytest_cache
 bin
 deps
+build
+.hasbuild
 _hashed_static.*
