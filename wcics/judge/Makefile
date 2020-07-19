@@ -2,12 +2,14 @@ BINDIR = build/bin
 DEPDIR = build/deps
 SOURCEDIRS = executors sandbox runtimes utils
 
+COMPILER = g++
+
 SOURCES = $(shell find $(SOURCEDIRS) -name '*.cpp')
 OBJECTS = $(SOURCES:%.cpp=$(BINDIR)/%.o)
 DEPS = $(SOURCES:%.cpp=$(DEPDIR)/%.d)
 
 
-CPP_FLAGS += -I. -std=c++11
+CPP_FLAGS += -I. -O
 LDFLAGS += -lpthread -lseccomp
 
 .PHONY: all clean mkbuild
@@ -19,17 +21,17 @@ build/.hasbuild:
 	touch build/.hasbuild
 
 main: $(DEPS) $(OBJECTS)
-	g++ $(LDFLAGS) -o $@ $(OBJECTS)
+	$(COMPILER) $(LDFLAGS) -o $@ $(OBJECTS)
 	
 
 $(OBJECTS): $(BINDIR)/%.o: %.cpp build/.hasbuild
 	@mkdir -p $(dir $@)
-	g++ -c -o $@ $(CPP_FLAGS) $< 
+	$(COMPILER) -c -o $@ $(CPP_FLAGS) $< 
 	
 	
 $(DEPS): $(DEPDIR)/%.d: %.cpp build/.hasbuild
 	@mkdir -p $(dir $@)
-	g++ $(CPP_FLAGS) -MP -MM -MT $(BINDIR)/$(basename $<).o $< > $@
+	$(COMPILER) $(CPP_FLAGS) -MP -MM -MT $(BINDIR)/$(basename $<).o $< > $@
 	
 ifneq ($(MAKECMDGOALS),clean)
 -include $(DEPS)

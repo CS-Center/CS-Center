@@ -54,7 +54,7 @@ private:
   ull get_arg3();
   
   // read file path from strptr
-  int readpath(ull strptr, string&);
+  int readpath(ull strptr, std::string&);
   
   // file access check
   // return -1 on error

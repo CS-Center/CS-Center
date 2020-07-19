@@ -2,7 +2,7 @@
 
 #include "runtimes/python.hpp"
 
-#if defined PYTHON_ENABLED && defined CPYTHON_ENABLED
+#if PYTHON_ENABLED && CPYTHON_ENABLED
 
   #include "executors/executor.hpp"
 
@@ -18,7 +18,7 @@
     const char* get_exec_name() = 0;
   };
   
-  #ifdef CPYTHON2_ENABLED
+  #if CPYTHON2_ENABLED
   
     class CPython2Executor : public CPythonExecutor {
       using CPythonExecutor::CPythonExecutor;
@@ -29,7 +29,7 @@
   
   #endif // CPYTHON2_ENABLED
   
-  #ifdef CPYTHON3_ENABLED
+  #if CPYTHON3_ENABLED
   
     class CPython3Executor : public CPythonExecutor {
       using CPythonExecutor::CPythonExecutor;

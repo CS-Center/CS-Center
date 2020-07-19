@@ -1,6 +1,6 @@
 #include "java_executor.hpp"
 
-#ifdef JAVA_ENABLED
+#if JAVA_ENABLED
   #include <string.h>
 
   const char* JavaExecutor::get_compiler_name() { return "javac"; }
@@ -32,13 +32,13 @@
     return add_args(base_args);
   }
 
-  #ifdef JAVA_8_ENABLED
+  #if JAVA_8_ENABLED
   
     const char* Java8Executor::get_compiler() { return JAVA_8_COMPILER_PATH; }
   
   #endif // JAVA_8_ENABLED
   
-  #ifdef JAVA_11_ENABLED
+  #if JAVA_11_ENABLED
   
     const char* Java11Executor::get_compiler() { return JAVA_11_COMPILER_PATH; }
   

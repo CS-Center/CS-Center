@@ -1,6 +1,6 @@
 #include "pypy_executor.hpp"
 
-#if defined PYTHON_ENABLED && defined PYPY_ENABLED
+#if PYTHON_ENABLED && PYPY_ENABLED
 
   void PyPyExecutor::make_base_args() {
     args = { get_exec_name(), "-BS", source_filename.c_str() };
@@ -10,7 +10,7 @@
     return ".py";
   }
   
-  #ifdef PYPY2_ENABLED
+  #if PYPY2_ENABLED
   
     const char* PyPy2Executor::get_exec() { return PYPY2_PATH; }
     
@@ -18,7 +18,7 @@
   
   #endif // PYPY2_ENABLED
   
-  #ifdef PYPY3_ENABLED
+  #if PYPY3_ENABLED
   
     const char* PyPy3Executor::get_exec() { return PYPY3_PATH; }
     

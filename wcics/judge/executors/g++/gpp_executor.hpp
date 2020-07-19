@@ -2,7 +2,7 @@
 
 #include "runtimes/cpp.hpp"
 
-#if defined CPP_ENABLED && defined GPP_ENABLED
+#if CPP_ENABLED && GPP_ENABLED
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_source_ext();
   };
   
-  #ifdef GPP_98_ENABLED
+  #if GPP_98_ENABLED
   
     class Gpp98Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -29,7 +29,7 @@
   
   #endif // GPP_98_ENABLED
   
-  #ifdef GPP_03_ENABLED
+  #if GPP_03_ENABLED
     
     class Gpp03Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -39,7 +39,7 @@
     
   #endif // GPP_03_ENABLED
   
-  #ifdef GPP_11_ENABLED
+  #if GPP_11_ENABLED
   
     class Gpp11Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -49,7 +49,7 @@
     
   #endif // GPP_11_ENABLED
   
-  #ifdef GPP_14_ENABLED
+  #if GPP_14_ENABLED
   
     class Gpp14Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -59,7 +59,7 @@
     
   #endif // GPP_14_ENABLED
   
-  #ifdef GPP_17_ENABLED
+  #if GPP_17_ENABLED
   
     class Gpp17Executor : public GppExecutor {
       using GppExecutor::GppExecutor;

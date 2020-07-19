@@ -1,6 +1,6 @@
 #include "runtimes/java.hpp"
 
-#ifdef JAVA_ENABLED
+#if JAVA_ENABLED
 
   #include "executors/compiled_executor.hpp"
 
@@ -27,7 +27,7 @@
     const char* get_exec();
   };
   
-  #ifdef JAVA_8_ENABLED
+  #if JAVA_8_ENABLED
   
     class Java8Executor : public JavaExecutor {
       using JavaExecutor::JavaExecutor;
@@ -37,7 +37,7 @@
   
   #endif // JAVA_8_ENABLED
   
-  #ifdef JAVA_11_ENABLED
+  #if JAVA_11_ENABLED
   
     class Java11Executor : public JavaExecutor {
       using JavaExecutor::JavaExecutor;

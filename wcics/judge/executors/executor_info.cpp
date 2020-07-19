@@ -15,6 +15,7 @@
 
 #include "utils/pipes.hpp"
 #include "utils/files.hpp"
+#include "utils/debug.hpp"
 
 #include "executor_info.hpp"
 

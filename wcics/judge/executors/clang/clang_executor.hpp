@@ -2,7 +2,7 @@
 
 #include "runtimes/c.hpp"
 
-#if defined C_ENABLED && defined CLANG_ENABLED
+#if C_ENABLED && CLANG_ENABLED
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_source_ext();
   };
   
-  #ifdef CLANG_90_ENABLED
+  #if CLANG_90_ENABLED
   
     class Clang90Executor : public ClangExecutor {
       using ClangExecutor::ClangExecutor;
@@ -29,7 +29,7 @@
   
   #endif // CLANG_90_ENABLED
   
-  #ifdef CLANG_99_ENABLED
+  #if CLANG_99_ENABLED
   
     class Clang99Executor : public ClangExecutor {
       using ClangExecutor::ClangExecutor;
@@ -39,7 +39,7 @@
   
   #endif // CLANG_99_ENABLED
   
-  #ifdef CLANG_11_ENABLED
+  #if CLANG_11_ENABLED
   
     class Clang11Executor : public ClangExecutor {
       using ClangExecutor::ClangExecutor;

@@ -2,7 +2,7 @@
 
 #include "runtimes/c.hpp"
 
-#if defined C_ENABLED && defined GCC_ENABLED
+#if C_ENABLED && GCC_ENABLED
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_source_ext();
   };
   
-  #ifdef GCC_90_ENABLED
+  #if GCC_90_ENABLED
   
     class GCC90Executor : public GCCExecutor {
       using GCCExecutor::GCCExecutor;
@@ -29,7 +29,7 @@
   
   #endif // GCC_90_ENABLED
   
-  #ifdef GCC_99_ENABLED
+  #if GCC_99_ENABLED
   
     class GCC99Executor : public GCCExecutor {
       using GCCExecutor::GCCExecutor;
@@ -39,7 +39,7 @@
   
   #endif // GCC_99_ENABLED
   
-  #ifdef GCC_11_ENABLED
+  #if GCC_11_ENABLED
   
     class GCC11Executor : public GCCExecutor {
       using GCCExecutor::GCCExecutor;

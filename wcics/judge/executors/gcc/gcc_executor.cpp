@@ -1,6 +1,6 @@
 #include "gcc_executor.hpp"
 
-#if defined C_ENABLED && defined GCC_ENABLED
+#if C_ENABLED && GCC_ENABLED
 
   const char* GCCExecutor::get_source_ext() { return ".c"; }
   
@@ -14,19 +14,19 @@
     };
   }
   
-  #ifdef GCC_90_ENABLED
+  #if GCC_90_ENABLED
     const char* GCC90Executor::get_standard() {
       return "-std=c90";
     }
   #endif // GCC_90_ENABLED
   
-  #ifdef GCC_99_ENABLED
+  #if GCC_99_ENABLED
     const char* GCC99Executor::get_standard() {
       return "-std=c99";
     }
   #endif // GCC_99_ENABLED
   
-  #ifdef GCC_11_ENABLED
+  #if GCC_11_ENABLED
     const char* GCC11Executor::get_standard() {
       return "-std=c11";
     }

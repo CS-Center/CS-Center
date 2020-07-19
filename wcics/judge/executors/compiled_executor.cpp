@@ -10,6 +10,7 @@
 
 #include "utils/pipes.hpp"
 #include "utils/files.hpp"
+#include "utils/debug.hpp"
 
 double CompiledExecutor::get_compiler_timelimit() {
   return 10;
@@ -72,7 +73,7 @@ void CompiledExecutor::compile() {
   
   compiler_output = read_from_file(temp_fd);
   
-  compiled_filename = string(base_filename) + get_compiled_ext();
+  compiled_filename = std::string(base_filename) + get_compiled_ext();
   compiled_filepath = conf.dir + compiled_filename;
   
   RUNTIME_FUNC(close(temp_fd));

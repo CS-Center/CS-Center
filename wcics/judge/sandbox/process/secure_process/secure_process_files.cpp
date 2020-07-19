@@ -9,6 +9,7 @@ using namespace std;
 
 #include "secure_process.hpp"
 #include "utils/paths.hpp"
+#include "utils/debug.hpp"
 
 // manage file access checking
 int SecureProcess::file_access_check(int dirfd, ull strptr, int flags) {

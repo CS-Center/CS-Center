@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
 #include <sys/types.h>
 
 #include "sandbox/process_result.hpp"
