@@ -1,6 +1,6 @@
 #include "clang_executor.hpp"
 
-#if C_ENABLED && CLANG_ENABLED
+#if HAS_CLANG
 
   const char* ClangExecutor::get_source_ext() { return ".c"; }
   
@@ -14,22 +14,22 @@
     };
   }
   
-  #if CLANG_90_ENABLED
+  #if HAS_CLANG_90
     const char* Clang90Executor::get_standard() {
       return "-std=c90";
     }
-  #endif // CLANG_90_ENABLED
+  #endif // HAS_CLANG_90
   
-  #if CLANG_99_ENABLED
+  #if HAS_CLANG_99
     const char* Clang99Executor::get_standard() {
       return "-std=c99";
     }
-  #endif // CLANG_99_ENABLED
+  #endif // HAS_CLANG_99
   
-  #if CLANG_11_ENABLED
+  #if HAS_CLANG_11
     const char* Clang11Executor::get_standard() {
       return "-std=c11";
     }
-  #endif // CLANG_11_ENABLED
+  #endif // HAS_CLANG_11
 
-#endif // C_ENABLED && GCC_ENABLED
+#endif // HAS_CLANG

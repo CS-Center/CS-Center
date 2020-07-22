@@ -42,7 +42,7 @@ void Executor::add_extra_args() {
     args.push_back(s);
 }
 
-Executor::Executor(string code, const char* file, vector<const char*> extra_args, const char* const* env, config& conf,  FileAccessChecker& fac, SharedProcessResult& res) :
+Executor::Executor(EXEC_INIT_ARGS) :
   base_filename(file),
   code(code),
   extra_args(extra_args),

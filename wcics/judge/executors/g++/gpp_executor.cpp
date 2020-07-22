@@ -1,6 +1,6 @@
 #include "gpp_executor.hpp"
 
-#if defined CPP_ENABLED && defined GPP_ENABLED
+#if HAS_GPP
 
   const char* GppExecutor::get_source_ext() { return ".cpp"; }
   
@@ -14,34 +14,34 @@
     };
   }
   
-  #ifdef GPP_98_ENABLED
+  #ifdef HAS_GPP_98
     const char* Gpp98Executor::get_standard() {
       return "-std=c++98";
     }
-  #endif // GPP_98_ENABLED
+  #endif // HAS_GPP_98
   
-  #ifdef GPP_03_ENABLED
+  #ifdef HAS_GPP_03
     const char* Gpp03Executor::get_standard() {
       return "-std=c++03";
     }
-  #endif // GPP_03_ENABLED
+  #endif // HAS_GPP_03
   
-  #ifdef GPP_11_ENABLED
+  #ifdef HAS_GPP_11
     const char* Gpp11Executor::get_standard() {
       return "-std=c++11";
     }
-  #endif // GPP_11_ENABLED
+  #endif // HAS_GPP_11
   
-  #ifdef GPP_14_ENABLED
+  #ifdef HAS_GPP_14
     const char* Gpp14Executor::get_standard() {
       return "-std=c++14";
     }
-  #endif // GPP_14_ENABLED
+  #endif // HAS_GPP_14
   
-  #ifdef GPP_17_ENABLED
+  #ifdef HAS_GPP_17
     const char* Gpp17Executor::get_standard() {
       return "-std=c++17";
     }
-  #endif // GPP_17_ENABLED
+  #endif // HAS_GPP_17
 
-#endif // CPP_ENABLED && GPP_ENABLED
+#endif // HAS_GPP

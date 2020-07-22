@@ -1,8 +1,8 @@
 #pragma once
 
-#include "runtimes/cpp.hpp"
+#include "executors/config/cpp.hpp"
 
-#if CPP_ENABLED && CLANGPP_ENABLED
+#if HAS_CLANGPP
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_ext();
   };
   
-  #if CLANGPP_98_ENABLED
+  #if HAS_CLANGPP_98
   
     class Clangpp98Executor : public ClangppExecutor {
       using ClangppExecutor::ClangppExecutor;
@@ -27,9 +27,9 @@
       const char* get_standard();
     };
   
-  #endif // CLANGPP_98_ENABLED
+  #endif // HAS_CLANGPP_98
   
-  #if CLANGPP_03_ENABLED
+  #if HAS_CLANGPP_03
   
     class Clangpp03Executor : public ClangppExecutor {
       using ClangppExecutor::ClangppExecutor;
@@ -37,9 +37,9 @@
       const char* get_standard();
     };
   
-  #endif // CLANGPP_03_ENABLED
+  #endif // HAS_CLANGPP_03
   
-  #if CLANGPP_11_ENABLED
+  #if HAS_CLANGPP_11
   
     class Clangpp11Executor : public ClangppExecutor {
       using ClangppExecutor::ClangppExecutor;
@@ -47,9 +47,9 @@
       const char* get_standard();
     };
   
-  #endif // CLANGPP_11_ENABLED
+  #endif // HAS_CLANGPP_11
   
-  #if CLANGPP_14_ENABLED
+  #if HAS_CLANGPP_14
   
     class Clangpp14Executor : public ClangppExecutor {
       using ClangppExecutor::ClangppExecutor;
@@ -57,9 +57,9 @@
       const char* get_standard();
     };
   
-  #endif // CLANGPP_14_ENABLED
+  #endif // HAS_CLANGPP_14
   
-  #if CLANGPP_17_ENABLED
+  #if HAS_CLANGPP_17
   
     class Clangpp17Executor : public ClangppExecutor {
       using ClangppExecutor::ClangppExecutor;
@@ -67,6 +67,6 @@
       const char* get_standard();
     };
   
-  #endif // CLANGPP_17_ENABLED
+  #endif // HAS_CLANGPP_17
 
-#endif // CPP_ENABLED && CLANGPP_ENABLED
+#endif // HAS_CLANGPP

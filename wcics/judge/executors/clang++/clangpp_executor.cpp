@@ -1,6 +1,6 @@
 #include "clangpp_executor.hpp"
 
-#if CPP_ENABLED && CLANGPP_ENABLED
+#if HAS_CLANGPP
 
   const char* ClangppExecutor::get_ext() { return ".cpp"; }
   
@@ -14,34 +14,34 @@
     };
   }
   
-  #if CLANGPP_98_ENABLED
+  #if HAS_CLANGPP_98
     const char* Clangpp98Executor::get_standard() {
       return "-std=c++98";
     }
-  #endif // CLANGPP_98_ENABLED
+  #endif // HAS_CLANGPP_98
   
-  #if CLANGPP_03_ENABLED
+  #if HAS_CLANGPP_03
     const char* Clangpp03Executor::get_standard() {
       return "-std=c++03";
     }
-  #endif // CLANGPP_03_ENABLED
+  #endif // HAS_CLANGPP_03
   
-  #if CLANGPP_11_ENABLED
+  #if HAS_CLANGPP_11
     const char* Clangpp11Executor::get_standard() {
       return "-std=c++11";
     }
-  #endif // CLANGPP_11_ENABLED
+  #endif // HAS_CLANGPP_11
   
-  #if CLANGPP_14_ENABLED
+  #if HAS_CLANGPP_14
     const char* Clangpp14Executor::get_standard() {
       return "-std=c++14";
     }
-  #endif // CLANGPP_14_ENABLED
+  #endif // HAS_CLANGPP_14
   
-  #if CLANGPP_17_ENABLED
+  #if HAS_CLANGPP_17
     const char* Clangpp17Executor::get_standard() {
       return "-std=c++17";
     }
-  #endif // CLANGPP_17_ENABLED
+  #endif // HAS_CLANGPP_17
 
-#endif // CPP_ENABLED && CLANGPP_ENABLED
+#endif // HAS_CLANGPP

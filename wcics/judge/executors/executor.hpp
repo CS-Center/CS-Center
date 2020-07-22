@@ -68,8 +68,10 @@ protected:
   virtual void compile();
   
 public:
+	#define EXEC_INIT_ARGS std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res
+
   // file is the file name to put the code in
-  Executor(std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res);
+  Executor(EXEC_INIT_ARGS);
 
   // prepare for launching
   // this _MUST_ be called before launch, and launch can be called many times after this is called

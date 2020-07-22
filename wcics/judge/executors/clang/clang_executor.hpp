@@ -1,8 +1,8 @@
 #pragma once
 
-#include "runtimes/c.hpp"
+#include "executors/config/c.hpp"
 
-#if C_ENABLED && CLANG_ENABLED
+#if HAS_CLANG
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_source_ext();
   };
   
-  #if CLANG_90_ENABLED
+  #if HAS_CLANG_90
   
     class Clang90Executor : public ClangExecutor {
       using ClangExecutor::ClangExecutor;
@@ -27,9 +27,9 @@
       const char* get_standard();
     };
   
-  #endif // CLANG_90_ENABLED
+  #endif // HAS_CLANG_90
   
-  #if CLANG_99_ENABLED
+  #if HAS_CLANG_99
   
     class Clang99Executor : public ClangExecutor {
       using ClangExecutor::ClangExecutor;
@@ -37,9 +37,9 @@
       const char* get_standard();
     };
   
-  #endif // CLANG_99_ENABLED
+  #endif // HAS_CLANG_99
   
-  #if CLANG_11_ENABLED
+  #if HAS_CLANG_11
   
     class Clang11Executor : public ClangExecutor {
       using ClangExecutor::ClangExecutor;
@@ -47,6 +47,6 @@
       const char* get_standard();
     };
   
-  #endif // CLANG_11_ENABLED
+  #endif // HAS_CLANG_11
 
-#endif // C_ENABLED && GCC_ENABLED
+#endif // HAS_CLANG

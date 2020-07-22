@@ -1,8 +1,8 @@
 #pragma once
 
-#include "runtimes/python.hpp"
+#include "executors/config/python.hpp"
 
-#if PYTHON_ENABLED && CPYTHON_ENABLED
+#if HAS_CPYTHON
 
   #include "executors/executor.hpp"
 
@@ -18,7 +18,7 @@
     const char* get_exec_name() = 0;
   };
   
-  #if CPYTHON2_ENABLED
+  #if HAS_CPYTHON_2
   
     class CPython2Executor : public CPythonExecutor {
       using CPythonExecutor::CPythonExecutor;
@@ -27,9 +27,9 @@
       const char* get_exec_name();
     };
   
-  #endif // CPYTHON2_ENABLED
+  #endif // HAS_CPYTHON_2
   
-  #if CPYTHON3_ENABLED
+  #if HAS_CPYTHON_3
   
     class CPython3Executor : public CPythonExecutor {
       using CPythonExecutor::CPythonExecutor;
@@ -38,6 +38,6 @@
       const char* get_exec_name();
     };
   
-  #endif // CPYTHON3_ENABLED
+  #endif // HAS_CPYTHON_3
 
-#endif // PYTHON_ENABLED && CPYTHON_ENABLED
+#endif // HAS_CPYTHON

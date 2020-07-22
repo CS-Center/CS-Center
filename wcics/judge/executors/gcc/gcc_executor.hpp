@@ -1,8 +1,8 @@
 #pragma once
 
-#include "runtimes/c.hpp"
+#include "executors/config/c.hpp"
 
-#if C_ENABLED && GCC_ENABLED
+#if HAS_GCC
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_source_ext();
   };
   
-  #if GCC_90_ENABLED
+  #if HAS_GCC_90
   
     class GCC90Executor : public GCCExecutor {
       using GCCExecutor::GCCExecutor;
@@ -27,9 +27,9 @@
       const char* get_standard();
     };
   
-  #endif // GCC_90_ENABLED
+  #endif // HAS_GCC_90
   
-  #if GCC_99_ENABLED
+  #if HAS_GCC_99
   
     class GCC99Executor : public GCCExecutor {
       using GCCExecutor::GCCExecutor;
@@ -37,9 +37,9 @@
       const char* get_standard();
     };
   
-  #endif // GCC_99_ENABLED
+  #endif // HAS_GCC_99
   
-  #if GCC_11_ENABLED
+  #if HAS_GCC_11
   
     class GCC11Executor : public GCCExecutor {
       using GCCExecutor::GCCExecutor;
@@ -47,6 +47,6 @@
       const char* get_standard();
     };
   
-  #endif // GCC_11_ENABLED
+  #endif // HAS_GCC_11
 
-#endif // C_ENABLED && GCC_ENABLED
+#endif // HAS_GCC

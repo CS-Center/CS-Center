@@ -1,8 +1,8 @@
 #pragma once
 
-#include "runtimes/cpp.hpp"
+#include "executors/config/cpp.hpp"
 
-#if CPP_ENABLED && GPP_ENABLED
+#if HAS_GPP
 
   #include "executors/compiled_executor.hpp"
 
@@ -19,7 +19,7 @@
     const char* get_source_ext();
   };
   
-  #if GPP_98_ENABLED
+  #if HAS_GPP_98
   
     class Gpp98Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -27,9 +27,9 @@
       const char* get_standard();
     };
   
-  #endif // GPP_98_ENABLED
+  #endif // HAS_GPP_98
   
-  #if GPP_03_ENABLED
+  #if HAS_GPP_03
     
     class Gpp03Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -37,9 +37,9 @@
       const char* get_standard();
     };
     
-  #endif // GPP_03_ENABLED
+  #endif // HAS_GPP_03
   
-  #if GPP_11_ENABLED
+  #if HAS_GPP_11
   
     class Gpp11Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -47,9 +47,9 @@
       const char* get_standard();
     };
     
-  #endif // GPP_11_ENABLED
+  #endif // HAS_GPP_11
   
-  #if GPP_14_ENABLED
+  #if HAS_GPP_14
   
     class Gpp14Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -57,9 +57,9 @@
       const char* get_standard();
     };
     
-  #endif // GPP_14_ENABLED
+  #endif // HAS_GPP_14
   
-  #if GPP_17_ENABLED
+  #if HAS_GPP_17
   
     class Gpp17Executor : public GppExecutor {
       using GppExecutor::GppExecutor;
@@ -67,6 +67,6 @@
       const char* get_standard();
     };
     
-  #endif // GPP_17_ENABLED
+  #endif // HAS_GPP_17
 
-#endif // CPP_ENABLED && GPP_ENABLED
+#endif // HAS_GPP

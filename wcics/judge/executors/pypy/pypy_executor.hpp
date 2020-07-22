@@ -1,6 +1,6 @@
-#include "runtimes/python.hpp"
+#include "executors/config/python.hpp"
 
-#if PYTHON_ENABLED && PYPY_ENABLED
+#if HAS_PYPY
 
   #include "executors/executor.hpp"
 
@@ -15,7 +15,7 @@
     virtual const char* get_exec_name() = 0;
   };
   
-  #if PYPY2_ENABLED
+  #if HAS_PYPY_2
   
     class PyPy2Executor : public PyPyExecutor {
       using PyPyExecutor::PyPyExecutor;
@@ -24,9 +24,9 @@
       const char* get_exec_name();
     };
     
-  #endif // PYPY2_ENABLED
+  #endif // HAS_PYPY_2
   
-  #if PYPY3_ENABLED
+  #if HAS_PYPY_3
   
     class PyPy3Executor : public PyPyExecutor {
       using PyPyExecutor::PyPyExecutor;
@@ -35,6 +35,6 @@
       const char* get_exec_name();
     };
     
-  #endif // PYPY3_ENABLED
+  #endif // HAS_PYPY_3
 
-#endif // PYTHON_ENABLED & PYPY_ENABLED
+#endif // HAS_PYPY

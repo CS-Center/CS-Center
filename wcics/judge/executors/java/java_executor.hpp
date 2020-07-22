@@ -1,6 +1,6 @@
-#include "runtimes/java.hpp"
+#include "executors/config/java.hpp"
 
-#if JAVA_ENABLED
+#if HAS_JAVA
 
   #include "executors/compiled_executor.hpp"
 
@@ -27,7 +27,7 @@
     const char* get_exec();
   };
   
-  #if JAVA_8_ENABLED
+  #if HAS_JAVA_8
   
     class Java8Executor : public JavaExecutor {
       using JavaExecutor::JavaExecutor;
@@ -35,9 +35,9 @@
       const char* get_compiler();
     };
   
-  #endif // JAVA_8_ENABLED
+  #endif // HAS_JAVA_8
   
-  #if JAVA_11_ENABLED
+  #if HAS_JAVA_11
   
     class Java11Executor : public JavaExecutor {
       using JavaExecutor::JavaExecutor;
@@ -45,6 +45,6 @@
       const char* get_compiler();
     };
   
-  #endif // JAVA_11_ENABLED
+  #endif // HAS_JAVA_11
 
-#endif // JAVA_ENABLED
+#endif // HAS_JAVA
