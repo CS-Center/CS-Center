@@ -4,6 +4,8 @@
 
 #include "executor.hpp"
 
+typedef Executor* (*get_executor_sig) (EXEC_INIT_ARGS);
+
 class ExecutorInfo {
 public:
   // full display name, e.g. Python 3
@@ -23,7 +25,7 @@ public:
       
   std::string info;
 	
-  ExecutorInfo(const char* exec, const char* fullname, const char* shortname, const char* lang, int version, const char* runtime, const char* const* args, bool, get_executor_sig);
+  ExecutorInfo(const char* exec, const char* fullname, const char* shortname, int version, bool, const char* vflag, const char* runtime, const char* lang, get_executor_sig);
 };
 
 extern std::vector<ExecutorInfo> executors;

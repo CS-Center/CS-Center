@@ -68,7 +68,9 @@ protected:
   virtual void compile();
   
 public:
-	#define EXEC_INIT_ARGS std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config&, FileAccessChecker&, SharedProcessResult& res
+	#define EXEC_INIT_ARGS std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res
+	
+	#define EXEC_INIT_ARG_NAMES code, file, extra_args, env, conf, fac, res
 
   // file is the file name to put the code in
   Executor(EXEC_INIT_ARGS);

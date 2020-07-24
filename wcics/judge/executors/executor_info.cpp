@@ -3,13 +3,13 @@
 #include <fcntl.h>
 #include <vector>
 
-#include "executors/clang/clang_executor.hpp"
-#include "executors/clang++/clangpp_executor.hpp"
-#include "executors/cpython/cpython_executor.hpp"
-#include "executors/g++/gpp_executor.hpp"
-#include "executors/gcc/gcc_executor.hpp"
-#include "executors/java/java_executor.hpp"
-#include "executors/pypy/pypy_executor.hpp"
+#include "executors/clang_executor.hpp"
+#include "executors/clangpp_executor.hpp"
+#include "executors/cpython_executor.hpp"
+#include "executors/gpp_executor.hpp"
+#include "executors/gcc_executor.hpp"
+#include "executors/java_executor.hpp"
+#include "executors/pypy_executor.hpp"
 
 #include "sandbox/process/insecure_process.hpp"
 
@@ -21,181 +21,80 @@
 
 using namespace std;
 
-#define DEF_INFO_FUNC(name) Executor* New##name##Executor(std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) {\
-  return new name##Executor(code, file, extra_args, env, conf, fac, res); \
-}
-
-#ifdef C_ENABLED
-  
-  #ifdef CLANG_ENABLED
-  
-    #ifdef CLANG_90_ENABLED
-      DEF_INFO_FUNC(Clang90);
-    #endif
-    
-    #ifdef CLANG_99_ENABLED
-      DEF_INFO_FUNC(Clang99);
-    #endif
-    
-    #ifdef CLANG_11_ENABLED
-      DEF_INFO_FUNC(Clang11);
-    #endif
-    
-  #endif
-  
-  #ifdef GCC_ENABLED
-  
-    #ifdef GCC_90_ENABLED
-      DEF_INFO_FUNC(GCC90);
-    #endif
-    
-    #ifdef GCC_99_ENABLED
-      DEF_INFO_FUNC(GCC99);
-    #endif
-    
-    #ifdef GCC_11_ENABLED
-      DEF_INFO_FUNC(GCC11);
-    #endif
-    
-  #endif
-  
-#endif
-
-#ifdef CPP_ENABLED
-
-  #ifdef CLANGPP_ENABLED
-  
-    #ifdef CLANGPP_98_ENABLED
-      DEF_INFO_FUNC(Clangpp98);
-    #endif
-    
-    #ifdef CLANGPP_03_ENABLED
-      DEF_INFO_FUNC(Clangpp03);
-    #endif
-    
-    #ifdef CLANGPP_11_ENABLED
-      DEF_INFO_FUNC(Clangpp11);
-    #endif
-    
-    #ifdef CLANGPP_14_ENABLED
-      DEF_INFO_FUNC(Clangpp14);
-    #endif
-    
-    #ifdef CLANGPP_17_ENABLED
-      DEF_INFO_FUNC(Clangpp17);
-    #endif
-    
-  #endif
-  
-  #ifdef GPP_ENABLED
-  
-    #ifdef GPP_98_ENABLED
-      DEF_INFO_FUNC(Gpp98);
-    #endif
-    
-    #ifdef GPP_03_ENABLED
-      DEF_INFO_FUNC(Gpp03);
-    #endif
-    
-    #ifdef GPP_11_ENABLED
-      DEF_INFO_FUNC(Gpp11);
-    #endif
-    
-    #ifdef GPP_14_ENABLED
-      DEF_INFO_FUNC(Gpp14);
-    #endif
-    
-    #ifdef GPP_17_ENABLED
-      DEF_INFO_FUNC(Gpp17);
-    #endif
-    
-  #endif
-  
-#endif
-
-#ifdef JAVA_ENABLED
-
-  #ifdef JAVA_8_ENABLED
-    DEF_INFO_FUNC(Java8);
-  #endif
-  
-  #ifdef JAVA_11_ENABLED
-    DEF_INFO_FUNC(Java11);
-  #endif
-  
-#endif
-
-#ifdef PYTHON_ENABLED
-
-  #ifdef CPYTHON_ENABLED
-  
-    #ifdef CPYTHON2_ENABLED
-      DEF_INFO_FUNC(CPython2);
-    #endif
-    
-    #ifdef CPYTHON3_ENABLED
-      DEF_INFO_FUNC(CPython3);
-    #endif
-    
-  #endif
-  
-  #ifdef PYPY_ENABLED
-  
-    #ifdef PYPY2_ENABLED
-      DEF_INFO_FUNC(PyPy2);
-    #endif
-    
-    #ifdef PYPY3_ENABLED
-      DEF_INFO_FUNC(PyPy3);
-    #endif
-  
-  #endif
-  
-#endif
-
-#define ADD_INFO(name, args...) res.push_back(ExecutorInfo(args, New##name##Executor));
+#define ADD_INFO(name, args...) res.emplace_back(EXEC, args, VFLAG, RUNTM, LANG, [](EXEC_INIT_ARGS){return new name(EXEC_INIT_ARG_NAMES); });
 
 std::vector<ExecutorInfo> get_executors() {
   std::vector<ExecutorInfo> res;
-  
-  #ifdef C_ENABLED
-  
-    #ifdef CLANG_ENABLED
-      const char* clang_args[] = {"clang", "-dumpversion", 0};
+	
+	#define VFLAG "--version"
+	
+	#define LANG "C"
+			
+		#define EXEC CLANG_PATH
+		#define RUNTM "Clang"
+	
+			#if HAS_GCC_90 
+				ADD_INFO(ClangExecutor<90>, "Clang 90", "clang90", 90, false);
+			#endif
 
-      #ifdef CLANG_90_ENABLED
-        ADD_INFO(Clang90, CLANG_PATH, "Clang90", "clang90", "C", 90, "Clang", clang_args, 0);
-      #endif
+			#if HAS_GCC_99
+				ADD_INFO(ClangExecutor<99>, "Clang 99", "clang99", 99, false);
+			#endif
 
-      #ifdef CLANG_99_ENABLED
-        ADD_INFO(Clang99, CLANG_PATH, "Clang99", "clang99", "C", 99, "Clang", clang_args, 0);
-      #endif
+			#if HAS_GCC_11
+				ADD_INFO(ClangExecutor<11>, "Clang 11", "clang11", 11, false);
+			#endif
+	
+		#undef EXEC
+		#undef RUNTM
+	
+		#define EXEC GCC_PATH
+		#define RUNTM "GCC"
 
-      #ifdef CLANG_11_ENABLED
-        ADD_INFO(Clang11, CLANG_PATH, "Clang11", "clang11", "C", 11, "Clang", clang_args, 0);
-      #endif
-
-    #endif
-
-    #ifdef GCC_ENABLED
-
-      const char* gcc_args[] = {"gcc", "-dumpversion", 0};
-
-      #ifdef GCC_90_ENABLED
-        ADD_INFO(GCC90, GCC_PATH, "GCC90", "gcc90", "C", 90, "GCC", gcc_args, 0);
-      #endif
-
-      #ifdef GCC_99_ENABLED
-        ADD_INFO(GCC99, GCC_PATH, "GCC99", "gcc99", "C", 99, "GCC", gcc_args, 0);
-      #endif
-
-      #ifdef GCC_11_ENABLED
-        ADD_INFO(GCC11, GCC_PATH, "GCC11", "gcc11", "C", 11, "GCC", gcc_args, 0);
-      #endif
-
-    #endif
-
-  #endif
+			#if HAS_GCC_90
+				ADD_INFO(GCCExecutor<90>, "GCC 90", "gcc90", 90, false);
+			#endif
+			
+			#if HAS_GCC_99
+				ADD_INFO(GCCExecutor<99>, "GCC 99", "gcc99", 99, false);
+			#endif
+	
+			#if HAS_GCC_11
+				ADD_INFO(GCCExecutor<11>, "GCC 11", "gcc11", 11, false);
+			#endif
+	
+		#undef EXEC
+		#undef RUNTM
+	#undef LANG
+	
+	#define LANG "C++"
+	
+		#define EXEC CLANGPP_PATH
+		#define RUNTM "Clang++"
+		
+			#if HAS_CLANGPP_98
+				ADD_INFO(ClangppExecutor<98>, "Clang++ 98", "clang++98", 98, false);
+			#endif
+			
+			#if HAS_CLANGPP_98
+				ADD_INFO(ClangppExecutor<98>, "Clang++ 98", "clang++98", 98, false);
+			#endif
+			
+			#if HAS_CLANGPP_98
+				ADD_INFO(ClangppExecutor<98>, "Clang++ 98", "clang++98", 98, false);
+			#endif
+			
+			#if HAS_CLANGPP_98
+				ADD_INFO(ClangppExecutor<98>, "Clang++ 98", "clang++98", 98, false);
+			#endif
+			
+			#if HAS_CLANGPP_98
+				ADD_INFO(ClangppExecutor<98>, "Clang++ 98", "clang++98", 98, false);
+			#endif
+			
+			
+	
+	#undef LANG
 
   #ifdef CPP_ENABLED
 
