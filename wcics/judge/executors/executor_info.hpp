@@ -56,7 +56,7 @@ struct executor_config {
 	const char* const runtime_name;
 	const char* const runtime_id;
 	
-	const int major_version;
+	const char* const  major_version;
 
 	int nproc = 0;
 };
@@ -74,6 +74,6 @@ public:
   ExecutorInfo(executor_config ec);
 };
 
-extern std::vector<ExecutorInfo> executors;
+extern std::vector<ExecutorInfo> executor_infos;
 
-ExecutorInfo get_einfo(const char* id);
+ExecutorInfo& get_einfo(const char* id);
