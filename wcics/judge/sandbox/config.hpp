@@ -9,12 +9,6 @@ struct config {
   
   // this is monitored in a different way
   double timelimit;
-  
-  // RLIMIT_CORE
-  int core;
-  
-  // RLIMIT_MEMLOCK
-  long memlock;
 
   // RLIMIT_FSIZE
   long fsize;

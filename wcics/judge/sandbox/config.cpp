@@ -61,9 +61,7 @@ void config::init(process_result& res) {
   
   if(nproc != -1)
     setr(RLIMIT_NPROC, rlim, nproc, res);
-  
-  setr(RLIMIT_CORE, rlim, core, res);
-      
+        
   if(dir && chdir(dir)) {
     res.death_ie("config::init: chdir");
     _exit(-1);

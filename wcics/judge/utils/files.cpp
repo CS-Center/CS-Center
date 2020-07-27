@@ -14,6 +14,10 @@ int file_len(int fd) {
 	return buf.st_size;	
 }
 
+int get_temp_fd() {
+	return RUNTIME_FUNC(open("/tmp", O_TMPFILE | O_CLOEXEC | O_RDWR, 0600));
+}
+
 void write_to_file(const char* name, std::string content) {
   FILE* f = RUNTIME_FUNC_EQ(fopen(name, "wb"), (FILE*)0);
   
@@ -22,12 +26,10 @@ void write_to_file(const char* name, std::string content) {
   RUNTIME_FUNC_NEQ(fclose(f), 0);
 }
 
-void write_to_file(int fd, std::string content, int len) {
+void write_to_file(int fd, std::string content) {
   FILE* f = RUNTIME_FUNC_EQ(fdopen(fd, "wb"), (FILE*)0);
   
   RUNTIME_FUNC_NEQ(fwrite(content.c_str(), content.size(), 1, f), content.size());
-  
-  RUNTIME_FUNC_NEQ(fclose(f), 0);
 }
 
 std::string _read_from_file(FILE* f) {
@@ -35,7 +37,7 @@ std::string _read_from_file(FILE* f) {
   
   int sz = RUNTIME_FUNC(ftell(f));
   
-  string s(sz, '\0');
+  std::string s(sz, '\0');
   
   RUNTIME_FUNC_NEQ(fread(&s[0], sz, 1, f), (size_t)sz);
   
@@ -45,7 +47,7 @@ std::string _read_from_file(FILE* f) {
 std::string read_from_file(const char* name) {
   FILE* f = RUNTIME_FUNC_EQ(fopen(name, "rb"), (FILE*)0);
   
-  string ret = _read_from_file(f);
+  std::string ret = _read_from_file(f);
   
   RUNTIME_FUNC_NEQ(fclose(f), 0);
   
