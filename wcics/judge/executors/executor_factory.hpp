@@ -14,13 +14,15 @@ namespace econf {
 		source_filepath, // dir + source_name
 		
 		compiled_filename, // base_file + compiled_ext
-		compiled_filepath // dir + compiled_name
+		compiled_filepath, // dir + compiled_name
+		
+		err,
 	};
 }
 
 // String / Special value ^^
 struct econf_str {
-	const char* str;
+	std::string str;
 	int val; // one of the constants from econf enum
 	
 	econf_str(int x);
@@ -30,38 +32,41 @@ struct econf_str {
 // Enough info to construct an ExecutorInfo
 
 struct executor_config {
+	// compiler arguments
 	econf_str compiler_exec;
 	std::vector<econf_str> compiler_args; // passed directly to execve(2)
-	const char* source_ext;
+	std::string source_ext;
 	
+	// interpreter arguments
 	econf_str interpreter_exec;
 	std::vector<econf_str> interpreter_args; // add the "extra_args" 
-	const char* compiled_ext;
+	std::string compiled_ext;
 	
+	// compiler limits
 	int compiler_memory = 128 * 1024 * 1024;
 	double compiler_timelimit = 10;
 	int compiler_max_file_size = 64 * 1024 * 1024;
 	
-	// Full display name
-	const char* const fullname;
-	
 	// identifying name, cpy3, pypy3 or gcc90
-	const char* const id;
+	std::string id;
 	
-	// Language (C, C++, Python)
-	const char* const language_name;
-	const char* const language_id;
+	// Fullname ("C++03 - G++", "Python2 - CPython")
+	std::string fullname;
 	
-	// Runtime (GCC, CPython, OpenJDK)
-	const char* const runtime_name;
-	const char* const runtime_id;
+	// Language name/ID
+	std::string language_name, language_id;
 	
-	const char* const  major_version;
+	// runtime name/ID
+	std::string runtime_name, runtime_id;
+	
+	// major version number
+	std::string version;
+	
 
 	int nproc = 0;
 };
 
-class ExecutorInfo {
+class ExecutorFactory {
 public:
 	// copy everything, intentionally not a reference
   executor_config ec;
@@ -71,9 +76,9 @@ public:
 		return Executor(ec, args...);
 	}
 	
-  ExecutorInfo(executor_config ec);
+  ExecutorFactory(executor_config ec);
 };
 
-extern std::vector<ExecutorInfo> executor_infos;
+extern std::vector<ExecutorFactory> executor_factories = get_factories();
 
-ExecutorInfo& get_einfo(const char* id);
+ExecutorFactory& get_factory(const char* id);
