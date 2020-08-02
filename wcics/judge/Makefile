@@ -15,14 +15,14 @@ CPP_FLAGS += -I. -O
 LDFLAGS += -lpthread -lseccomp
 
 .PHONY: all clean mkbuild
-all: main
+all: build/main
 
 build/.hasbuild:
 	mkdir -p build
 	sudo mount -t tmpfs tmpfs build/
 	touch build/.hasbuild
 
-main: $(PCHS) $(DEPS) $(OBJECTS)
+build/main: $(PCHS) $(DEPS) $(OBJECTS)
 	$(COMPILER) -o $@ $(OBJECTS) $(LDFLAGS)
 
 
