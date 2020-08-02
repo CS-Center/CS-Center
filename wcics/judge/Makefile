@@ -23,34 +23,34 @@ build/.hasbuild:
 	touch build/.hasbuild
 
 main: $(PCHS) $(DEPS) $(OBJECTS)
-	$(COMPILER) $(LDFLAGS) -o $@ $(OBJECTS)
-	
+	$(COMPILER) -o $@ $(OBJECTS) $(LDFLAGS)
+
 
 $(OBJECTS): $(BINDIR)/%.o: %.cpp build/.hasbuild
 	@mkdir -p $(dir $@)
-	$(COMPILER) -c -o $@ $(CPP_FLAGS) $< 
-	
-	
+	$(COMPILER) -c -o $@ $(CPP_FLAGS) $<
+
+
 $(DEPS): $(DEPDIR)/%.d: %.cpp build/.hasbuild
 	@mkdir -p $(dir $@)
 	$(COMPILER) $(CPP_FLAGS) -MP -MM -MT $(BINDIR)/$(basename $<).o $< > $@
-		
+
 	$(COMPILER) $(CPP_FLAGS) -MM -MT $@ $< >> $@
 
 # ^^^^^^^^^^^
 # In the future, if this file's dependencies are updated, re-update the dependency file as well
-# This means that if 
+# This means that if
 # a.cpp depends on b.hpp
 # b.hpp depends on c.hpp
 # if c.hpp is deleted, a.cpp is initially recompiled because of a indirect dependency on c.hpp
 # a new dependency file is also created indicating that a.cpp no longer depends on c.hpp
 # This also means that dependency files aren't re-created unless they need to be
 
-	
+
 ifneq ($(MAKECMDGOALS),clean)
 -include $(DEPS)
 endif
-	
+
 clean:
 	sudo umount build
 	rm -r build
