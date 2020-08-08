@@ -1,6 +1,5 @@
 BINDIR = build/bin
 DEPDIR = build/deps
-PCHDIR = build/pch
 SOURCEDIRS = executors sandbox runtimes utils
 
 COMPILER = g++
@@ -11,7 +10,7 @@ HEADERS = $(shell find $(SOURCEDIRS) -name '*.hpp')
 OBJECTS = $(SOURCES:%.cpp=$(BINDIR)/%.o)
 DEPS = $(SOURCES:%.cpp=$(DEPDIR)/%.d)
 
-CPP_FLAGS += -I. -O
+CPP_FLAGS += -I. -O -g
 LDFLAGS += -lpthread -lseccomp
 
 .PHONY: all clean mkbuild
@@ -22,8 +21,8 @@ build/.hasbuild:
 	sudo mount -t tmpfs tmpfs build/
 	touch build/.hasbuild
 
-build/main: $(PCHS) $(DEPS) $(OBJECTS)
-	$(COMPILER) -o $@ $(OBJECTS) $(LDFLAGS)
+build/main: $(DEPS) $(OBJECTS)
+	$(COMPILER) -o $@ $(OBJECTS) main.cpp $(LDFLAGS)
 
 
 $(OBJECTS): $(BINDIR)/%.o: %.cpp build/.hasbuild
