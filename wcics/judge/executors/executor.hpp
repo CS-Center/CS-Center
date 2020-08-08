@@ -16,7 +16,6 @@ private:
 
   std::string code;
 
-  std::vector<const char*> args;
   const char* const* env;
 
 	config& conf;
@@ -33,7 +32,8 @@ private:
 	SharedProcessResult compiler_res;
 	std::string compiler_output;
 
-	// either compiled_filepath or ec.interpreter_exec
+	std::vector<const char*> args;
+
 	const char* get_str(econf_str&);
 
 	bool is_compiled();

@@ -10,7 +10,7 @@ HEADERS = $(shell find $(SOURCEDIRS) -name '*.hpp')
 OBJECTS = $(SOURCES:%.cpp=$(BINDIR)/%.o)
 DEPS = $(SOURCES:%.cpp=$(DEPDIR)/%.d)
 
-CPP_FLAGS += -I. -O -g
+CPP_FLAGS += -I. -Wextra -Wpedantic -Wall -g # -O
 LDFLAGS += -lpthread -lseccomp
 
 .PHONY: all clean mkbuild

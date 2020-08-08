@@ -22,8 +22,8 @@ namespace econf {
 
 // String / Special value ^^
 struct econf_str {
-	std::string str;
 	int val; // one of the constants from econf enum
+	std::string str;
 
 	econf_str();
 	econf_str(int x);

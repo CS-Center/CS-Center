@@ -18,7 +18,7 @@ bool Executor::is_compiled() {
 	if(ec.compiler_exec == econf::null)
 		return true;
 
-	RUNTIME_FUNC(-1);
+	RUNTIME_ERROR();
 }
 
 const char* Executor::get_str(econf_str& ecf) {
@@ -88,13 +88,13 @@ void Executor::compile() {
 }
 
 Executor::Executor(executor_config& ec, std::string code, const char* file, std::vector<const char*> extra_args, const char* const* env, config& conf, FileAccessChecker& fac, SharedProcessResult& res) :
+	code(code),
+	env(env),
+	conf(conf),
+	fac(fac),
+	res(res),
 	ec(ec),
   base_filename(file),
-  code(code),
-  env(env),
-  conf(conf),
-  fac(fac),
-  res(res),
 	source_filename(base_filename + ec.source_ext),
 	source_filepath(conf.dir + ("/" + source_filename)),
 	compiled_filename(base_filename + ec.compiled_ext),

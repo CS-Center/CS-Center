@@ -18,7 +18,7 @@ std::map<char, char> id_replace = {
 };
 
 std::string to_id(std::string str) {
-	for(int i = 0; i < str.size(); i++) {
+	for(unsigned int i = 0; i < str.size(); i++) {
 		char nc = tolower(str[i]);
 
 		if(id_replace.count(nc))
@@ -31,7 +31,7 @@ std::string to_id(std::string str) {
 }
 
 std::string lower(std::string str) {
-	for(int i = 0; i < str.size(); i++) {
+	for(unsigned int i = 0; i < str.size(); i++) {
 		char nc = tolower(str[i]);
 
 		str[i] = nc;
@@ -45,7 +45,7 @@ std::string filepart(std::string val) {
 
 	while(ind > 0 && val[ind - 1] != '/') ind--;
 
-	return val.substr(0, ind);
+	return val.substr(ind);
 }
 
 typedef std::string (*conf_fn) (std::string);
@@ -61,12 +61,13 @@ std::map<std::string, int> ec_consts = {
 	{ "COMPILED_FILEPATH", econf::compiled_filepath },
 	{ "SOURCE_FILENAME", econf::source_filename },
 	{ "SOURCE_FILEPATH", econf::source_filepath },
-	{ "BASE_FILE", econf::base_file }
+	{ "BASE_FILE", econf::base_file },
+	{ "NO_COMPILER", econf::no_compiler },
 };
 
 std::string f_content;
 
-int f_index = 0;
+unsigned int f_index = 0;
 int line = 1, col = 0;
 
 bool is_id_char(char c) {
@@ -75,12 +76,17 @@ bool is_id_char(char c) {
 	return isalnum(lc) || (lc == '_');
 }
 
-void unget(const std::string& str = f_content, int& pos = f_index) {
-	if(pos != str.size()) pos--;
+void unget(const std::string& str = f_content, unsigned int& pos = f_index) {
+	if(pos >= str.size()) {} // Legacy, should remote the str param
+
+	pos--;
 }
 
-char gc(const std::string& str = f_content, int& pos = f_index) {
-	if(pos >= str.size()) return 0;
+char gc(const std::string& str = f_content, unsigned int& pos = f_index) {
+	if(pos >= str.size()) {
+		pos++;
+		return 0;
+	};
 
 	char c = str[pos++];
 
@@ -95,14 +101,14 @@ char gc(const std::string& str = f_content, int& pos = f_index) {
 	return c;
 }
 
-std::string read_id(const std::string& str = f_content, int& pos = f_index) {
+std::string read_id(const std::string& str = f_content, unsigned int& pos = f_index) {
 	std::string ret;
 
 	char c = gc(str, pos);
 	while(is_id_char(c)) {
 		ret += c;
 
-		char c = gc(str, pos);
+		c = gc(str, pos);
 	}
 
 	unget(str, pos);
@@ -111,7 +117,7 @@ std::string read_id(const std::string& str = f_content, int& pos = f_index) {
 }
 
 std::string rstrip(std::string str) {
-	int ind = str.size();
+	unsigned int ind = str.size();
 
 	while(ind > 0 && isspace(str[ind - 1]))
 		ind--;
@@ -120,7 +126,7 @@ std::string rstrip(std::string str) {
 }
 
 std::string lstrip(std::string str) {
-	int ind = 0;
+	unsigned int ind = 0;
 	while(ind < str.size() && isspace(str[ind]))
 		ind++;
 
@@ -144,11 +150,13 @@ std::vector<std::string> split(std::string str) {
 		else
 			ret.back() += c;
 	}
+
+	return ret;
 }
 
 typedef std::map<std::string, std::string> var_context;
 
-void trim(const std::string& str = f_content, int& pos = f_index) {
+void trim(const std::string& str = f_content, unsigned int& pos = f_index) {
 	char c;
 
 	do {
@@ -166,7 +174,7 @@ std::string outchar(char c) {
 		return std::string("\\") + std::to_string(int(c));
 }
 
-void expect(char ec, std::string& str = f_content, int& pos = f_index) {
+void expect(char ec, const std::string& str = f_content, unsigned int& pos = f_index) {
 	char sc = gc(str, pos);
 
 	if(sc != ec) {
@@ -207,7 +215,7 @@ econf_str evaluate(var_context& vctx, const std::string& val) {
 		return ec_consts[cname];
 	}
 	else {
-		int index = 0;
+		unsigned int index = 0;
 
 		std::string ret;
 
@@ -217,6 +225,11 @@ econf_str evaluate(var_context& vctx, const std::string& val) {
 			std::string sub_id, f_name, param;
 
 			switch(c) {
+				case '\\':
+					ret += gc(val, index);
+
+					break;
+
 				case '$':
 					sub_id = read_id(val, index);
 
@@ -232,13 +245,13 @@ econf_str evaluate(var_context& vctx, const std::string& val) {
 					f_name = read_id(val, index);
 
 					trim(val, index);
-					expect('(');
+					expect('(', val, index);
 					trim(val, index);
 
 					param = read_id(val, index);
 
 					trim(val, index);
-					expect(')');
+					expect(')', val, index);
 
 					if(color[param] == 1) {
 						fprintf(stderr, "Recursion error when trying to resolve '%s' on line %d.\n", val.c_str(), line);
@@ -357,7 +370,7 @@ std::vector<executor_config> parse_config(var_context vctx = var_context()) {
 				break;
 
 			case '}':
-				if(lastbrac != '}') {
+				if(lastbrac == 0) {
 					for(executor_config ec : do_export(vctx)) {
 						ret.push_back(ec);
 					}
