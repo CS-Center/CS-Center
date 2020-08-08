@@ -5,7 +5,7 @@
 #include "executor.hpp"
 
 namespace econf {
-	enum {
+	enum ec_type {
 		null,
 		no_compiler,
 		base_file, // Base filename as passed to the executor
@@ -22,11 +22,11 @@ namespace econf {
 
 // String / Special value ^^
 struct econf_str {
-	int val; // one of the constants from econf enum
+	econf::ec_type val; // one of the constants from econf enum
 	std::string str;
 
 	econf_str();
-	econf_str(int x);
+	econf_str(econf::ec_type x);
 	econf_str(std::string str);
 
 	bool operator==(int v);

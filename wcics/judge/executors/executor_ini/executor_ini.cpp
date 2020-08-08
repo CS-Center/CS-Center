@@ -56,7 +56,7 @@ std::map<std::string, conf_fn> ec_funcs = {
 	{ "FILEPART", filepart }
 };
 
-std::map<std::string, int> ec_consts = {
+std::map<std::string, econf::ec_type> ec_consts = {
 	{ "COMPILED_FILENAME", econf::compiled_filename },
 	{ "COMPILED_FILEPATH", econf::compiled_filepath },
 	{ "SOURCE_FILENAME", econf::source_filename },

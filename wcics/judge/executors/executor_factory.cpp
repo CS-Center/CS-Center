@@ -5,7 +5,7 @@
 ExecutorFactory::ExecutorFactory(executor_config ec) : ec(ec) {}
 
 econf_str::econf_str() : val(econf::null), str("") {}
-econf_str::econf_str(int x) : val(x), str("") {}
+econf_str::econf_str(econf::ec_type x) : val(x), str("") {}
 econf_str::econf_str(std::string s) : val(econf::null), str(s) {}
 
 bool econf_str::operator==(int v) { return val == v; }
