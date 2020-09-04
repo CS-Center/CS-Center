@@ -11,3 +11,5 @@ logs.txt
 .pytest_cache
 bin
 _hashed_static.*
+keys/
+keys.json
