@@ -18,7 +18,7 @@ def admin_sublinks():
     links.append(("/admin/database/", "database", []))
   if user.news_admin_organizations():
     links.append(("/admin/news/", "news", [("/organization/%s/admin/news/" % organization.oid, organization.name) for organization in user.news_admin_organizations()]))
-  if any(role.attendance > AttendanceRoles.default for role in OrganizationRoles.query.filter_by(uid = user.id).all()):
+  if any(role.attendance > AttendanceRoles.default for role in OrganizationRoles.query.filter_by(uid = user.id).all() if role.oid != 1):
     links.append(("/admin/attendance/", "attendance", [("/organization/%s/admin/attendance/" % organization.oid, organization.name) for organization in Organizations.query.all() if organization.id != 1 and OrganizationUsers.query.filter_by(oid = organization.id, uid = user.id).count() > 0 and OrganizationRoles.query.filter_by(oid = organization.id, uid = user.id).first().attendance > AttendanceRoles.default]))
   if False:
     links.append(("/admin/topics/", "topics", []))

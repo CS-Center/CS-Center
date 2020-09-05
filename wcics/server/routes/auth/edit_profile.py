@@ -27,7 +27,7 @@ def serve_edit_profile_request():
 def edit_profile(form):
   kwargs = {}
 
-  if form.description.data != user.desc:
+  if form.desc.data != user.desc:
     kwargs["desc"] = form.description.data
 
   if form.username.data != user.username:

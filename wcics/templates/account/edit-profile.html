@@ -21,7 +21,7 @@
     {{ form.csrf_token }}
     {{ textbox_field(form.desc) }}
     <br />
-    {%- with source = "description" -%}
+    {%- with source = "desc" -%}
       {%- include 'utils/markdown-preview.html' -%}
     {%- endwith -%}
     <hr />
