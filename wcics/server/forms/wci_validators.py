@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from wcics import consts
-
 from wcics.auth.hash import pass_hash
 from wcics.auth.manage_user import user
 

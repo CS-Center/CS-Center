@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ..utils import send_single
-from wcics.consts import DOMAIN
+from wcics.config.consts import DOMAIN
 
 # Get directory of messages
 import os
@@ -16,8 +16,8 @@ def send_link_email(email, token, next):
   ## email -> the user's email
   ## jwt -> the jwt of the action
   ## next -> the next page
-  
-  # Pass the domain for URL creation  
+
+  # Pass the domain for URL creation
   return send_single(email, reset_subject, reset_body.format(
     email = email,
     jwt = token,

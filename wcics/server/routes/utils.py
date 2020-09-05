@@ -4,8 +4,6 @@ from wcics import app, db, md, md_no_mj
 
 from wcics.auth.manage_user import user
 
-from wcics import consts
-
 from wcics.database.models import AttendanceCodes, AttendanceRecords, News, OrganizationUsers, Roles, Users, Lessons
 from wcics.database.models.roles import UserRoles
 from wcics.database.models.roles.consts import roles
@@ -74,18 +72,18 @@ def attendance_link(org):
 def get_user_list(include_all = False, organization = False):
   if not include_all and (not user or user.roles.users <= UserRoles.default):
     abort(403)
-  
+
   query = db.session.query(Users.username, Users.id)
   if not include_all:
     query = query.filter(Users.id != user.id)
     if not user.admin:
       query = query.join(Roles).filter(Roles.users < UserRoles.moderator)
-      
+
   if organization:
     query = query.join(OrganizationUsers).filter(OrganizationUsers.oid == get_org_id(), OrganizationUsers.uid == Users.id)
-      
+
   users = query.all()
-  
+
   return users
 
 @app.template_global()

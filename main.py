@@ -3,7 +3,7 @@
 
 from wcics import app, socketio
 
-from wcics.consts import PORT
+from wcics.config.consts import PORT
 from wcics.server.routes import *
 
 from flask import request

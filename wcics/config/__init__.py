@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from ..consts import set_constant
+from .consts import set_constant
 from wcics.config import debug, testing, default, prod
 from wcics.auth._jwt import verify_jwt, make_jwt, InvalidJWT, ExpiredJWT
 from wcics.auth._cookies import set_cookie

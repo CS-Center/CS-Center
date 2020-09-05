@@ -8,7 +8,7 @@ from wcics.auth.jwt import make_jwt, verify_jwt, InvalidJWT, ExpiredJWT
 from wcics.auth.manage_user import set_user, user
 from wcics.auth.oauth.google import GoogleOAuth
 
-from wcics.consts import DOMAIN
+from wcics.config.consts import DOMAIN
 
 from wcics.database.models import GoogleLinks, Users
 
@@ -47,26 +47,26 @@ def authorize_google():
           state = session['state']
         else:
           state = request.args.get("state", "")
-        
+
         data = verify_jwt(state)
-        
+
         next_url = data.get("next", "/")
       except (InvalidJWT, ExpiredJWT):
         next_url = "/"
-    
+
     return redirect(next_url, code = 303)
-  
+
   if 'state' not in session:
     return error_page(400, message = "No state was provided! Please return to /login to retrieve a valid state.")
 
   state = request.args.get('state', '')
   sess_state = session.get('state')
-  
+
   del session['state']
-    
+
   if state != sess_state:
     return error_page(400, message = "The provided state is invalid! Please return to /login to retrieve a new state.")
-  
+
   try:
     next_url = verify_jwt(sess_state).get("next", "/")
   except (InvalidJWT, ExpiredJWT):

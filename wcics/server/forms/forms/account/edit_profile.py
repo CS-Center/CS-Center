@@ -7,10 +7,9 @@ from wtforms import BooleanField, StringField, SubmitField, TextAreaField
 
 class EditProfileForm(FlaskForm):
   def __init__(self, user):
-    FlaskForm.__init__(self)
-    self.assoc_obj = user
+    FlaskForm.__init__(self, obj = user)
 
-  description = TextAreaField("Profile Description", account_edit_profile_description)
+  desc = TextAreaField("Profile Description", account_edit_profile_description)
   username = StringField("Username", account_edit_profile_username)
   real_name = StringField("Real Name", account_edit_profile_real_name)
   email = StringField("Email", account_edit_profile_email)

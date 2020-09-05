@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from wcics import app, consts, db
+from wcics import app, db
 
 from wcics.auth.manage_user import assert_login, organization_page, user
-
-from wcics.consts import KEYS_FOLDER_PATH
 
 from wcics.database.models.organizations import Organizations, OrganizationInvites
 from wcics.database.models.roles import OrganizationManagerRoles
@@ -27,32 +25,32 @@ def serve_organization_sudo(org):
     abort(403)
 
   form = OrganizationSudoForm()
-  
+
   organization = Organizations.query.filter_by(id = get_org_id()).first()
-  
+
   if form.validate_on_submit():
     organization.name = form.name.data
     organization.desc = form.description.data
     organization.join_code = form.join_code.data
     organization.can_join_code = form.can_join_code.data
     organization.can_apply = form.can_apply.data
-    
+
     db_commit()
-    
+
     flash("Successfully updated organization!", category = "SUCCESS")
-  
+
   if form.name.data is None:
     form.name.data = organization.name
 
   if form.description.data is None:
     form.description.data = organization.desc
-  
+
   if form.join_code.data is None:
     form.join_code.data = organization.join_code
-  
+
   form.can_join_code.data = organization.can_join_code
   form.can_apply.data = organization.can_apply
-  
+
   flash_form_errors(form)
-  
+
   return render_template("adminpages/organization.html", sudo = True, active = "organization", form = form)

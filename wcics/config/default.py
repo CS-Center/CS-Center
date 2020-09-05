@@ -6,7 +6,7 @@ from ..utils.files import load_file
 from ..utils.session_interface import WCICS_Session_Interface
 
 from .keys import keys
-from .consts import DOMAIN, PRESET
+from .consts import DOMAIN, PRESET, LOCAL
 
 from flask import json
 
@@ -19,9 +19,9 @@ app_properties = dict(
 
 GRECAPTCHA = keys['GRECAPTCHA']
 
-GOOGLE = keys['OAUTH_GOOGLE']['web']
+GOOGLE = {} if LOCAL else keys['OAUTH_GOOGLE']['web']
 
-GITHUB = keys['OAUTH_GITHUB'][DOMAIN]
+GITHUB = [0,0] if LOCAL else keys['OAUTH_GITHUB'][DOMAIN]
 
 app_config = dict(
   MAIL_SERVER = keys['MAIL']['SERVER'],
@@ -49,21 +49,19 @@ app_config = dict(
 
   SERVER_NAME = DOMAIN,
 
-  GOOGLE_OAUTH_CLIENT_ID = GOOGLE['client_id'],
-  GOOGLE_OAUTH_CLIENT_SECRET = GOOGLE['client_secret'],
+  GOOGLE_OAUTH_CLIENT_ID = GOOGLE.get('client_id'),
+  GOOGLE_OAUTH_CLIENT_SECRET = GOOGLE.get('client_secret'),
 
   GITHUB_OAUTH_CLIENT_ID = GITHUB[0],
   GITHUB_OAUTH_CLIENT_SECRET = GITHUB[1],
 )
-
-print(app_config['SQLALCHEMY_DATABASE_URI'])
 
 app_params = dict(
   subdomain_matching = True
 )
 
 misc_config = dict(
-  CSP_HEADERS = load_file('wcics/config/config-files/csp-headers.json')
+  CSP_HEADERS = json.load(open('wcics/config/config-files/csp-headers.json'))
 )
 
 configuration = dict(

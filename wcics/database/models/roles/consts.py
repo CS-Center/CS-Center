@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-  
+
 class AttendanceRoles:
   default = 0
   reader = 1
   admin = 2
-  
+
 class DatabaseRoles:
   default = 0
   admin = 1
@@ -25,17 +25,17 @@ class OrganizationManagerRoles:
   default = 0
   inviter = 1
   admin = 2
-  
+
 class TopicRoles:
   default = 0
   editor = 1
   admin = 2
-  
+
 class UserRoles:
   default = 0
   moderator = 1
   admin = 2
-  
+
 class LessonRoles:
   underprivileged = -1
   default = 0
@@ -48,8 +48,8 @@ class roles:
   users = UserRoles
   attendance = AttendanceRoles
   topics = TopicRoles
-  
+
   org_admin = OrganizationAdminRoles
   org_manager = OrganizationManagerRoles
-  
+
   lessons = LessonRoles

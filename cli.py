@@ -7,18 +7,34 @@ ports = {
   "hyper-neutrino" : 5000
 }
 
+DOMAINS = {
+  4000 : 'riolku.cscenter.ca',
+  5000 : 'neutrino.cscenter.ca'
+}
+
+def set_env(k, v):
+  os.environ[k] = str(v)
+
 def set_preset(x):
-  os.environ['CSCENTER_PRESET'] = x
+  set_env("CSCENTER_PRESET", x)
 
 def main(args):
+  port = ports.get(os.getlogin(), None)
+  if port is None: port = args[1]
+
+  set_env("CSCENTER_PORT", port)
+
+  DOMAIN = DOMAINS[port]
+
+  if 'local' in sys.argv:
+    DOMAIN = f'localhost:{port}'
+
+  set_env("CSCENTER_DOMAIN", DOMAIN)
+
   if args[0] == 'debug':
     set_preset('debug')
 
-    port = ports.get(os.getlogin(), None)
-
-    if port is None: port = args[1]
-
-    return os.system(f"python3 main.py {port}")
+    return os.system(f"python3 main.py")
 
   elif args[0] in ['make', 'clean']:
     return wcics_cli.indexing.main(args)
@@ -41,7 +57,7 @@ def main(args):
   elif args[0] == 'inspect':
     set_preset('debug')
 
-    return os.system("python3 -i wcics_cli/inspect_defaults.py")
+    return os.system(f"python3 -i inspect_defaults.py {port}")
 
   raise ValueError("No valid command was specified!")
 

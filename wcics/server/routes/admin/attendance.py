@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from wcics import app, consts, db
+from wcics import app, db
 
 from wcics.auth.manage_user import assert_login, organization_page, user
-
-from wcics.consts import KEYS_FOLDER_PATH
 
 from wcics.database.models.attendance import AttendanceCodes
 from wcics.database.models.roles import AttendanceRoles, OrganizationRoles
@@ -24,7 +22,7 @@ import json
 @assert_login
 def serve_attendance_sudo_home():
   links = []
-  
+
   for organization in Organizations.query.all():
     if organization.id == 1:
       continue
@@ -33,10 +31,10 @@ def serve_attendance_sudo_home():
     role = OrganizationRoles.query.filter_by(oid = organization.id, uid = user.id).first().attendance
     if role > AttendanceRoles.default:
       links.append((organization.oid, organization.name, role))
-  
+
   if links == []:
     abort(403)
-  
+
   return render_template("adminpages/attendance-home.html", sudo = True, active = "attendance", links = links)
 
 @app.route("/organization/<org>/admin/attendance/", methods = ["GET", "POST"])
@@ -47,11 +45,11 @@ def serve_attendance_sudo(org):
     abort(403)
 
   form = BlankForm()
-  
+
   if form.validate_on_submit():
     for change in json.loads(request.form["changes"]):
       item = AttendanceCodes.query.filter_by(id = change["id"]).first()
-      
+
       if change.get("delete") is True:
         AttendanceCodes.remove(item)
       else:
@@ -60,7 +58,7 @@ def serve_attendance_sudo(org):
             item.__setattr__(attr, change[attr].strip() if attr == "code" else change[attr])
 
     db_commit()
-  
+
   return render_template("adminpages/attendance.html", sudo = True, active = "attendance", form = form)
 
 @app.route("/organization/<org>/admin/attendance/display/")
@@ -69,9 +67,9 @@ def serve_attendance_sudo(org):
 def serve_attendance_display(org):
   if user.organization_roles.attendance <= AttendanceRoles.default:
     abort(403)
-  
+
   codes = AttendanceCodes.current_objs(get_org_id())
-  
+
   if len(codes) == 0:
     return render_template("adminpages/attendance-display-no-codes.html", sudo = True, active = "attendance")
   elif len(codes) == 1:
@@ -85,5 +83,5 @@ def serve_attendance_display(org):
 def serve_attendance_code_display(org, cid):
   if user.organization_roles.attendance <= AttendanceRoles.default:
     abort(403)
-  
+
   return render_template("adminpages/attendance-display.html", sudo = True, active = "attendance", code = AttendanceCodes.query.filter_by(id = cid).first_or_404().code)

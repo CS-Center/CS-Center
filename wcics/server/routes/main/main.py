@@ -4,8 +4,6 @@ from wcics import app
 
 from wcics.auth.manage_user import organization_page
 
-from wcics.consts import CONFIG_FOLDER_PATH, STATIC_FOLDER_PATH
-
 from wcics.database.models import News, Organizations
 
 from wcics.server.consts import NEWS_PER_PAGE
@@ -71,16 +69,16 @@ def serve_terms():
 def serve_robots():
   if app.debug:
     txt = "User-Agent: *\r\nDisallow: /"
-    
+
   else:
     txt = "User-Agent: *\r\nDisallow: "
-  
+
   resp = make_response(txt)
   resp.headers['Content-Type'] = "text/plain"
   resp.headers['Cache-Control'] = 'no-cache'
 
   return resp
-  
+
 # Temporary redirects here are a must, otherwise the route would hardcode to a location which would be BAD
 @app.route("/alticon.ico")
 def serve_alticon():

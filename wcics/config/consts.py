@@ -1,14 +1,14 @@
 import os, sys
 
+def set_constant(k, v):
+  globals()[k] = v
+
 PRESET = os.environ['CSCENTER_PRESET']
 
-DOMAINS = {
-  4000 : 'riolku.cscenter.ca',
-  5000 : 'neutrino.cscenter.ca'
-}
+PORT = os.environ['CSCENTER_PORT']
 
-PORT = int(sys.argv[1])
+DOMAIN = os.environ['CSCENTER_DOMAIN']
 
-DOMAIN = DOMAINS[PORT]
+LOCAL = DOMAIN.startswith('local')
 
 CSP_HEADERS = None
