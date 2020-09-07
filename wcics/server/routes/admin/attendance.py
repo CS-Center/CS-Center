@@ -47,6 +47,8 @@ def serve_attendance_sudo(org):
   form = BlankForm()
 
   if form.validate_on_submit():
+    submit_type = request.form['submit']
+
     for change in json.loads(request.form["changes"]):
       item = AttendanceCodes.query.filter_by(id = change["id"]).first()
 
@@ -56,6 +58,9 @@ def serve_attendance_sudo(org):
         for attr in ["start", "end", "code"]:
           if attr in change:
             item.__setattr__(attr, change[attr].strip() if attr == "code" else change[attr])
+
+    if submit_type == 'save-all-create':
+      AttendanceCodes.add(oid = org, code = '', start = 0, end = 0)
 
     db_commit()
 

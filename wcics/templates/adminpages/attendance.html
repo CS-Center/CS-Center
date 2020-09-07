@@ -19,10 +19,10 @@
   <a class="button-link outlined-button" href="display">Display code</a><br /><br />
   <form id="attendance-form" method="post">
     {{ form.csrf_token }}
-    <button id="save-all" class="contained-button" type="submit" disabled>
+    <button id="save-all" class="contained-button" name='submit' value='save-all' type="submit" disabled>
       Save All
     </button>
-    <button id="save-all-create" class="outlined-button" type="button">
+    <button id="save-all-create" class="outlined-button" name='submit' value='save-all-create' type="submit">
       Save All &amp; Create New
     </button>
     <br /><br />
