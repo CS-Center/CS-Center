@@ -46,11 +46,13 @@ def main(args):
 
   elif args[0] == 'prod':
     set_preset("production")
+    set_env("CSCENTER_DOMAIN", "cscenter.ca")
 
     return os.system("uwsgi --ini csc.ini")
 
   elif args[0] == 'prod-test':
     set_preset("production")
+    set_env("CSCENTER_DOMAIN", "prod-test.cscenter.ca")
 
     return os.system("uwsgi --ini csc-test.ini")
 
