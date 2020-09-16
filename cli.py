@@ -19,6 +19,26 @@ def set_preset(x):
   set_env("CSCENTER_PRESET", x)
 
 def main(args):
+  if args[0] == 'prod':
+    set_env("CSCENTER_PORT", "3000")
+    set_env("CSCENTER_DOMAIN", "cscenter.ca")
+    set_preset("production")
+
+    return os.system("uwsgi --ini csc.ini")
+
+  elif args[0] == 'prod-test':
+    set_env("CSCENTER_PORT", "3000")
+    set_env("CSCENTER_DOMAIN", "prod-test.cscenter.ca")
+    set_preset("production")
+
+    return os.system("uwsgi --ini csc-test.ini")
+
+  elif args[0] == 'inspect':
+    set_env("CSCENTER_PORT", "3000")
+    set_preset('debug')
+
+    return os.system(f"python3 -i inspect_defaults.py {port}")
+
   port = ports.get(os.getlogin(), None)
   if port is None: port = args[1]
 
@@ -43,23 +63,6 @@ def main(args):
     set_preset('testing')
 
     return os.system("pytest --capture=no wcics/tests -vv")
-
-  elif args[0] == 'prod':
-    set_preset("production")
-    set_env("CSCENTER_DOMAIN", "cscenter.ca")
-
-    return os.system("uwsgi --ini csc.ini")
-
-  elif args[0] == 'prod-test':
-    set_preset("production")
-    set_env("CSCENTER_DOMAIN", "prod-test.cscenter.ca")
-
-    return os.system("uwsgi --ini csc-test.ini")
-
-  elif args[0] == 'inspect':
-    set_preset('debug')
-
-    return os.system(f"python3 -i inspect_defaults.py {port}")
 
   raise ValueError("No valid command was specified!")
 
