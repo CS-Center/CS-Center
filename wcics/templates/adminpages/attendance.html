@@ -4,10 +4,6 @@
   admin - attendance
 {%- endblock -%}
 
-{%- block header -%}
-  {{ js_link("/static/js/adminpages/attendance.js") }}
-{%- endblock -%}
-
 {%- block content_header -%}
   <h1 class="header">
     admin - attendance
@@ -16,59 +12,32 @@
 {%- endblock -%}
 
 {%- block content -%}
-  <a class="button-link outlined-button" href="display">Display code</a><br /><br />
   <form id="attendance-form" method="post">
     {{ form.csrf_token }}
-    <button id="save-all" class="contained-button" name='submit' value='save-all' type="submit" disabled>
-      Save All
-    </button>
-    <button id="save-all-create" class="outlined-button" name='submit' value='save-all-create' type="submit">
-      Save All &amp; Create New
-    </button>
+    <a class="button-link outlined-button" href="display">Display code</a>
+    <input class="button outlined-button" type="submit" value="Create New" />
     <br /><br />
-  </form>
   {%- for code in attendance_codes.query.filter_by(oid = get_org_id()).order_by(attendance_codes.start.desc()) -%}
     {%- set outer_loop = loop -%}
-    <div data-id="{{ code.id }}" data-code="{{ code.code }}" data-start="{{ code.start }}" data-end="{{ code.end }}" class="code-edit border-box">
-      <span>
-        <div class="material-field-container material-input-container">
-          <input id="code-{{ loop.index }}" class="form-field standard-input-size listen" value="{{ code.code }}" placeholder=" " /><label for="code-{{ loop.index }}" class="material-field-container-label">Code</label>
-        </div><br /><br />
-      </span>
-      <span>
-        {%- for mode, dt in [("start", code.start), ("end", code.end)] -%}
-          <select id="{{ mode }}-month-{{ outer_loop.index }}" class="monospace listen month">
-            {%- for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] -%}
-              <option value="{{ loop.index - 1 }}" {%- if dtft(dt).month == loop.index -%} selected="selected" {%- endif -%}>{{ month }}</option>
-            {%- endfor -%}
-          </select>
-          {%- for attribute, upper in [("day", -1), ("year", 0), ("hour", 23), ("minute", 59), ("second", 59)] -%}
-            <div class="material-field-container material-input-container">
-              <input id="{{ mode }}-{{ attribute }}-{{ outer_loop.index }}" class="for-field small-input-size listen {{ attribute }}" type="number" value="{{ dtft(dt)[attribute] }}" min="0"
-                     {%- if upper > 0 -%}
-                       max="{{ upper }}"
-                     {%- elif upper == -1 -%}
-                       max="{{ [0, 31, 29 if dtft(dt).year % 4 == 0 and (dtft(dt).year % 100 or dtft(dt).year % 400 == 0), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][dtft(dt).month] }}"
-                     {%- endif -%}
-              placeholder=" " /><label for="{{ mode }}-{{ attribute }}-{{ outer_loop.index }}" class="material-field-container-label">{{ attribute }}</label>
-            </div>
-          {%- endfor -%}
-          {%- if loop.index == 1 -%}
-            <br /><br /><span class="monospace">to</span><br />
-          {%- endif -%}
-        {%- endfor -%}
-        <br /><br />
-        <span id="info-{{ loop.index }}" class="monospace">
-          {%- if get_time() > code.end -%}
-            [Expired]
-          {%- elif code.end > get_time() > code.start -%}
-            [Active]
-          {%- else -%}
-            [Upcoming]
-          {%- endif -%}
-        </span><br /><br />
-        <input id="delete-{{ loop.index }}" class="listen" type="checkbox" /> Delete this code (cannot be undone!)
-      </span>
+    <div class="code-edit border-box">
+      <a href="{{ code.id }}">
+        {{ (code.code if code.code else "<em>No code</em>") | safe }}
+      </a>
+
+      <br><br>
+
+      <span id="info-{{ loop.index }}" class="monospace">
+        {%- if get_time() > code.end -%}
+          [Expired]
+        {%- elif code.end > get_time() > code.start -%}
+          [Active]
+        {%- else -%}
+          [Upcoming]
+        {%- endif -%}
+      </span><br /><br />
+      <button name="delete" type="submit" value="{{ code.id }}" class="outlined-button">Delete this code (cannot be undone!)</button>
     </div>
+    <br>
   {%- endfor -%}
+  </form>
 {%- endblock -%}

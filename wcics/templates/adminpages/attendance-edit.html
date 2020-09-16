@@ -1,0 +1,34 @@
+{%- extends 'utils/layout.html' -%}
+
+{%- block title -%}
+  admin - attendance - edit
+{%- endblock -%}
+
+{%- block content_header -%}
+  <h1 class="header">
+    admin - attendance - edit
+  </h1>
+  <hr />
+{%- endblock -%}
+
+{%- block content -%}
+  <form id="attendance-form-edit" method="post">
+    {{ form.csrf_token }}
+
+    {{ input_field(form.code) }}
+    <br>
+
+    {{ input_field(form.start_date) }}
+    {{ input_field(form.start_time) }}
+
+    <br>
+
+    {{ input_field(form.end_date) }}
+    {{ input_field(form.end_time) }}
+
+    <br><br>
+
+    {{ form.submit(class = "outlined-button") }}
+
+  </form>
+{%- endblock -%}

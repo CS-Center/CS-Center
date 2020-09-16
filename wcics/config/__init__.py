@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
-from .consts import set_constant
+from .consts import set_constant, LOCAL
 from wcics.config import debug, testing, default, prod
 from wcics.auth._jwt import verify_jwt, make_jwt, InvalidJWT, ExpiredJWT
 from wcics.auth._cookies import set_cookie
@@ -70,7 +70,7 @@ def configure_app():
   # Run setup function for the configuration
   module.setup_func()
 
-  if preset_config_name != 'production' and not application.testing:
+  if preset_config_name != 'production' and not application.testing and not LOCAL:
     # If we aren't full prod, we make ppl enter password
     password = base64.b64encode(os.urandom(12)).decode("utf-8")
 

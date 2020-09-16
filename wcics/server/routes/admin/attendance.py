@@ -9,14 +9,16 @@ from wcics.database.models.roles import AttendanceRoles, OrganizationRoles
 from wcics.database.models import Organizations, OrganizationUsers
 from wcics.database.utils import db_commit
 
-from wcics.server.forms import BlankForm
+from wcics.server.forms.forms.admin.attendance_edit import AttendanceEditForm
+from wcics.server.forms.forms.blank_form import BlankForm
 
 from wcics.utils.files import write_file
 from wcics.utils.url import get_org_id
+from wcics.utils.time import to_tstamp
 
 from flask import abort, flash, redirect, render_template, request
 
-import json
+import json, os
 
 @app.route("/admin/attendance/")
 @assert_login
@@ -37,34 +39,68 @@ def serve_attendance_sudo_home():
 
   return render_template("adminpages/attendance-home.html", sudo = True, active = "attendance", links = links)
 
-@app.route("/organization/<org>/admin/attendance/", methods = ["GET", "POST"])
+@app.route("/organization/<oid>/admin/attendance/", methods = ["GET", "POST"])
 @organization_page
 @assert_login
-def serve_attendance_sudo(org):
+def serve_attendance_sudo(oid):
   if user.organization_roles.attendance < AttendanceRoles.admin:
     abort(403)
 
   form = BlankForm()
 
+  org = Organizations.query.filter_by(oid = oid).first_or_404()
+
   if form.validate_on_submit():
-    submit_type = request.form['submit']
+    if 'delete' in request.form:
+      del_id = int(request.form['delete'])
 
-    for change in json.loads(request.form["changes"]):
-      item = AttendanceCodes.query.filter_by(id = change["id"]).first()
+      AttendanceCodes.query.filter_by(id = del_id).delete()
 
-      if change.get("delete") is True:
-        AttendanceCodes.remove(item)
-      else:
-        for attr in ["start", "end", "code"]:
-          if attr in change:
-            item.__setattr__(attr, change[attr].strip() if attr == "code" else change[attr])
+      db_commit()
+    else:
+      b = os.urandom(16)
 
-    if submit_type == 'save-all-create':
-      AttendanceCodes.add(oid = org, code = '', start = 0, end = 0)
+      c = "".join(chr(97 + bc % 26) for bc in b)
 
-    db_commit()
+      ac = AttendanceCodes.add(oid = org.id, code = c, start = 0, end = 0)
+
+      db_commit()
+
+      return redirect(f"/organization/{oid}/admin/attendance/{ac.id}", code = 303)
 
   return render_template("adminpages/attendance.html", sudo = True, active = "attendance", form = form)
+
+@app.route("/organization/<oid>/admin/attendance/<acid>", methods = ["GET", "POST"])
+@organization_page
+@assert_login
+def serve_attendance_edit(oid, acid):
+  if user.organization_roles.attendance < AttendanceRoles.admin:
+    abort(403)
+
+  ac = AttendanceCodes.query.filter_by(id = acid).first_or_404()
+
+  form = AttendanceEditForm(ac)
+
+  if form.validate_on_submit():
+    start_ts = to_tstamp(form.start_date.data, form.start_time.data)
+    end_ts = to_tstamp(form.end_date.data, form.end_time.data)
+
+    if start_ts > end_ts:
+      flash("Start is after end!", category = "ERROR")
+
+    else:
+
+      code = form.code.data
+
+      ac.code = code
+      ac.start = start_ts
+      ac.end = end_ts
+
+      db_commit()
+
+      flash("Attendance code updated!", category = "SUCCESS")
+
+  return render_template("adminpages/attendance-edit.html", form = form)
 
 @app.route("/organization/<org>/admin/attendance/display/")
 @organization_page

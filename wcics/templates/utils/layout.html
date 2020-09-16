@@ -13,11 +13,11 @@
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charset="UTF-8" />
       <link rel="icon" type="image/x-icon" href="{{'/alticon.ico' if sudo else '/favicon.ico' }}" />
-    
+
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cousine:400,700|Open+Sans:300,400,600|Material+Icons" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" integrity="sha256-BtbhCIbtfeVWGsqxk1vOHEYXS6qcvQvLMZqjtpWUEx8=" crossorigin="anonymous" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css" integrity="sha256-zcunqSn1llgADaIPFyzrQ8USIjX2VpuxHzUwYisOwo8=" crossorigin="anonymous" />
-      
+
       {{ css_link("/static/css/global/clickables.css") }}
       {{ css_link("/static/css/global/fields.css") }}
       {{ css_link("/static/css/global/fontawesome-mods.css") }}
@@ -33,21 +33,21 @@
       {%- if request.MOBILE -%}
         {{ css_link("/static/css/utils/mobile.css") }}
       {%- endif -%}
-      
+
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
-      
+
       {{ js_link("/static/js/utils/configure-highlight.js") }}
       {{ js_link("/static/js/utils/keybinds.js") }}
       {{ js_link("/static/js/utils/load-events.js") }}
       {{ js_link("/static/js/utils/requests.js") }}
     {%- endblock -%}
-    
+
     {%- block header -%}
     {%- endblock -%}
   </head>
-  
+
   <body>
     <input id="blur-hack" type="text" />
     <div id="helpbox" class="monospace" hidden>
@@ -77,11 +77,11 @@
               </div>
             {%- endif -%}
           {%- endblock -%}
-          
+
           {%- block status_box -%}
             {%- include 'utils/status-box.html' -%}
           {%- endblock -%}
-          
+
           {%- block content -%}
           {%- endblock -%}
         </div>
@@ -96,7 +96,7 @@
       {%- endblock -%}
     </footer>
   </body>
-  
+
   <!--
     Copyright 2019, Alexander Liao and Keenan Gugeler
 
@@ -106,7 +106,7 @@
     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
     the Software, and to permit persons to whom the Software is furnished to do so,
     subject to the following conditions:
- 
+
     The above copyright notice and this permission notice shall be included in all
     copies or substantial portions of the Software.
 
